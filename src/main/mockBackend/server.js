@@ -15,6 +15,11 @@ app.get("/api/v1/groups", (req, res) => {
     res.json(groupNames)
 })
 
+
+app.post("/api/v1/groups", (req, res) => {
+    console.log("Added group")
+})
+
 app.use(express.static("../web/dist"))
 
 app.use((req, res, next) => {

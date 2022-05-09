@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useState} from "react"
 import ReactDOM from "react-dom";
 import {BrowserRouter, Link, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import {useLoader} from "./useLoader.jsx";
@@ -60,11 +60,51 @@ function Footer(){
 }
 
 function SearchGroup() {
+
     return <div>Search</div>;
 }
 
 function CreateGroup() {
-    return <div>Create</div>;
+
+    const [groupname, setGroupName] = useState("");
+    const [error, setError] = useState();
+
+
+    async function handleSubmit(e){
+        e.preventDefault()
+
+
+        if(groupname.length === 0){
+            alert("Please fill in a group name")
+        }else {
+
+            const res = await fetch("/api/v1/groups", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({groupname})
+            })
+
+            if(!res.ok){
+                setError("Failed to create the group, Error: " + res.status )
+            }
+        }
+
+
+    }
+
+
+
+
+    return <div>
+        <h2>Opprett gruppe</h2>
+        <form onSubmit={handleSubmit} >
+            <label>Gruppenavn: <input type="text" value={groupname} onChange={e => setGroupName(e.target.value)}/></label>
+            <button>Opprett gruppe</button>
+        </form>
+
+    </div>;
 }
 
 function ShowMyGroup() {
