@@ -36,21 +36,27 @@ function GroupLinks() {
                     </div>
                 </div>
             ) )}
-            <h2>atCampus</h2>
-            <h3>Get unstuck</h3>
-            <div>
-                <ul>
-                    <li>Regler</li>
-                    <li>Bruksvilkår</li>
-                    <li>Salgsvilkår</li>
-                    <li>Personvernsærklæring</li>
-                    <li>Om atcampus</li>
-                    <li>Gi tilbakemelding</li>
-                    <li>Ledige stillinger</li>
-                </ul>
-            </div>
+            <Footer/>
         </div>
     </div>;
+}
+
+function Footer(){
+    return <div>
+        <h2>atCampus</h2>
+        <h3>Get unstuck</h3>
+        <div>
+            <ul>
+                <li>Regler</li>
+                <li>Bruksvilkår</li>
+                <li>Salgsvilkår</li>
+                <li>Personvernsærklæring</li>
+                <li>Om atcampus</li>
+                <li>Gi tilbakemelding</li>
+                <li>Ledige stillinger</li>
+            </ul>
+        </div>
+    </div>
 }
 
 function SearchGroup() {
@@ -73,6 +79,7 @@ function ShowMyGroup() {
         <h2>Møtekalender</h2>
         <h2>Notater</h2>
         <button onClick={() => navigate("/group/members", {state: {group}})}>Medlemmer</button>
+        <Footer/>
     </div>;
 }
 
@@ -90,6 +97,8 @@ function GroupMembers() {
                 </div>
             )))}
         </ul>
+        <button>+ Legg til medlem</button>
+        <Footer/>
     </div>;
 }
 
