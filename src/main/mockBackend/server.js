@@ -1,8 +1,13 @@
 import express from "express";
 import * as path from "path";
+import bodyParser from "body-parser";
 
 
 const app = express();
+
+
+app.use(bodyParser.json())
+
 
 const groupNames = [{groupname: "PRO201-G8", members: ["Lil J", "Per åge", "Bernt Kåre"]},
     {groupname: "TK2100", members: ["Svein Torleif", "Bjertulf sveinson", "Sigurd Knutsen"]},
@@ -17,7 +22,10 @@ app.get("/api/v1/groups", (req, res) => {
 
 
 app.post("/api/v1/groups", (req, res) => {
-    console.log("Added group")
+    const newGroup = {groupname: req.body.groupname, members: ["Only you"]}
+
+    groupNames.push(newGroup)
+    res.status(200)
 })
 
 app.use(express.static("../web/dist"))
