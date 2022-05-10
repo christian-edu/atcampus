@@ -25,6 +25,7 @@ function GroupLinks() {
     }
 
     return <div>
+        <TopNavBar/>
         <div><Link to={"/createGroup"}>Opprett gruppe</Link></div>
         <div><Link to={"/searchGroup"}>Søk etter gruppe</Link></div>
         <div>
@@ -67,6 +68,7 @@ function Footer(){
 function SearchGroup() {
 
     return <div>
+        <TopNavBar/>
         <h2>Søk etter gruppenavn</h2>
         <h4>Trykk på en gruppe for å sende forespørsel</h4>
         <input type="text"/>
@@ -109,6 +111,8 @@ function SearchGroup() {
                 <label htmlFor="fysisk">Fysisk</label>
                 <input type="radio" name={"metode"} id={"digitalt"}/>
                 <label htmlFor="digitalt">Digitalt</label>
+                <input type="radio" name={"metode"} id={"begge"}/>
+                <label htmlFor="begge">Begge</label>
             </div>
             <button>Vis resultater</button>
 
@@ -164,6 +168,7 @@ function CreateGroup() {
 
 
     return <div>
+        <TopNavBar/>
         <h2>Opprett gruppe</h2>
         <form onSubmit={handleSubmit} >
             <label>Gruppenavn: <input type="text" value={groupname} onChange={e => setGroupName(e.target.value)}/></label>
@@ -180,6 +185,7 @@ function ShowMyGroup() {
     const group = location.state.group
 
     return <div>
+        <TopNavBar/>
         <h2>{group.groupname}</h2>
         <h2>Chat</h2>
         <h2>Møtekalender</h2>
@@ -196,6 +202,7 @@ function GroupMembers() {
     const group = location.state.group
 
     return <div>
+        <TopNavBar/>
         <h2>Medlemmer</h2>
         <ul>
             {group.members.map((member => (
@@ -272,15 +279,14 @@ function Questions() {
     }
 
     // gets the subject list from the backend data
-    // Subjects for dropdown
+    // For more easy displaying of the subject names in the dropdown menu
     data.map((subject) => {
         subjects.push(subject.subject)
     })
 
 
-
-
     return <div>
+        <TopNavBar/>
         <div>
             <h2>Emner</h2>
 
@@ -290,9 +296,6 @@ function Questions() {
                 )}
 
             </select>
-
-                <pre>{JSON.stringify({chosenSubject})}</pre>
-
         </div>
 
 
@@ -314,10 +317,46 @@ function Questions() {
         }
 
 
-
         <Footer/>
         <BottomNavBar/>
     </div>;
+}
+
+
+function TopNavBar() {
+
+    const [showNavBar, setShowNavBar] = useState(false);
+
+    function showNavBarFn(){
+        if(showNavBar){
+            setShowNavBar(false)
+        }else {
+            setShowNavBar(true)
+        }
+    }
+
+
+    return <div>
+        {showNavBar? <TopNavBarMenu/>: <h2></h2>}
+
+        <h2 style={{display: "inline-block", marginRight: 20}}>&#x2190;</h2>
+        <button onClick={showNavBarFn}> Menu</button>
+    </div>
+}
+
+function TopNavBarMenu(){
+    return <div>
+        <ul>
+            <li><Link to={"/"}>Forsiden</Link></li>
+            <li>Still spørsmål</li>
+            <li>Topplisten</li>
+            <li>Flashcard</li>
+            <li>Dokumentering</li>
+            <li>Min Profil</li>
+            <li>Mine Spørsmål</li>
+            <li>Mine svar</li>
+        </ul>
+    </div>
 }
 
 function BottomNavBar(){
