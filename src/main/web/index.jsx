@@ -38,6 +38,7 @@ function GroupLinks() {
             ) )}
             <Footer/>
         </div>
+        <BottomNavBar/>
     </div>;
 }
 
@@ -113,6 +114,7 @@ function SearchGroup() {
 
         </div>
         <Footer/>
+        <BottomNavBar/>
     </div>;
 }
 
@@ -155,6 +157,7 @@ function CreateGroup() {
         return <div>
             <h2>Error: </h2>
             <h4>{error}</h4>
+            <BottomNavBar/>
         </div>
     }
 
@@ -166,8 +169,7 @@ function CreateGroup() {
             <label>Gruppenavn: <input type="text" value={groupname} onChange={e => setGroupName(e.target.value)}/></label>
             <button>Opprett gruppe</button>
         </form>
-
-            <Link to={"/"}>Frontpage</Link>
+        <BottomNavBar/>
     </div>;
 }
 
@@ -184,6 +186,7 @@ function ShowMyGroup() {
         <h2>Notater</h2>
         <button onClick={() => navigate("/group/members", {state: {group}})}>Medlemmer</button>
         <Footer/>
+        <BottomNavBar/>
     </div>;
 }
 
@@ -203,6 +206,133 @@ function GroupMembers() {
         </ul>
         <button>+ Legg til medlem</button>
         <Footer/>
+        <BottomNavBar/>
+    </div>;
+}
+
+
+
+
+
+function QuestionCard({subject, person, posted, question, answerAmount, likes, answers}) {
+
+    const [showAnswer, setShowAnswers] = useState(false)
+
+    function showAnswerFn(){
+
+        if(showAnswer){
+            setShowAnswers(false)
+        }else {
+            setShowAnswers(true)
+        }
+    }
+
+    return <div>
+        <h5>{subject}</h5>
+        <h4>{person}</h4>
+        <p>{posted}</p>
+        <p>{question}</p>
+        <h4 onClick={showAnswerFn} style={{display: "inline-block", marginRight: 20}}>{answerAmount} Svar</h4>
+        <h4 style={{display: "inline-block"}}>{likes} Hearths</h4>
+
+        {showAnswer? <div>
+            {answers.map((specificAnswer) => (
+                <h5>{specificAnswer.answer} ({specificAnswer.votes})<p>voted</p></h5>
+            ))}
+        </div>: <h2></h2>}
+
+    </div>;
+}
+
+function Questions() {
+
+    const {data, error, loading} = useLoader(() => fetchJSON("/api/questions"))
+
+    if(loading){
+        return <h2>Loading questions..</h2>
+    }
+
+    if(error){
+        return <div>
+            <h2>Error</h2>
+            {error}
+        </div>
+    }
+
+
+    // Get subjects from backend
+    // Place them in a dropdown
+
+    // get comments, person, comments, posted time, questions and answers related to those subjects from the backend
+
+
+    return <div>
+        <div>
+            <h2>Emner</h2>
+            <h4 style={{display: "inline-block", marginRight: 10}}>Arbeidsmiljø og psykologi</h4>
+            <button>+Legg til emner</button>
+        </div>
+
+
+        {
+            data.map((subject) => (
+                <div>
+                    {subject.questions.map((question) => (
+                        <div>
+                            <QuestionCard subject={subject.subject} person={question.student} posted={question.timeposted}
+                                          question={question.question} answerAmount={question.answers.length} likes={question.likes} answers={question.answers} />
+                        </div>
+                    ))}
+                </div>
+            ))
+        }
+
+
+
+        <Footer/>
+        <BottomNavBar/>
+    </div>;
+}
+
+function BottomNavBar(){
+
+    const [showProfile, setShowProfile] = useState(false);
+
+
+    function showProfileFn(){
+
+        if (showProfile){
+            setShowProfile(false)
+        }else {
+            setShowProfile(true)
+        }
+    }
+
+
+    return <div>
+        { showProfile ? <ProfileMenu showProfileFn={showProfileFn}/> : <div>
+            <div style={{display: "inline-block", marginRight: 20}}><Link to={"/questions"}><h4>Spørsmål</h4></Link></div>
+            <div style={{display: "inline-block", marginRight: 20}}><h4>Flashcards</h4></div>
+            <div style={{display: "inline-block", marginRight: 20}}><Link to={"/"}><h4>Grupper</h4></Link></div>
+            <div style={{display: "inline-block"}}><button onClick={showProfileFn}>Profile</button></div>
+        </div> }
+
+    </div>
+}
+
+function ProfileMenu({showProfileFn}) {
+    return <div>
+        <button onClick={showProfileFn}>X</button>
+        <ul>
+            <li>Endre profil</li>
+            <li>Instillinger</li>
+            <li>Notifikasjoner</li>
+            <li onClick={showProfileFn} ><Link to={"/"}>Mine grupper</Link></li>
+            <li>Mine spørsmål</li>
+            <li>Mine svar</li>
+            <li>Logg ut</li>
+        </ul>
+
     </div>;
 }
 
@@ -214,6 +344,8 @@ function Application() {
             <Route path={"/createGroup"} element={<CreateGroup/>}/>
             <Route path={"/group/specific"} element={<ShowMyGroup/>}/>
             <Route path={"/group/members"} element={<GroupMembers/>}/>
+            <Route path={"/questions"} element={<Questions/>}/>
+            <Route path={"/profile"} element={<ProfileMenu/>}/>
         </Routes>
     </BrowserRouter>
 }
