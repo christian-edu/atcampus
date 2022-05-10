@@ -42,6 +42,10 @@ function GroupLinks() {
 }
 
 function Footer(){
+
+    // Linke til atcampus sider
+
+
     return <div>
         <h2>atCampus</h2>
         <h3>Get unstuck</h3>
