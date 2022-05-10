@@ -237,7 +237,11 @@ function QuestionCard({subject, person, posted, question, answerAmount, likes, a
 
         {showAnswer? <div>
             {answers.map((specificAnswer) => (
-                <h5>{specificAnswer.answer} ({specificAnswer.votes})<p>voted</p></h5>
+                <div key={specificAnswer.answer}>
+                    <h4>{specificAnswer.answer} </h4>
+                    <p>({specificAnswer.votes}) votes</p>
+                </div>
+
             ))}
         </div>: <h2></h2>}
 
@@ -247,6 +251,14 @@ function QuestionCard({subject, person, posted, question, answerAmount, likes, a
 function Questions() {
 
     const {data, error, loading} = useLoader(() => fetchJSON("/api/questions"))
+
+    const [chosenSubject, setChosenSubject] = useState([])
+
+    const subjects = []
+
+
+
+
 
     if(loading){
         return <h2>Loading questions..</h2>
@@ -259,23 +271,36 @@ function Questions() {
         </div>
     }
 
+    // gets the subject list from the backend data
+    // Subjects for dropdown
+    data.map((subject) => {
+        subjects.push(subject.subject)
+    })
 
-    // Get subjects from backend
-    // Place them in a dropdown
 
-    // get comments, person, comments, posted time, questions and answers related to those subjects from the backend
 
 
     return <div>
         <div>
             <h2>Emner</h2>
-            <h4 style={{display: "inline-block", marginRight: 10}}>Arbeidsmiljø og psykologi</h4>
-            <button>+Legg til emner</button>
+
+            <select name="subject" onChange={(e) => setChosenSubject(oldArray => [...oldArray, e.target.value])} >
+
+                {subjects.map((su) => <option key={su} value={su}>{su}</option>
+                )}
+
+            </select>
+
+                <pre>{JSON.stringify({chosenSubject})}</pre>
+
         </div>
 
 
         {
             data.map((subject) => (
+
+                /*Choose to show the chosen subject*/
+
                 <div>
                     {subject.questions.map((question) => (
                         <div>
@@ -283,6 +308,7 @@ function Questions() {
                                           question={question.question} answerAmount={question.answers.length} likes={question.likes} answers={question.answers} />
                         </div>
                     ))}
+
                 </div>
             ))
         }

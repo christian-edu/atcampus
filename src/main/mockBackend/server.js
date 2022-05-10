@@ -43,7 +43,7 @@ const subjectQuestions = [
             likes: 12,
             answers: [
                 {answer: "You could try to put fidgetspinners under your feet, that increased my frps by 24", votes: 9999},
-                {answer:  "I usually try to dress up as the subject matter, do you have any car costumes", votes: 777},
+                {answer:  "I usually try to dress up as the subject matter, do you have any car costumes?", votes: 777},
                 {answer: "If you cant figure this out by yourself, you cant really call yourself an interpretive dancer", votes: -99}]}]
     }
 ]
