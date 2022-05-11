@@ -2,7 +2,7 @@ const Footer = () => {
   // Linke til atcampus sider?
 
   return (
-    <footer class="bg-purple-4 px-4 py-6 w-full">
+    <footer className="bg-purple-4 px-4 py-6 w-full">
         <img src="https://www.atcampus.no/_next/static/media/atcampus-full-logo.2e7d1a2a.svg" alt="" />
         <h3 className="text-dark-2">Get unstuck</h3>
         <div>

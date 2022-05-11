@@ -1,18 +1,19 @@
-import { useLocation } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
+import UserCard from './shared/UserCard';
 
 const GroupMembers = () => {
   const location = useLocation();
 
   const group = location.state.group;
 
+  console.log(group);
+
   return (
     <div>
       <h2>Medlemmer</h2>
-      <ul>
+      <ul className='grid grid-cols-1 gap-4'>
         {group.members.map((member) => (
-          <div key={member}>
-            <li>{member}</li>
-          </div>
+          <UserCard key={member} edit={true} user={member} />
         ))}
       </ul>
       <button>+ Legg til medlem</button>
