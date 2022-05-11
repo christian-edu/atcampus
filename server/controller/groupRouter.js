@@ -1,5 +1,6 @@
 import GroupService from "../service/groupService.js";
 import {SearchDTO} from "../dto/searchDTO.js";
+import express from "express";
 
 
 function sendError(res, e) {
@@ -8,7 +9,7 @@ function sendError(res, e) {
 }
 
 export default class GroupRouter {
-    constructor(groupService = new GroupService(), router = new Express.Router()) {
+    constructor(groupService, router = new express.Router()) {
         this.service = groupService;
         this.router = router;
     }
