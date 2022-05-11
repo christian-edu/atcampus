@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ProfileMenu from '../ProfileMenu';
+import ProfileMenu from './ProfileMenu';
 
 const BottomNavBar = () => {
   const [showProfile, setShowProfile] = useState(false);

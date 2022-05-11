@@ -6,7 +6,7 @@ import ShowMyGroup from './components/ShowMyGroup';
 import GroupMembers from './components/GroupMembers';
 import Questions from './components/GroupMembers';
 import Questions from './components/Questions';
-import ProfileMenu from './components/ProfileMenu';
+import ProfileMenu from './components/shared/ProfileMenu';
 import Footer from './components/shared/Footer';
 import TopNavBar from './components/shared/TopNavBar';
 import BottomNavBar from './components/shared/BottomNavBar';

@@ -9,7 +9,7 @@ const ProfileMenu = ({ showProfileFn }) => {
         <li>Instillinger</li>
         <li>Notifikasjoner</li>
         <li onClick={showProfileFn}>
-          {/* <Link to={'/'}>Mine grupper</Link> */}
+          <Link to={'/'}>Mine grupper</Link>
         </li>
         <li>Mine spørsmål</li>
         <li>Mine svar</li>
