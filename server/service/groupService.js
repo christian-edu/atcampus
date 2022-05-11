@@ -1,7 +1,7 @@
 import HttpException from "../httpException.js";
 import {groupNames} from "../mockData.js";
 
-export default class GroupService{
+export default class GroupService {
     constructor(groupRepo) {
         this.repo = groupRepo;
     }
@@ -11,10 +11,7 @@ export default class GroupService{
     }
 
     addGroup(group) {
-        app.post("/api/v1/groups", (req, res) => {
-            groupNames.push(newGroup)
-            res.status(200)
-        });
+        groupNames.push(group);
     }
 
 
