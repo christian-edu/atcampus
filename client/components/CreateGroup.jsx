@@ -41,12 +41,13 @@ function CreateGroup() {
   return (
     <>
       <div className='bg-white p-6 grid gap-4 rounded-standard border border-purple-4'>
-        <h2>Opprett gruppe</h2>
+        <h2 className='text-xl font-bold'>Opprett gruppe</h2>
         <form onSubmit={handleSubmit}>
           <label>Gruppenavn:</label>
           <div>
             <input
               type='text'
+              className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'
               value={groupname}
               onChange={(e) => setGroupName(e.target.value)}
             />
