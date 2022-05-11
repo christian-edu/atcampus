@@ -2,9 +2,10 @@ on:
   push:
     branches:
       - main
-
+      - service_and_router
 jobs:
   verify:
+    permissions: write-all
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
