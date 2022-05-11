@@ -60,18 +60,6 @@ const ProfileMenu = (props) => {
           </Link>
         </ul>
       </div>
-
-      <ul>
-        <li>Endre profil</li>
-        <li>Instillinger</li>
-        <li>Notifikasjoner</li>
-        <li onClick={props.onClick}>
-          <Link to={'/'}>Mine grupper</Link>
-        </li>
-        <li>Mine spørsmål</li>
-        <li>Mine svar</li>
-        <li>Logg ut</li>
-      </ul>
     </div>
   );
 };
