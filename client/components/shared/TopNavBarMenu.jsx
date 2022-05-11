@@ -5,7 +5,7 @@ const TopNavBarMenu = () => {
     <div>
       <ul>
         <li>
-          {/* <Link to='/'>Forsiden</Link> */}
+          <Link to='/'>Forsiden</Link>
         </li>
         <li>Still spørsmål</li>
         <li>Topplisten</li>

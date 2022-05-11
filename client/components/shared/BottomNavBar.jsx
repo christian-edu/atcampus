@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ProfileMenu from './ProfileMenu';
+import ProfileMenu from '../ProfileMenu';
 
 const BottomNavBar = () => {
   const [showProfile, setShowProfile] = useState(false);
@@ -19,7 +19,7 @@ const BottomNavBar = () => {
         <ProfileMenu showProfileFn={showProfileFn} />
       ) : (
         <div>
-          {/* <div style={{ display: 'inline-block', marginRight: 20 }}>
+          <div style={{ display: 'inline-block', marginRight: 20 }}>
             <Link to={'/questions'}>
               <h4>Spørsmål</h4>
             </Link>
@@ -31,7 +31,7 @@ const BottomNavBar = () => {
             <Link to={'/'}>
               <h4>Grupper</h4>
             </Link>
-          </div> */}
+          </div>
           <div style={{ display: 'inline-block' }}>
             <button onClick={showProfileFn}>Profile</button>
           </div>

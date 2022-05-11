@@ -7,15 +7,15 @@ import GroupMembers from './components/GroupMembers';
 import Questions from './components/GroupMembers';
 import Questions from './components/Questions';
 import ProfileMenu from './components/ProfileMenu';
-import Footer from './components/Footer';
-import TopNavBar from './components/TopNavBar';
-import BottomNavBar from './components/BottomNavBar';
+import Footer from './components/shared/Footer';
+import TopNavBar from './components/shared/TopNavBar';
+import BottomNavBar from './components/shared/BottomNavBar';
 
 const App = () => {
   return (
     <>
-      <TopNavBar />
       <BrowserRouter>
+        <TopNavBar />
         <Routes>
           <Route path={'/'} element={<GroupLinks />} />
           <Route path={'/searchGroup'} element={<SearchGroup />} />
@@ -25,9 +25,9 @@ const App = () => {
           <Route path={'/questions'} element={<Questions />} />
           <Route path={'/profile'} element={<ProfileMenu />} />
         </Routes>
+        <Footer />
+        <BottomNavBar />
       </BrowserRouter>
-      <Footer />
-      <BottomNavBar />
     </>
   );
 };
