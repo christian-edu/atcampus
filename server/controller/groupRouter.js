@@ -54,11 +54,12 @@ export default class GroupRouter {
                 sendError(res, e);
             }
         });
+
         // Member paths
         router.get("/member", async (req, res) => {
             const {group_id} = req?.query;
             try {
-                await service.getGroupMembers(group_id);
+                res.json(await service.getGroupMembers(group_id));
             } catch (e) {
                 sendError(res, e);
             }
@@ -67,7 +68,7 @@ export default class GroupRouter {
             const {group, user} = req?.body;
 
             try {
-                await service.deleteMember(group, user);
+                res.json(await service.deleteMember(group, user));
             } catch (e) {
                 sendError(res, e);
             }
@@ -88,7 +89,7 @@ export default class GroupRouter {
             const searchDto = new SearchDTO(language, school, place, workMethod, gradeGoal, frequency);
 
             try {
-                await service.searchGroup(searchDto)
+                res.json(await service.searchGroup(searchDto));
             } catch (e) {
                 sendError(res, e);
             }
@@ -102,7 +103,6 @@ async function fetchGroupById(service, group_id, res) {
     try {
         res.json(await service.fetchGroupById(group_id));
     } catch (e) {
-        console.error(e);
         sendError(res, e);
     }
 }
@@ -111,7 +111,6 @@ async function fetchAllGroups(res, service) {
     try {
         res.json(await service.fetchAllGroups());
     } catch (e) {
-        console.error(e);
         sendError(res, e);
     }
 }
