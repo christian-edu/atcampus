@@ -4,3 +4,4 @@ target/
 .parcel-cache/
 dist/
 .idea/
+coverage/
