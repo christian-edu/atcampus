@@ -26,5 +26,7 @@ export default class GroupRouter {
 
             }
         });
+
+        return router;
     }
 }
