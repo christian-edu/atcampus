@@ -1,7 +1,7 @@
 import GroupService from "../service/groupService.js";
 
 export default class GroupRouter {
-    constructor(groupService = GroupService, router) {
+    constructor(groupService = new GroupService(), router = new Express.Router()) {
         this.service = groupService;
         this.router = router;
     }
@@ -13,7 +13,10 @@ export default class GroupRouter {
             try {
                 res.json(service.fetchAllGroups());
             } catch (e) {
-                res.status(e.status).message(e.message);
+                console.error(e);
+                console.Console
+                res.status(e.status);
+                res.send(e.message);
             }
         });
 

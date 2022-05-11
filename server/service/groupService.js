@@ -5,8 +5,11 @@ export default class GroupService{
         this.repo = groupRepo;
     }
 
-
-    static fetchAllGroups() {
+    fetchAllGroups() {
         throw new HttpException("Not implemented!", 500);
+    }
+
+    addGroup(group) {
+        return undefined;
     }
 }

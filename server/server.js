@@ -7,7 +7,7 @@ import GroupRouter from "./controller/groupRouter.js";
 
 const app = express();
 const groupService = new GroupService();
-const groupRoutes = new GroupRouter();
+const groupRoutes = new GroupRouter(groupService, express.Router());
 
 app.use(express.json())
 
