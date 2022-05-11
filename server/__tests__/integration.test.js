@@ -13,9 +13,6 @@ const agent = supertest.agent(app);
 
 describe("End-to-end testing for backend", () => {
 
-    afterAll(() => {
-        app.close()
-    })
     it("Should throw error without group_id", (done) => {
         agent.get("/api/v1/groups/member")
             .expect(400)
