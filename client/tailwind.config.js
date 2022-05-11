@@ -55,6 +55,14 @@ module.exports = {
       xl: '1280px',
       '2xl': '1536px',
     },
+    container: {
+      padding: {
+        sm: '0.5rem',
+        lg: '4rem',
+        xl: '5rem',
+        '2xl': '6rem',
+      },
+    },
   },
   variants: {
     extend: {},
