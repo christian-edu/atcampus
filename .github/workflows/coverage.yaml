@@ -1,0 +1,25 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+      - name: install dependencies
+        run: npm ci
+      - run: npm test
+      - name: Collect coverage for server
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          working-directory: server
+      - name: Collect coverage for client
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          working-directory: client
