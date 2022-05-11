@@ -21,9 +21,12 @@ const UserCard = ({ user, edit = false }) => {
   return (
     <>
       {modalIsVisible && <Modal onClick={toggleModal}>{content}</Modal>}
-      <li className='bg-white flex items-center p-6 rounded-standard border border-purple-4'>
+      <li
+        className='bg-white flex items-center p-6 rounded-standard border border-purple-4 cursor-pointer'
+        onClick={toggleModal}
+      >
         <h2 className='font-bold'>{user}</h2>
-        <button onClick={toggleModal} className='ml-auto'>
+        <button className='ml-auto'>
           {edit ? (
             <DotsHorizontalIcon className={classes} />
           ) : (
