@@ -14,19 +14,12 @@ app.use(express.json())
 
 
 app.use("/api/v1/groups", groupRoutes.fetchRoutes());
-//
-// app.post("/api/v1/groups", (req, res) => {
-//     const newGroup = {groupname: req.body.groupname, members: ["Only you"]}
-//
-//     groupNames.push(newGroup)
-//     res.status(200)
-// })
-//
-// app.get("/api/questions", (req, res) => {
-//     console.log("U hit the right spot")
-//
-//     res.json(subjectQuestions)
-// })
+
+app.get("/api/questions", (req, res) => {
+    console.log("U hit the right spot")
+
+    res.json(subjectQuestions)
+})
 
 app.use(express.static("../web/dist"))
 

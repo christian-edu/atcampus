@@ -1,4 +1,5 @@
 import HttpException from "../httpException.js";
+import {groupNames} from "../mockData.js";
 
 export default class GroupService{
     constructor(groupRepo) {
@@ -6,10 +7,18 @@ export default class GroupService{
     }
 
     fetchAllGroups() {
-        throw new HttpException("Not implemented!", 500);
+        return groupNames;
     }
 
     addGroup(group) {
-        return undefined;
+        app.post("/api/v1/groups", (req, res) => {
+            groupNames.push(newGroup)
+            res.status(200)
+        });
+    }
+
+
+    fetchGroupById(groupId) {
+        throw new HttpException("Not implemented!", 500);
     }
 }
