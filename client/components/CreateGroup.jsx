@@ -39,20 +39,22 @@ function CreateGroup() {
   }
 
   return (
-    <div>
-      <h2>Opprett gruppe</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Gruppenavn:{' '}
-          <input
-            type='text'
-            value={groupname}
-            onChange={(e) => setGroupName(e.target.value)}
-          />
-        </label>
-        <button>Opprett gruppe</button>
-      </form>
-    </div>
+    <>
+      <div>
+        <h2>Opprett gruppe</h2>
+        <form onSubmit={handleSubmit}>
+          <label>
+            Gruppenavn:{' '}
+            <input
+              type='text'
+              value={groupname}
+              onChange={(e) => setGroupName(e.target.value)}
+            />
+          </label>
+          <button>Opprett gruppe</button>
+        </form>
+      </div>
+    </>
   );
 }
 
