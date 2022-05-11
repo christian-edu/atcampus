@@ -1,55 +1,60 @@
+import { useCallback, useEffect, useState } from 'react';
+import GroupCriteria from './shared/GroupCriteria';
+
 const SearchGroup = () => {
+  const [groups, setGroups] = useState([]);
+  const [input, setInput] = useState('');
+
+  const getGroups = useCallback(async () => {
+    const res = await fetch('api/v1/groups');
+    const data = await res.json();
+    setGroups(data);
+  });
+
+  const inputHandler = (e) => setInput(e.target.value);
+
+  useEffect(() => {
+    getGroups();
+  }, []);
+
+  const filteredGroups = groups.filter((group) =>
+    group.groupname.toLowerCase().includes(input.toLowerCase())
+  );
+
   return (
-    <div>
-      <h2>Søk etter gruppenavn</h2>
-      <h4>Trykk på en gruppe for å sende forespørsel</h4>
-      <input type='text' />
-      <div>
-        <h2>Søk etter gruppekriterier</h2>
-        <h4>Velg kriterier for søket</h4>
+    <>
+      <div className='grid grid-cols-1 gap-4 bg-white p-6 rounded-standard border border-purple-4 mb-6'>
         <div>
-          <div>
-            <select name='emne'>
-              <option value='Programmering'>Programmering</option>
-              <option value='Frontend'>Frontend</option>
-              <option value='InteraktivtDesign'>InteraktivtDesign</option>
-            </select>
-          </div>
-          <div>
-            <select name='størrelse'>
-              <option value='liten'>Liten (1-4stk)</option>
-              <option value='Medium'>Liten (5-7stk)</option>
-              <option value='Stor'>Stor (8+)</option>
-            </select>
-          </div>
+          <h2>Søk etter gruppenavn</h2>
+          <h4>Trykk på en gruppe for å sende forespørsel</h4>
         </div>
         <div>
-          <select name='karaktermål'>
-            <option value='A'>A</option>
-            <option value='B'>B</option>
-            <option value='C'>C</option>
-            <option value='D'>D</option>
-            <option value='E'>E</option>
-            <option value='F'>F</option>
-          </select>
+          <label htmlFor='groupName mb-20'>Gruppenavn</label>
+          <input
+            type='text'
+            id='groupName'
+            placeholder='Gruppenavn'
+            className='w-full p-2 border border-purple-3 rounded-standard'
+            onChange={inputHandler}
+          />
         </div>
-        <div>
-          <select name='arbeidsfrekvens'>
-            <option value='Månedlig'>Månedlig</option>
-            <option value='Ukentlig'>Ukentlig</option>
-          </select>
-        </div>
-        <div>
-          <input type='radio' name={'metode'} id={'fysisk'} />
-          <label htmlFor='fysisk'>Fysisk</label>
-          <input type='radio' name={'metode'} id={'digitalt'} />
-          <label htmlFor='digitalt'>Digitalt</label>
-          <input type='radio' name={'metode'} id={'begge'} />
-          <label htmlFor='begge'>Begge</label>
-        </div>
-        <button>Vis resultater</button>
+        <ul>
+          {(!input || filteredGroups.length === 0) && 'Ingen grupper å vise'}
+          {input &&
+            filteredGroups.map((group) => (
+              <li key={group.groupname}>{group.groupname}</li>
+            ))}
+        </ul>
       </div>
-    </div>
+
+      <div className='bg-white p-6 rounded-standard border border-purple-4'>
+        <div>
+          <h2>Søk etter gruppekriterier</h2>
+          <h4>Trykk på en gruppe for å sende forespørsel</h4>
+        </div>
+        <GroupCriteria />
+      </div>
+    </>
   );
 };
 
