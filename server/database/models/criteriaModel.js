@@ -26,6 +26,14 @@ export function createCriteriaModel(sequelize) {
                     "5 gang i uka"
                 ]
             },
+            work_type: {
+                type: DataTypes.ENUM,
+                values: [
+                    "Fysisk",
+                    "Digitalt",
+                    "Begge"
+                ]
+            },
             max_size: {
                 type: DataTypes.INTEGER,
             },
