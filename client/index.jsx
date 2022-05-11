@@ -45,7 +45,7 @@ function GroupLinks() {
 
 function Footer(){
 
-    // Linke til atcampus sider?
+    // Linke til atcampus sider??
 
 
     return <div>
