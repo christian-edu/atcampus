@@ -30,13 +30,12 @@ export default class GroupRouter {
         const router = this.router;
         const service = this.service;
         router.get("/", async (req, res, next) => {
-            const {group_id} = req?.params;
-
+            const {group_id} = req?.query;
             if (group_id) {
                 await fetchGroupById(service, group_id, res);
                 return;
             }
-            fetchAllGroups(res, service);
+            await fetchAllGroups(res, service);
         });
 
         router.post("/", async(req,res) => {
