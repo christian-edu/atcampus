@@ -22,7 +22,7 @@ const BottomNavBar = () => {
       {showProfile ? (
         <ProfileMenu showProfileFn={showProfileFn} />
       ) : (
-        <div className='flex justify-between px-6 pt-4 pb-6 sm:justify-center sm:gap-20 fixed inset-x-0 bottom-0 bg-dark-6 text-sm font-semibold text-dark-1 lg:hidden'>
+        <div className='flex justify-between px-6 pt-4 pb-6 sm:justify-center sm:gap-20 fixed inset-x-0 bottom-0 bg-purple-5 outline outline-1 outline-dark-5 text-sm font-semibold text-dark-1 lg:hidden'>
           <div>
             <Link to={'/questions'} className="flex flex-col items-center">
               <DocumentTextIcon className="h-6 w-6 text-purple-1"/>
