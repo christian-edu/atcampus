@@ -20,7 +20,3 @@ jobs:
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           working-directory: server
-      - name: Collect coverage for client
-        uses: ArtiomTr/jest-coverage-report-action@v2
-        with:
-          working-directory: client
