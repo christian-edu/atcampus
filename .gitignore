@@ -1,6 +1,6 @@
 # Project exclude paths
 node_modules/
-/target/
-/src/main/web/.parcel-cache/
-/src/main/web/dist/
-/.idea/
+target/
+.parcel-cache/
+dist/
+.idea/
