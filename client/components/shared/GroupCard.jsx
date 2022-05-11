@@ -4,6 +4,7 @@ import Modal from './Modal';
 import GroupRequest from './GroupRequest';
 
 const GroupCard = (props) => {
+
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const { groupname, members } = props.group;
 
