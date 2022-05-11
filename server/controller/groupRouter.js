@@ -1,11 +1,19 @@
 import GroupService from "../service/groupService.js";
+import {SearchDTO} from "../dto/searchDTO.js";
+import express from "express";
 
+
+function sendError(res, e) {
+    res.status(e.status);
+    res.send({message: e.message});
+}
 
 export default class GroupRouter {
-    constructor(groupService = new GroupService(), router = new Express.Router()) {
+    constructor(groupService, router = new express.Router()) {
         this.service = groupService;
         this.router = router;
     }
+
     fetchRoutes() {
         const router = this.router;
         const service = this.service;
@@ -19,14 +27,31 @@ export default class GroupRouter {
             await fetchAllGroups(res, service);
         });
 
-        router.post("/", async(req,res) => {
+        router.post("/", async (req, res) => {
             const newGroup = {groupname: req.body.groupname, members: ["Only you"]}
-
             try {
                 res.json(await service.addGroup(newGroup));
             } catch (e) {
-                res.status(e.status);
-                res.send({message: e.message});
+                sendError(res, e);
+            }
+        });
+
+        router.patch("/", async (req, res) => {
+            const group = {groupname: req.body.groupname, members: ["Only you"]}
+            try {
+                res.json(await service.updateGroup(group));
+            } catch (e) {
+                sendError(res, e);
+            }
+        });
+
+        router.delete("/", async (req, res) => {
+            const group = {groupname: req.body.groupname, members: ["Only you"]}
+
+            try {
+                res.json(await service.deleteGroup(group));
+            } catch (e) {
+                sendError(res, e);
             }
         });
 
@@ -34,32 +59,41 @@ export default class GroupRouter {
         router.get("/member", async (req, res) => {
             const {group_id} = req?.query;
             try {
-                await service.getGroupMembers(group_id);
+                res.json(await service.getGroupMembers(group_id));
             } catch (e) {
-                res.status(e.status);
-                res.send({message: e.message});
+                sendError(res, e);
             }
         });
         router.delete("/member", async (req, res) => {
             const {group, user} = req?.body;
 
             try {
-                await service.deleteMember(group, user);
+                res.json(await service.deleteMember(group, user));
             } catch (e) {
-                res.status(e.status);
-                res.send({message: e.message});
+                sendError(res, e);
             }
         });
 
         router.post("/member", async (req, res) => {
             const {group, user} = req?.body;
+            console.log(req?.body);
             try {
-                await service.addMember(group, user);
+                res.json(await service.addMember(group, user));
             } catch (e) {
-                res.status(e.status);
-                res.send({message: e.message});
+                sendError(res, e);
             }
         });
+
+        router.get("/search", async (req, res) => {
+            const {language, school, place, workMethod, gradeGoal, frequency} = req?.body;
+            const searchDto = new SearchDTO(language, school, place, workMethod, gradeGoal, frequency);
+
+            try {
+                res.json(await service.searchGroup(searchDto));
+            } catch (e) {
+                sendError(res, e);
+            }
+        })
         return router;
     }
 }
@@ -69,9 +103,7 @@ async function fetchGroupById(service, group_id, res) {
     try {
         res.json(await service.fetchGroupById(group_id));
     } catch (e) {
-        console.error(e);
-        res.status(e.status);
-        res.send({message: e.message});
+        sendError(res, e);
     }
 }
 
@@ -79,9 +111,7 @@ async function fetchAllGroups(res, service) {
     try {
         res.json(await service.fetchAllGroups());
     } catch (e) {
-        console.error(e);
-        res.status(e.status);
-        res.send({message: e.message});
+        sendError(res, e);
     }
 }
 

@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  postgres-db:
+  atcampus-db:
     container_name: 'atcampus-db'
     image: postgres:alpine
     environment:
@@ -20,6 +20,6 @@ services:
       DB_PASSWORD: postgres
       DB_HOST: postgres
     depends_on:
-      - postgres
+      - atcampus-db
     ports:
       - '3000:3000'
