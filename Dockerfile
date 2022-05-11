@@ -4,13 +4,13 @@ FROM node:16
 WORKDIR /usr/src/app
 #kopiere package og package-lock til workdir
 ADD package*.json ./
-RUN npm install
+#RUN npm install
 
 # For prod.miljø
-# RUN npm ci --only=production
+RUN npm ci --only=production
 
 # Kopiere kildekoden
-ADD . .
+COPY . .
 
 # Intern port i containeren
 EXPOSE 3000

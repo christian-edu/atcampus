@@ -13,6 +13,7 @@ export default class GroupRouter {
         this.service = groupService;
         this.router = router;
     }
+
     fetchRoutes() {
         const router = this.router;
         const service = this.service;
@@ -26,7 +27,7 @@ export default class GroupRouter {
             await fetchAllGroups(res, service);
         });
 
-        router.post("/", async(req,res) => {
+        router.post("/", async (req, res) => {
             const newGroup = {groupname: req.body.groupname, members: ["Only you"]}
             try {
                 res.json(await service.addGroup(newGroup));
@@ -36,16 +37,16 @@ export default class GroupRouter {
         });
 
         router.patch("/", async (req, res) => {
-           const {group} = req?.body;
-           try {
-               res.json(await service.updateGroup(group));
-           } catch (e) {
-               sendError(res, e);
-           }
+            const group = {groupname: req.body.groupname, members: ["Only you"]}
+            try {
+                res.json(await service.updateGroup(group));
+            } catch (e) {
+                sendError(res, e);
+            }
         });
 
         router.delete("/", async (req, res) => {
-            const {group} = req?.body;
+            const group = {groupname: req.body.groupname, members: ["Only you"]}
 
             try {
                 res.json(await service.deleteGroup(group));

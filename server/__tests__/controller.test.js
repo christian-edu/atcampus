@@ -3,6 +3,7 @@ import GroupService from "../service/groupService.js";
 import supertest from "supertest";
 import express, {Router} from "express";
 import {groupNames} from "../mockData";
+
 jest.mock("../service/groupService.js");
 
 describe("Tests for all controllers", () => {
@@ -14,8 +15,8 @@ describe("Tests for all controllers", () => {
     beforeAll(() => {
         app = express();
         agent = supertest.agent(app);
-        app.use("/api/v1/groups", groupRouter.fetchRoutes());
         app.use(express.json());
+        app.use("/api/v1/groups", groupRouter.fetchRoutes());
     });
 
     beforeEach(() => {
@@ -45,5 +46,35 @@ describe("Tests for all controllers", () => {
         expect(mockGroupService.fetchGroupById).toHaveBeenCalledWith("1");
         expect(mockGroupService.fetchGroupById).toHaveBeenCalledTimes(1);
         expect(result.body.groupname).toContain("PRO201-G8");
+    });
+
+    it("Should add a new group", async() => {
+        jest.spyOn(GroupService.prototype, 'addGroup')
+            .mockImplementation(async () => groupNames[0]);
+
+        const result = await agent
+            .post("/api/v1/groups")
+            .send({groupname: "PRO201-G8", members: ["Lil J", "Per åge", "Bernt Kåre"]})
+            .set('content-type', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200);
+        expect(mockGroupService.addGroup).toHaveBeenCalledTimes(1);
+        expect(mockGroupService.addGroup).toHaveBeenCalledWith({"groupname": "PRO201-G8", "members": ["Only you"]});
+        expect(result.body.groupname).toEqual("PRO201-G8");
+    });
+
+    it("Should update a group", async () => {
+        jest.spyOn(GroupService.prototype, 'updateGroup')
+            .mockImplementation(async () => groupNames[0]);
+
+        const result = await agent
+            .patch("/api/v1/groups")
+            .send({groupname: "PRO201-G8", members: ["Lil J", "Per åge", "Bernt Kåre"]})
+            .set('content-type', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200);
+
+        expect(mockGroupService.updateGroup).toHaveBeenCalledTimes(1);
+        expect(mockGroupService.updateGroup).toHaveBeenCalledWith({"groupname": "PRO201-G8", "members": ["Only you"]});
     });
 })
