@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { fetchJSON } from '../fetchJSON';
 import { useLoader } from '../useLoader';
 import Loading from './shared/Loading';
+import GroupCard from './shared/GroupCard';
 
 const GroupLinks = () => {
   // Should get the data for the group names you are a part of
@@ -29,20 +30,14 @@ const GroupLinks = () => {
       <div>
         <Link to={'/searchGroup'}>Søk etter gruppe</Link>
       </div>
-      <div>
-        <h2>Mine grupper</h2>
+      <h2>Mine grupper</h2>
+      <div className='grid gap-4'>
         {data.map((group) => (
-          <div>
-            <div key={group.groupname}>
-              <button
-                onClick={() =>
-                  navigate('/group/specific', { state: { group } })
-                }
-              >
-                {group.groupname}
-              </button>
-            </div>
-          </div>
+          <GroupCard
+            group={group}
+            key={group.groupname}
+            onClick={() => navigate('/group/specific', { state: { group } })}
+          />
         ))}
       </div>
     </div>

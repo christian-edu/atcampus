@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
+import GroupCard from './shared/GroupCard';
 import GroupCriteria from './shared/GroupCriteria';
 
 const SearchGroup = () => {
   const [groups, setGroups] = useState([]);
   const [input, setInput] = useState('');
+
 
   const getGroups = useCallback(async () => {
     const res = await fetch('api/v1/groups');
@@ -38,11 +40,14 @@ const SearchGroup = () => {
             onChange={inputHandler}
           />
         </div>
-        <ul>
+        <ul className='grid gap-4'>
           {(!input || filteredGroups.length === 0) && 'Ingen grupper å vise'}
           {input &&
             filteredGroups.map((group) => (
-              <li key={group.groupname}>{group.groupname}</li>
+              <GroupCard
+                key={group.groupname}
+                group={group}
+              />
             ))}
         </ul>
       </div>
