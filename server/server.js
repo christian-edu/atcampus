@@ -21,11 +21,11 @@ app.get("/api/questions", (req, res) => {
     res.json(subjectQuestions)
 })
 
-app.use(express.static("../web/dist"))
+app.use(express.static("../client/dist"))
 
 app.use((req, res, next) => {
     if(req.method === "GET" && !req.path.startsWith("/api")){
-        res.sendFile(path.resolve("../web/dist/index.html"))
+        res.sendFile(path.resolve("../client/dist/index.html"))
     }else{
         next();
     }
