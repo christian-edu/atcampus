@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { fetchJSON } from '../fetchJSON';
 import { useLoader } from '../useLoader';
+import Loading from './shared/Loading';
 
 const GroupLinks = () => {
   // Should get the data for the group names you are a part of
@@ -9,9 +10,7 @@ const GroupLinks = () => {
 
   const { data, error, loading } = useLoader(() => fetchJSON('/api/v1/groups'));
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <Loading />;
 
   if (error) {
     return (

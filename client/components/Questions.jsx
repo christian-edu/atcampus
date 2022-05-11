@@ -2,6 +2,7 @@ import { useLoader } from '../useLoader';
 import QuestionCard from './QuestionCard';
 import { fetchJSON } from '../fetchJSON';
 import { useState } from 'react';
+import Loading from './shared/Loading';
 
 const Questions = () => {
   const { data, error, loading } = useLoader(() => fetchJSON('/api/questions'));
@@ -10,9 +11,7 @@ const Questions = () => {
 
   const subjects = [];
 
-  if (loading) {
-    return <h2>Loading questions..</h2>;
-  }
+  if (loading) return <Loading />;
 
   if (error) {
     return (
