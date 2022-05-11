@@ -6,16 +6,15 @@ export default class GroupService {
         this.repo = groupRepo;
     }
 
-    fetchAllGroups() {
+    async fetchAllGroups() {
         return groupNames;
     }
 
-    addGroup(group) {
+    async addGroup(group) {
         groupNames.push(group);
     }
 
-
-    fetchGroupById(groupId) {
+    async fetchGroupById(groupId) {
         throw new HttpException("Not implemented!", 500);
     }
 }

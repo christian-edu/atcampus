@@ -1,8 +1,8 @@
 import GroupService from "../service/groupService.js";
 
-function fetchGroupById(service, group_id, res) {
+async function fetchGroupById(service, group_id, res) {
     try {
-        service.fetchGroupById(group_id);
+        res.json(await service.fetchGroupById(group_id));
     } catch (e) {
         console.error(e);
         res.status(e.status);
@@ -10,9 +10,9 @@ function fetchGroupById(service, group_id, res) {
     }
 }
 
-function fetchAllGroups(res, service) {
+async function fetchAllGroups(res, service) {
     try {
-        res.json(service.fetchAllGroups());
+        res.json(await service.fetchAllGroups());
     } catch (e) {
         console.error(e);
         res.status(e.status);
@@ -33,7 +33,7 @@ export default class GroupRouter {
             const {group_id} = req?.params;
 
             if (group_id) {
-                fetchGroupById(service, group_id, res);
+                await fetchGroupById(service, group_id, res);
                 return;
             }
             fetchAllGroups(res, service);
@@ -43,13 +43,12 @@ export default class GroupRouter {
             const newGroup = {groupname: req.body.groupname, members: ["Only you"]}
 
             try {
-                res.json(service.addGroup(newGroup));
+                res.json(await service.addGroup(newGroup));
             } catch (e) {
                 res.status(e.status);
                 res.send(e.method);
             }
         });
-
 
         return router;
     }
