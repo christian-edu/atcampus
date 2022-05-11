@@ -1,4 +1,10 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+  MenuAlt1Icon,
+  UserGroupIcon,
+  ChatIcon,
+  CalendarIcon,
+} from '@heroicons/react/solid';
 
 const GroupPage = () => {
   const location = useLocation();
@@ -7,14 +13,51 @@ const GroupPage = () => {
   const group = location.state.group;
 
   return (
-    <div>
-      <h2>{group.groupname}</h2>
-      <h2>Chat</h2>
-      <h2>Møtekalender</h2>
-      <h2>Notater</h2>
-      <button onClick={() => navigate('/group/members', { state: { group } })}>
-        Medlemmer
-      </button>
+    <div className='bg-white p-6'>
+      <h2 className='text-xl font-bold mb-8'>{group.groupname}</h2>
+
+      <ul className='grid gap-8'>
+        <li className='border-b-2 border-purple-1'>
+          <Link
+            to='/'
+            className='flex gap-2 items-center text-lg pb-4 inline-block'
+          >
+            <ChatIcon className='h-6 text-purple-1' />
+            Chat
+          </Link>
+        </li>
+        <li className='border-b-2 border-purple-1'>
+          <Link
+            to='/'
+            className='flex gap-2 items-center text-lg pb-4 inline-block'
+          >
+            <CalendarIcon className='h-6 text-purple-1' />
+            Møtekalender
+          </Link>
+        </li>
+        <li className='border-b-2 border-purple-1'>
+          <Link
+            to='/'
+            className='flex gap-2 items-center text-lg pb-4 inline-block'
+          >
+            <MenuAlt1Icon className='h-6 text-purple-1' />
+            Notater
+          </Link>
+        </li>
+        <li className='border-b-2 border-purple-1'>
+          <button
+            onClick={() => navigate('/group/members', { state: { group } })}
+          >
+            <Link
+              to='/'
+              className='flex gap-2 items-center text-lg pb-4 inline-block'
+            >
+              <UserGroupIcon className='h-6 text-purple-1' />
+              Medlemmer
+            </Link>
+          </button>
+        </li>
+      </ul>
     </div>
   );
 };

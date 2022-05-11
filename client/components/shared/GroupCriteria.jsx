@@ -1,6 +1,10 @@
 const GroupCriteria = () => {
+  const submitHandler = (e) => {
+    e.preventDefault();
+  };
+
   return (
-    <form>
+    <form onSubmit={submitHandler}>
       <h2>Søk etter gruppekriterier</h2>
       <h4>Velg kriterier for søket</h4>
       <div>
