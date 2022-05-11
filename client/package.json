@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "concurrently npm:server:dev npm:client:dev",
-    "client:dev": "cd ../src/main/web && npm run dev",
-    "server:dev": "cd ../src/main/mockBackend && npm run dev"
+    "client:dev": "cd client && npm run dev",
+    "server:dev": "cd server && npm run dev"
   },
   "keywords": [],
   "author": "",
