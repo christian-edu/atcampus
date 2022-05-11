@@ -9,7 +9,7 @@ COPY . .
 
 WORKDIR /usr/src/app/client
 RUN npm install
-RUN npm build
+RUN npm run build
 
 WORKDIR /usr/src/app/server
 RUN npm install
