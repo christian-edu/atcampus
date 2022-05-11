@@ -1,18 +1,43 @@
 {
-  "name": "main",
+  "name": "mockbackend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently npm:server:dev npm:client:dev",
-    "client:dev": "cd client && npm run dev",
-    "server:dev": "cd server && npm run dev"
+    "dev": "nodemon server.js"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^7.1.0"
+    "@babel/preset-env": "^7.17.10",
+    "jest": "^28.1.0",
+    "nodemon": "^2.0.16",
+    "babel-jest": "^28.1.0",
+    "supertest": "^6.2.3"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "express": "^4.18.1"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "**/*.js",
+      "!dist/**",
+      "!coverage/**"
+    ]
   }
 }
