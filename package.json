@@ -11,6 +11,7 @@
     "client:dev": "cd client && npm run dev",
     "server:dev": "cd server && npm run dev"
   },
+  "postinstall": "cd server && npm install",
   "keywords": [],
   "author": "",
   "license": "ISC",
