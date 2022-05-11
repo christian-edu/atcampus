@@ -25,16 +25,16 @@ const SearchGroup = () => {
     <>
       <div className='grid grid-cols-1 gap-4 bg-white p-6 rounded-standard border border-purple-4 mb-6'>
         <div>
-          <h2>Søk etter gruppenavn</h2>
+          <h2 className='text-xl font-bold'>Søk etter gruppenavn</h2>
           <h4>Trykk på en gruppe for å sende forespørsel</h4>
         </div>
         <div>
-          <label htmlFor='groupName mb-20'>Gruppenavn</label>
+          <label htmlFor='groupName'>Gruppenavn</label>
           <input
             type='text'
             id='groupName'
-            placeholder='Gruppenavn'
-            className='w-full p-2 border border-purple-3 rounded-standard'
+            placeholder='Smidig Prosjekt'
+            className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'
             onChange={inputHandler}
           />
         </div>
@@ -49,7 +49,7 @@ const SearchGroup = () => {
 
       <div className='bg-white p-6 rounded-standard border border-purple-4'>
         <div>
-          <h2>Søk etter gruppekriterier</h2>
+          <h2 className='text-xl font-bold'>Søk etter gruppekriterier</h2>
           <h4>Trykk på en gruppe for å sende forespørsel</h4>
         </div>
         <GroupCriteria />
