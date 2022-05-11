@@ -1,8 +1,15 @@
 import GroupService from "../service/groupService.js";
+import {SearchDTO} from "../dto/searchDTO.js";
+import express from "express";
 
+
+function sendError(res, e) {
+    res.status(e.status);
+    res.send({message: e.message});
+}
 
 export default class GroupRouter {
-    constructor(groupService = new GroupService(), router = new Express.Router()) {
+    constructor(groupService, router = new express.Router()) {
         this.service = groupService;
         this.router = router;
     }
@@ -21,23 +28,38 @@ export default class GroupRouter {
 
         router.post("/", async(req,res) => {
             const newGroup = {groupname: req.body.groupname, members: ["Only you"]}
-
             try {
                 res.json(await service.addGroup(newGroup));
             } catch (e) {
-                res.status(e.status);
-                res.send({message: e.message});
+                sendError(res, e);
             }
         });
 
+        router.patch("/", async (req, res) => {
+           const {group} = req?.body;
+           try {
+               res.json(await service.updateGroup(group));
+           } catch (e) {
+               sendError(res, e);
+           }
+        });
+
+        router.delete("/", async (req, res) => {
+            const {group} = req?.body;
+
+            try {
+                res.json(await service.deleteGroup(group));
+            } catch (e) {
+                sendError(res, e);
+            }
+        });
         // Member paths
         router.get("/member", async (req, res) => {
             const {group_id} = req?.query;
             try {
                 await service.getGroupMembers(group_id);
             } catch (e) {
-                res.status(e.status);
-                res.send({message: e.message});
+                sendError(res, e);
             }
         });
         router.delete("/member", async (req, res) => {
@@ -46,8 +68,7 @@ export default class GroupRouter {
             try {
                 await service.deleteMember(group, user);
             } catch (e) {
-                res.status(e.status);
-                res.send({message: e.message});
+                sendError(res, e);
             }
         });
 
@@ -56,10 +77,20 @@ export default class GroupRouter {
             try {
                 await service.addMember(group, user);
             } catch (e) {
-                res.status(e.status);
-                res.send({message: e.message});
+                sendError(res, e);
             }
         });
+
+        router.get("/search", async (req, res) => {
+            const {language, school, place, workMethod, gradeGoal, frequency} = req?.body;
+            const searchDto = new SearchDTO(language, school, place, workMethod, gradeGoal, frequency);
+
+            try {
+                await service.searchGroup(searchDto)
+            } catch (e) {
+                sendError(res, e);
+            }
+        })
         return router;
     }
 }
@@ -70,8 +101,7 @@ async function fetchGroupById(service, group_id, res) {
         res.json(await service.fetchGroupById(group_id));
     } catch (e) {
         console.error(e);
-        res.status(e.status);
-        res.send({message: e.message});
+        sendError(res, e);
     }
 }
 
@@ -80,8 +110,7 @@ async function fetchAllGroups(res, service) {
         res.json(await service.fetchAllGroups());
     } catch (e) {
         console.error(e);
-        res.status(e.status);
-        res.send({message: e.message});
+        sendError(res, e);
     }
 }
 
