@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 
-const ShowMyGroup = () => {
+const GroupPage = () => {
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -19,4 +19,4 @@ const ShowMyGroup = () => {
   );
 };
 
-export default ShowMyGroup;
+export default GroupPage;
