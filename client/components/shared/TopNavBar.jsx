@@ -14,13 +14,13 @@ const TopNavBar = () => {
     navigate(-1);
   };
 
-  const showNavBarHandler = () => setShowNavBar((state) => !state);
+  const toggleNavBarHandler = () => setShowNavBar((state) => !state);
 
   return (
 
     <>
 
-    {showNavBar ? <Modal onClick={showNavBarHandler}> <TopNavBarMenu/> </Modal> : <h2></h2>}
+    {showNavBar ? <Modal onClick={toggleNavBarHandler}> <TopNavBarMenu onClick={toggleNavBarHandler}/> </Modal> : <h2></h2>}
 
     <div className='flex flex-row py-4 px-4 bg-purple-5 items-center justify-between'>
         
@@ -29,7 +29,7 @@ const TopNavBar = () => {
 
         </button>
 
-        <button onClick={showNavBarHandler} className="flex flex-col items-center">
+        <button onClick={toggleNavBarHandler} className="flex flex-col items-center">
           <MenuIcon className="h-7 w-7 text-purple-1"/>
           Menu
         </button>
