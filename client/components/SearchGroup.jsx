@@ -47,6 +47,7 @@ const SearchGroup = () => {
               <GroupCard
                 key={group.groupname}
                 group={group}
+                add={true}
               />
             ))}
         </ul>

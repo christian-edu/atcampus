@@ -1,3 +1,5 @@
+import { PlusIcon } from '@heroicons/react/solid';
+
 const GroupCard = (props) => {
   const { groupname, members } = props.group;
 
@@ -10,6 +12,7 @@ const GroupCard = (props) => {
         <h2 className='font-bold'>{groupname}</h2>
         <p>Medlemmer: {members.length}</p>
       </div>
+      {props.add && <PlusIcon className='h-6 text-purple-1 ml-auto' />}
     </div>
   );
 };

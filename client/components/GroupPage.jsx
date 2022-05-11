@@ -18,28 +18,19 @@ const GroupPage = () => {
 
       <ul className='grid gap-8'>
         <li className='border-b-2 border-purple-1'>
-          <Link
-            to='/'
-            className='flex gap-2 items-center text-lg pb-4 inline-block'
-          >
+          <Link to='/' className='flex gap-2 items-center text-lg pb-4'>
             <ChatIcon className='h-6 text-purple-1' />
             Chat
           </Link>
         </li>
         <li className='border-b-2 border-purple-1'>
-          <Link
-            to='/'
-            className='flex gap-2 items-center text-lg pb-4 inline-block'
-          >
+          <Link to='/' className='flex gap-2 items-center text-lg pb-4'>
             <CalendarIcon className='h-6 text-purple-1' />
             Møtekalender
           </Link>
         </li>
         <li className='border-b-2 border-purple-1'>
-          <Link
-            to='/'
-            className='flex gap-2 items-center text-lg pb-4 inline-block'
-          >
+          <Link to='/' className='flex gap-2 items-center text-lg pb-4'>
             <MenuAlt1Icon className='h-6 text-purple-1' />
             Notater
           </Link>
@@ -48,10 +39,7 @@ const GroupPage = () => {
           <button
             onClick={() => navigate('/group/members', { state: { group } })}
           >
-            <Link
-              to='/'
-              className='flex gap-2 items-center text-lg pb-4 inline-block'
-            >
+            <Link to='/' className='flex gap-2 items-center text-lg pb-4'>
               <UserGroupIcon className='h-6 text-purple-1' />
               Medlemmer
             </Link>
