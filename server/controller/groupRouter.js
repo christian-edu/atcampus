@@ -75,8 +75,9 @@ export default class GroupRouter {
 
         router.post("/member", async (req, res) => {
             const {group, user} = req?.body;
+            console.log(req?.body);
             try {
-                await service.addMember(group, user);
+                res.json(await service.addMember(group, user));
             } catch (e) {
                 sendError(res, e);
             }
