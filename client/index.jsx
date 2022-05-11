@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import {BrowserRouter, Link, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import {useLoader} from "./useLoader.jsx";
 import {fetchJSON} from "./fetchJSON.jsx";
+import {data} from "autoprefixer";
 
 
 function GroupLinks() {
@@ -67,6 +68,35 @@ function Footer(){
 
 function SearchGroup() {
 
+
+    // Send a request to the backend to search for the required group with the criterias
+
+    const [language, setLanguage] = useState()
+    const [subject, setSubject] = useState();
+    const [size, setSize] = useState();
+    const [gradeGoal, setGradeGoal] = useState();
+    const [frequency, setFrequency] = useState();
+    const [workMethod, setWorkMethod] = useState();
+
+
+
+
+
+    async function searchForGroup(){
+        const data = await fetch('/api/v1/groups/search?' + new URLSearchParams({subject, size, gradeGoal, frequency, workMethod, language}));
+
+        const yes = await data.json()
+        console.log(yes)
+        // This is where to start
+
+    }
+
+
+
+
+
+
+
     return <div>
         <TopNavBar/>
         <h2>Søk etter gruppenavn</h2>
@@ -76,14 +106,20 @@ function SearchGroup() {
         <h4>Velg kriterier for søket</h4>
             <div>
                 <div>
-                    <select name="emne">
+                    <select name="språk" onChange={(e) => setLanguage(e.target.value)}>
+                        <option value="Norsk">Norsk</option>
+                        <option value="Engelsk">Engelsk</option>
+                    </select>
+                </div>
+                <div>
+                    <select name="emne" onChange={(e) => setSubject(e.target.value)}>
                         <option value="Programmering">Programmering</option>
                         <option value="Frontend">Frontend</option>
                         <option value="InteraktivtDesign">InteraktivtDesign</option>
                     </select>
                 </div>
                 <div>
-                    <select name="størrelse">
+                    <select name="størrelse" onChange={(e) => setSize(e.target.value)}>
                         <option value="liten">Liten (1-4stk)</option>
                         <option value="Medium">Liten (5-7stk)</option>
                         <option value="Stor">Stor (8+)</option>
@@ -91,7 +127,7 @@ function SearchGroup() {
                 </div>
             </div>
             <div>
-                <select name="karaktermål">
+                <select name="karaktermål" onChange={(e) => setGradeGoal(e.target.value)}>
                     <option value="A">A</option>
                     <option value="B">B</option>
                     <option value="C">C</option>
@@ -101,21 +137,20 @@ function SearchGroup() {
                 </select>
             </div>
             <div>
-                <select name="arbeidsfrekvens">
+                <select name="arbeidsfrekvens" onChange={(e) => setFrequency(e.target.value)}>
                     <option value="Månedlig">Månedlig</option>
                     <option value="Ukentlig">Ukentlig</option>
                 </select>
             </div>
             <div>
-                <input type="radio" name={"metode"} id={"fysisk"}/>
+                <input type="radio" name={"metode"} id={"fysisk"} value={"fysisk"} onChange={(e) => setWorkMethod(e.target.value)}/>
                 <label htmlFor="fysisk">Fysisk</label>
-                <input type="radio" name={"metode"} id={"digitalt"}/>
+                <input type="radio" name={"metode"} id={"digitalt"} value={"digitalt"} onChange={(e) => setWorkMethod(e.target.value)}/>
                 <label htmlFor="digitalt">Digitalt</label>
-                <input type="radio" name={"metode"} id={"begge"}/>
+                <input type="radio" name={"metode"} id={"begge"} value={"begge"} onChange={(e) => setWorkMethod(e.target.value)}/>
                 <label htmlFor="begge">Begge</label>
             </div>
-            <button>Vis resultater</button>
-
+            <button onClick={searchForGroup}>Vis resultater</button>
         </div>
         <Footer/>
         <BottomNavBar/>
