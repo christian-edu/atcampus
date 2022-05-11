@@ -5,12 +5,14 @@ WORKDIR /usr/src/app
 #kopiere package og package-lock til workdir
 ADD package*.json ./
 RUN npm install
+COPY . .
 
-# For prod.miljø
-# RUN npm ci --only=production
+WORKDIR /usr/src/app/client
+RUN npm install
+RUN npm run build
 
-# Kopiere kildekoden
-ADD . .
+WORKDIR /usr/src/app/server
+RUN npm install
 
 # Intern port i containeren
 EXPOSE 3000
