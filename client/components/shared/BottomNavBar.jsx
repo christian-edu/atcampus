@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import ProfileMenu from './ProfileMenu';
 import {UserGroupIcon} from '@heroicons/react/solid'
 import {UserIcon} from '@heroicons/react/solid'
-import {DocumentTextIcon} from '@heroicons/react/solid'
+import {QuestionMarkCircleIcon} from '@heroicons/react/solid'
 import {CalendarIcon} from '@heroicons/react/solid'
 
 const BottomNavBar = () => {
@@ -25,7 +25,7 @@ const BottomNavBar = () => {
         <div className='flex justify-between px-6 pt-4 pb-6 sm:justify-center sm:gap-20 fixed inset-x-0 bottom-0 bg-purple-5 outline outline-1 outline-dark-5 text-sm font-semibold text-dark-1 lg:hidden'>
           <div>
             <Link to={'/questions'} className="flex flex-col items-center">
-              <DocumentTextIcon className="h-6 w-6 text-purple-1"/>
+              <QuestionMarkCircleIcon className="h-6 w-6 text-purple-1"/>
               <h4>Spørsmål</h4>
             </Link>
           </div>
