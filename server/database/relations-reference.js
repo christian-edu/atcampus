@@ -43,6 +43,7 @@ const groupToCriteria = groupModel.hasOne(
         }
     }
 )
+
 const criteriaToGroup = criteriaModel.belongsTo(groupModel)
 
 

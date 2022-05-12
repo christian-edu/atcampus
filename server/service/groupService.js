@@ -1,39 +1,9 @@
 import HttpException from "../httpException.js";
-import {groupNames} from "../mockData.js";
-import {createGroupModel} from "../database/models/groupModel";
-import {createUserModel} from "../database/models/userModel";
-import {createGroupMemberModel} from "../database/models/relationModels/groupMemberModel";
-import {createGroupRequestModel} from "../database/models/relationModels/groupRequestModel";
-import {createCriteriaModel} from "../database/models/criteriaModel";
-import {createSchoolModel} from "../database/models/schoolModel";
-import {createSubjectModel} from "../database/models/subjectModel";
+import {groupNames, groups} from "../mockData.js";
 
 export default class GroupService {
-    // For at relasjonene skal fungere, må jeg ha med ALT her
-    // Oh lord, give me strength
-    constructor(sequelize) {
-
-        this.groupModel = createGroupModel(sequelize);
-
-        this.criteriaModel = createCriteriaModel(sequelize);
-        this.userModel = createUserModel(sequelize);
-        this.schoolModel = createSchoolModel(sequelize);
-        this.subjectModel = createSubjectModel(sequelize)
-
-        this.groupMembersModel = createGroupMemberModel(sequelize);
-        this.groupRequestModel = createGroupRequestModel(sequelize);
-
-        this.schoolToUser = this.schoolModel.hasMany(
-            // Options kan ligge i enten hasOne() eller belongsTo()
-            // FK havner uansett i schoolModel i dette tilfellet
-            this.userModel,
-            {
-                foreignKey: {
-                    name: "uuid"
-                }
-            }
-        )
-        this.userToSchool = this.userModel.belongsTo(this.schoolModel)
+    constructor(groupRepo) {
+        this.repo = groupRepo;
     }
 
     async fetchAllGroups() {
@@ -56,7 +26,7 @@ export default class GroupService {
         throw new HttpException("Not implemented", 500);
     }
 
-    async getGroupMembers(groupId) {
+    async fetchGroupMembers(groupId) {
         if (!groupId) throw new HttpException("group_id request parameter must be specified",400);
         throw new HttpException("Not implemented", 500);
     }
@@ -73,6 +43,26 @@ export default class GroupService {
 
     async searchGroup(searchDto) {
         if (!searchDto) throw new HttpException("No searchDto provided",400);
-        throw new HttpException("Not implemented", 500);
+
+        const results = {};
+
+        for (const group of groups) {
+            let score = 0;
+            if (group.subject.toLowerCase() !== searchDto.toLowerCase()) continue;
+            if (group.gradeGoal.toLowerCase() === searchDto.gradeGoal.toLowerCase()) score++;
+            if (group.size == searchDto.size) score++;
+            if (group.place.toLowerCase() === searchDto.place.toLowerCase()) score++;
+            if (group.frequency.toLowerCase() === searchDto.frequency.toLowerCase()) score++;
+            if (group.language.toLowerCase() === searchDto.language.toLowerCase()) score++;
+            if (group.school.toLowerCase() === searchDto.school.toLowerCase()) score++;
+            if (group.workMethod.toLowerCase() === searchDto.workMethod.toLowerCase()) score++;
+            results[group.id] = {
+                group,
+                score
+            }
+        }
+
+        return results;
     }
+
 }

@@ -9,7 +9,7 @@ function sendError(res, e) {
 }
 
 export default class GroupRouter {
-    constructor(groupService, router = new express.Router()) {
+    constructor(groupService = new GroupService(), router = new express.Router()) {
         this.service = groupService;
         this.router = router;
     }
@@ -59,7 +59,7 @@ export default class GroupRouter {
         router.get("/member", async (req, res) => {
             const {group_id} = req?.query;
             try {
-                res.json(await service.getGroupMembers(group_id));
+                res.json(await service.fetchGroupMembers(group_id));
             } catch (e) {
                 sendError(res, e);
             }
@@ -68,7 +68,8 @@ export default class GroupRouter {
             const {group, user} = req?.body;
 
             try {
-                res.json(await service.deleteMember(group, user));
+                const result = await service.deleteMember(group, user)
+                if (result) res.sendStatus(200);
             } catch (e) {
                 sendError(res, e);
             }
@@ -85,8 +86,11 @@ export default class GroupRouter {
         });
 
         router.get("/search", async (req, res) => {
-            const {language, school, place, workMethod, gradeGoal, frequency} = req?.body;
-            const searchDto = new SearchDTO(language, school, place, workMethod, gradeGoal, frequency);
+
+
+            const {language, workMethod, gradeGoal, frequency, size, subject, place, school} = req.query;
+
+            const searchDto = new SearchDTO(language,workMethod,gradeGoal,frequency, size, subject,place, school);
 
             try {
                 res.json(await service.searchGroup(searchDto));
