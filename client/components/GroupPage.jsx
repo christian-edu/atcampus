@@ -1,10 +1,15 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Modal from './shared/Modal';
+import GroupSettings from './shared/GroupSettings';
+import { useState } from 'react';
 import {
   MenuAlt1Icon,
   UserGroupIcon,
   ChatIcon,
   CalendarIcon,
+  CogIcon
 } from '@heroicons/react/solid';
+import ProfileMenu from './shared/ProfileMenu';
 
 const GroupPage = () => {
   const location = useLocation();
@@ -12,9 +17,24 @@ const GroupPage = () => {
   const navigate = useNavigate();
   const group = location.state.group;
 
+  const [showSettings, setShowSettings] = useState(false);
+
+  const toggleSettings = () => setShowSettings((showSettings) => !showSettings);
+
   return (
     <div className='bg-white p-6'>
-      <h2 className='text-dark-1 text-xl font-bold mb-8 '>{group.groupname}</h2>
+      
+      <div className='flex flex-row justify-between'>
+        <h2 className='text-dark-1 text-xl font-bold mb-8'>{group.groupname}</h2>
+        {showSettings && (
+          <Modal onClick={toggleSettings}>
+            <GroupSettings/>
+          </Modal>
+        )}
+        <CogIcon onClick={toggleSettings} className='text-dark-1 h-6 w-6'/>
+
+      </div>
+      
 
       <ul className='grid gap-8'>
         <li className='border-b-2 border-purple-1'>

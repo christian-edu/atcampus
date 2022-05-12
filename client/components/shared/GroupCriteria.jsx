@@ -69,7 +69,6 @@ const SearchGroup = () => {
                 <input type="radio" name={"metode"} id={"begge"} value={"begge"} onChange={(e) => setWorkMethod(e.target.value)}/>
                 <label htmlFor="begge">Begge</label>
             </div>
-            <button onClick={searchForGroup}>Vis resultater</button>
         </div>
     </div>;
 }

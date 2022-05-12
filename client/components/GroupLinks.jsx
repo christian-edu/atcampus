@@ -3,6 +3,7 @@ import { fetchJSON } from '../fetchJSON';
 import { useLoader } from '../useLoader';
 import Loading from './shared/Loading';
 import GroupCard from './shared/GroupCard';
+import Button from './shared/Button';
 
 const GroupLinks = () => {
   // Should get the data for the group names you are a part of
@@ -24,13 +25,12 @@ const GroupLinks = () => {
 
   return (
     <div>
-      <div>
-        <Link to={'/createGroup'}>Opprett gruppe</Link>
+      <div className='flex flex-row justify-between'>
+          <Button to="/createGroup">Opprett gruppe</Button>
+          <Button to="/searchGroup">Søk etter gruppe</Button>
       </div>
-      <div>
-        <Link to={'/searchGroup'}>Søk etter gruppe</Link>
-      </div>
-      <h2 className='text-dark-1 font-bold text-xl'>Mine grupper</h2>
+
+      <h2 className='text-dark-1 text-xl font-bold mb-4 mt-6'>Mine grupper</h2>
       <div className='grid gap-4'>
         {data.map((group) => (
           <GroupCard
