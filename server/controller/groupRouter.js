@@ -1,6 +1,7 @@
 import GroupService from "../service/groupService.js";
 import {SearchDTO} from "../dto/searchDTO.js";
 import express from "express";
+import {groupSearchResults} from "../mockData.js";
 
 
 function sendError(res, e) {
@@ -92,9 +93,12 @@ export default class GroupRouter {
 
             const searchDto = new SearchDTO(language,workMethod,gradeGoal,frequency, size, subject,place, school);
 
+
+            console.log("OK DUDE " + subject)
             try {
                 /*res.json(await service.searchGroup(searchDto));*/
-                res.json([{group: "group 1"}, {group: "group 2"}, {group: "group 3"}, {group: "group 4"}, {group: "group 5"}, {group: "group 6"}])
+                // Dummy data response
+                res.json(groupSearchResults)
 
             } catch (e) {
                 sendError(res, e);

@@ -15,8 +15,14 @@ export function GroupCriteria() {
     const [school, setSchool] = useState("velg");
     const [error, setError] = useState();
     const [groupResult, setGroupResult] = useState();
+    const [subjectFieldsCounter, setSubjectFieldsCounter] = useState([])
 
     const navigate = useNavigate();
+
+    function addSubjectField(){
+        setSubjectFieldsCounter(oldArray => [...oldArray, "counter"])
+
+    }
 
 
     useEffect(() => {
@@ -55,18 +61,20 @@ export function GroupCriteria() {
                     <input type="text" placeholder={"Eks. 'Høyskolen Kristiania'"} onChange={(e) => setSchool(e.target.value)}/>
                 </div>
                 <div>
+                    <h4>Emne:</h4>
+                    <input type="text" placeholder={"Eks. 'Avansert Java'"} onChange={(e) => setSubject(e.target.value)}/>
+                    <div><button onClick={addSubjectField}>+</button></div>
+                    {subjectFieldsCounter.map((field) => (
+                        <h2>
+                            <input type="text" placeholder={"Eks. 'Avansert Java'"} onChange={(e) => setSubject(e.target.value)}/>
+                        </h2>
+                    ))}
+                </div>
+                <div>
                     <select defaultValue={"velg"} name="språk" onChange={(e) => setLanguage(e.target.value)}>
                         <option value="velg" disabled>språk</option>
                         <option value="Norsk">Norsk</option>
                         <option value="Engelsk">Engelsk</option>
-                    </select>
-                </div>
-                <div>
-                    <select defaultValue={"velg"} name="emne" onChange={(e) => setSubject(e.target.value)}>
-                        <option value="velg" disabled>emne</option>
-                        <option value="Programmering">Programmering</option>
-                        <option value="Frontend">Frontend</option>
-                        <option value="InteraktivtDesign">InteraktivtDesign</option>
                     </select>
                 </div>
                 <div>

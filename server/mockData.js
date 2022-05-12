@@ -62,3 +62,5 @@ export const subjectQuestions = [
         }]
     }
 ]
+
+   export const groupSearchResults =  [{groupname: "group match 1", members: ["Per åge", "Ole kristiansen"]}, {groupname: "group match 2",  members: ["Svein", "Per persen", "Ole paus"]}, {groupname: "matching group 3", members: ["Per åge"]}, {groupname: "matching group 4",  members: ["Pål Pålsen", "Ole kristiansen"]}, {groupname: "group 5",  members: ["Per åge", "Ole kristiansen"]}, {groupname: "group 6",  members: ["Per åge", "Ole kristiansen"]}]

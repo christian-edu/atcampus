@@ -14,6 +14,7 @@ const GroupCard = (props) => {
   // Mottar en gruppe som props // <GroupCard group={group} />
   const { groupname, members } = props.group;
 
+
   // Toggle modal vinduer
   const clickHandler = () => {
     if (props.onClick) return props.onClick();
