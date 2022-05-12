@@ -7,7 +7,6 @@ const GroupMembers = () => {
 
   const group = location.state.group;
 
-  console.log(group);
 
   return (
     <div className='bg-white p-6 rounded border border-purple-4'>

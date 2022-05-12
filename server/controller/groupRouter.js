@@ -93,7 +93,9 @@ export default class GroupRouter {
             const searchDto = new SearchDTO(language,workMethod,gradeGoal,frequency, size, subject,place, school);
 
             try {
-                res.json(await service.searchGroup(searchDto));
+                /*res.json(await service.searchGroup(searchDto));*/
+                res.json([{group: "group 1"}, {group: "group 2"}, {group: "group 3"}, {group: "group 4"}, {group: "group 5"}, {group: "group 6"}])
+
             } catch (e) {
                 sendError(res, e);
             }

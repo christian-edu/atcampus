@@ -1,44 +1,77 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
+import Button from "./Button";
+import {useNavigate} from "react-router-dom";
 
-const SearchGroup = () => {
+export function GroupCriteria() {
     // Send a request to the backend to search for the required group with the criterias
 
-    const [language, setLanguage] = useState()
-    const [subject, setSubject] = useState();
-    const [size, setSize] = useState();
-    const [gradeGoal, setGradeGoal] = useState();
-    const [frequency, setFrequency] = useState();
-    const [workMethod, setWorkMethod] = useState();
+    const [language, setLanguage] = useState("velg")
+    const [subject, setSubject] = useState("velg");
+    const [size, setSize] = useState("velg");
+    const [gradeGoal, setGradeGoal] = useState("velg");
+    const [frequency, setFrequency] = useState("velg");
+    const [workMethod, setWorkMethod] = useState("velg");
+    const [place, setPlace] = useState("velg");
+    const [school, setSchool] = useState("velg");
+    const [error, setError] = useState();
+    const [groupResult, setGroupResult] = useState();
+
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+
+        if(groupResult !== undefined){
+            navigate("/searchGroup/searchGroupResults", { state: { groupResult} })
+        }
+
+    }, [groupResult])
+
 
     async function searchForGroup(){
-        const data = await fetch('/api/v1/groups/search?' + new URLSearchParams({subject, size, gradeGoal, frequency, workMethod, language}));
 
-        const yes = await data.json()
-        console.log(yes)
-        // This is where to start
+        if(language === "velg" || subject === "velg" || size === "velg" || gradeGoal === "velg" || frequency === "velg" || workMethod === "velg" || place === "velg" || school === "velg" ){
+            setError("Fyll inn alle feltene")
+        }else {
 
+            const res = await fetch('/api/v1/groups/search?' + new URLSearchParams({subject, size, gradeGoal, frequency, workMethod, language, place, school}));
+
+           setGroupResult( await res.json())
+
+        }
     }
 
     return <div>
-        <input type="text"/>
-        <div><h2>Søk etter gruppekriterier</h2>
+        <div>
+            <h2 className='text-xl font-bold'>Søk etter gruppekriterier</h2>
         <h4>Velg kriterier for søket</h4>
             <div>
                 <div>
-                    <select name="språk" onChange={(e) => setLanguage(e.target.value)}>
+                    <h4>Sted:</h4>
+                    <input type="text" placeholder={"Eks. 'Oslo'"} onChange={(e) => setPlace(e.target.value)}/>
+                </div>
+                <div>
+                    <h4>Skole:</h4>
+                    <input type="text" placeholder={"Eks. 'Høyskolen Kristiania'"} onChange={(e) => setSchool(e.target.value)}/>
+                </div>
+                <div>
+                    <select defaultValue={"velg"} name="språk" onChange={(e) => setLanguage(e.target.value)}>
+                        <option value="velg" disabled>språk</option>
                         <option value="Norsk">Norsk</option>
                         <option value="Engelsk">Engelsk</option>
                     </select>
                 </div>
                 <div>
-                    <select name="emne" onChange={(e) => setSubject(e.target.value)}>
+                    <select defaultValue={"velg"} name="emne" onChange={(e) => setSubject(e.target.value)}>
+                        <option value="velg" disabled>emne</option>
                         <option value="Programmering">Programmering</option>
                         <option value="Frontend">Frontend</option>
                         <option value="InteraktivtDesign">InteraktivtDesign</option>
                     </select>
                 </div>
                 <div>
-                    <select name="størrelse" onChange={(e) => setSize(e.target.value)}>
+                    <select defaultValue={"velg"} name="størrelse" onChange={(e) => setSize(e.target.value)}>
+                        <option value="velg" disabled>gruppestørrelse</option>
                         <option value="liten">Liten (1-4stk)</option>
                         <option value="Medium">Liten (5-7stk)</option>
                         <option value="Stor">Stor (8+)</option>
@@ -46,7 +79,9 @@ const SearchGroup = () => {
                 </div>
             </div>
             <div>
-                <select name="karaktermål" onChange={(e) => setGradeGoal(e.target.value)}>
+
+                <select defaultValue={"velg"} name="karaktermål" onChange={(e) => setGradeGoal(e.target.value)}>
+                    <option value="velg" disabled>karaktermål</option>
                     <option value="A">A</option>
                     <option value="B">B</option>
                     <option value="C">C</option>
@@ -56,7 +91,8 @@ const SearchGroup = () => {
                 </select>
             </div>
             <div>
-                <select name="arbeidsfrekvens" onChange={(e) => setFrequency(e.target.value)}>
+                <select defaultValue={"velg"} name="arbeidsfrekvens" onChange={(e) => setFrequency(e.target.value)}>
+                    <option value="velg" disabled>arbeidsfrekvens</option>
                     <option value="Månedlig">Månedlig</option>
                     <option value="Ukentlig">Ukentlig</option>
                 </select>
@@ -68,9 +104,14 @@ const SearchGroup = () => {
                 <label htmlFor="digitalt">Digitalt</label>
                 <input type="radio" name={"metode"} id={"begge"} value={"begge"} onChange={(e) => setWorkMethod(e.target.value)}/>
                 <label htmlFor="begge">Begge</label>
+                <div >
+                    {/*Button css needs styling fix*/}
+                    <button onClick={searchForGroup}>Søk etter kriterier</button>
+                </div>
             </div>
         </div>
+        {error ? <h2>{error}</h2>: <></>}
+
     </div>;
 }
 
-export default SearchGroup;

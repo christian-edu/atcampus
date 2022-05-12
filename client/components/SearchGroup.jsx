@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import GroupCard from './shared/GroupCard';
-import GroupCriteria from './shared/GroupCriteria';
-import Button from './shared/Button';
+import {GroupCriteria} from "./shared/GroupCriteria";
+
+
 
 const SearchGroup = () => {
+
   const [groups, setGroups] = useState([]);
   const [input, setInput] = useState('');
 
@@ -55,13 +57,8 @@ const SearchGroup = () => {
       </div>
 
       <div className='bg-white p-6 rounded-standard border border-purple-4'>
-        <div>
-          <h2 className='text-xl font-bold'>Søk etter gruppekriterier</h2>
-          <h4>Trykk på en gruppe for å sende forespørsel</h4>
-        </div>
         <div className='flex flex-col gap-8'>
           <GroupCriteria />
-          <Button to="/searchGroup/searchGroupResults">Søk etter kriterier</Button>
         </div>
       </div>
     </>
