@@ -68,7 +68,8 @@ export default class GroupRouter {
             const {group, user} = req?.body;
 
             try {
-                res.json(await service.deleteMember(group, user));
+                const result = await service.deleteMember(group, user)
+                if (result) res.sendStatus(200);
             } catch (e) {
                 sendError(res, e);
             }
@@ -85,7 +86,7 @@ export default class GroupRouter {
         });
 
         router.get("/search", async (req, res) => {
-            const {language, school, place, workMethod, gradeGoal, frequency} = req?.body;
+            const {language, school, place, workMethod, gradeGoal, frequency} = req?.query;
             const searchDto = new SearchDTO(language, school, place, workMethod, gradeGoal, frequency);
 
             try {
