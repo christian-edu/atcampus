@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import GroupCard from './shared/GroupCard';
 import GroupCriteria from './shared/GroupCriteria';
+import Button from './shared/Button';
 
 const SearchGroup = () => {
   const [groups, setGroups] = useState([]);
@@ -47,7 +48,7 @@ const SearchGroup = () => {
               <GroupCard
                 key={group.groupname}
                 group={group}
-                match={true}
+                search={true}
               />
             ))}
         </ul>
@@ -59,6 +60,7 @@ const SearchGroup = () => {
           <h4>Trykk på en gruppe for å sende forespørsel</h4>
         </div>
         <GroupCriteria />
+        <Button to="/searchGroup/searchGroupResults">Søk etter kriterier</Button>
       </div>
     </>
   );

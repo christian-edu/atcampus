@@ -11,6 +11,7 @@ import TopNavBar from './components/shared/TopNavBar';
 import BottomNavBar from './components/shared/BottomNavBar';
 import GroupPage from './components/GroupPage';
 import SearchUser from "./components/SearchUser"
+import SearchGroupResults from './components/SearchGroupResults';
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
             <Routes>
               <Route path={'/'} element={<GroupLinks />} />
               <Route path={'/searchGroup'} element={<SearchGroup />} />
+              <Route path={'/searchGroup/searchGroupResults'} element={<SearchGroupResults />} />
               <Route path={'/createGroup'} element={<CreateGroup />} />
               <Route path={'/group/specific'} element={<GroupPage />} />
               <Route path={'/group/members'} element={<GroupMembers />} />
