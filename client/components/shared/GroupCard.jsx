@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Modal from './Modal';
 import SearchRequest from './SearchRequest';
 import MatchRequest from "./MatchRequest";
+import { UserGroupIcon } from '@heroicons/react/solid';
 
 const GroupCard = (props) => {
 
@@ -23,8 +24,12 @@ const GroupCard = (props) => {
         onClick={clickHandler}
       >
         <div>
-          <h2 className='font-bold'>{groupname}</h2>
-          <p>Medlemmer: {members.length}</p>
+          <h3 className='text-dark-1 text-lg font-bold'>{groupname}</h3>
+          <div className='flex flex-row items-center text-dark-3 mt-2'>
+            <UserGroupIcon className='h-5 w-5 mr-2'/>
+            <p className='text-md'>Medlemmer: {members.length}</p>
+          </div>
+          
         </div>
         {(props.search || props.match) && <PlusIcon className='h-6 text-purple-1 ml-auto' />}
       </div>
