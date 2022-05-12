@@ -14,7 +14,7 @@ const TopNavBar = () => {
     navigate(-1);
   };
 
-  const toggleNavBarHandler = () => setShowNavBar((state) => !state);
+  const toggleNavBarHandler = () => setShowNavBar((showNavBar) => !showNavBar);
 
   return (
     <>

@@ -9,7 +9,7 @@ const UserCard = ({ user, edit = false }) => {
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
   // Funksjon for å toggle modal vindu
-  const toggleModal = () => setModalIsVisible((state) => !state);
+  const toggleModal = () => setModalIsVisible((modalIsVisible) => !modalIsVisible);
 
   // Dummy content for modal vindu
   const content = (

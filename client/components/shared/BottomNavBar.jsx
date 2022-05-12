@@ -10,7 +10,7 @@ import { CalendarIcon } from '@heroicons/react/solid';
 const BottomNavBar = () => {
   const [showProfile, setShowProfile] = useState(false);
 
-  const toggleProfileMenu = () => setShowProfile((state) => !state);
+  const toggleProfileMenu = () => setShowProfile((showProfile) => !showProfile);
 
   return (
     <div>
