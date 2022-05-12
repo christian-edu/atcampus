@@ -2,14 +2,7 @@ import HttpException from "../httpException.js";
 import { groupNames, groups } from "../mockData.js";
 import { SearchDTO } from "../dto/searchDTO";
 import { IGroupRepo } from "../repo/IGroupRepo";
-import { IGroupService } from "./IGroupService";
-
-type searchResult = {
-  [key: string]: {
-    group: GroupDto;
-    score: number;
-  };
-};
+import { IGroupService, searchResult } from "./IGroupService";
 
 export class GroupCriteriaDto {
   constructor(
@@ -46,8 +39,8 @@ export class GroupDto {
 export default class GroupService implements IGroupService {
   constructor(public groupRepo: IGroupRepo) {}
 
-  async fetchAllGroups() {
-    return groupNames;
+  async fetchAllGroups(): Promise<GroupDto[]> {
+    return groups;
   }
 
   async addGroup(group: GroupDto): Promise<GroupDto> {

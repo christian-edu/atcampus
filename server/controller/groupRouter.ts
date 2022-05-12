@@ -1,9 +1,9 @@
-import GroupService from "../service/groupService.js";
 import { SearchDTO } from "../dto/searchDTO.js";
-import express, { IRouter } from "express";
+import { IRouter, Response } from "express";
 import { IGroupService } from "../service/IGroupService";
+import HttpException from "../httpException";
 
-function sendError(res, e) {
+function sendError(res: Response, e: HttpException) {
   res.status(e.status);
   res.send({ message: e.message });
 }
@@ -28,7 +28,7 @@ export default class GroupRouter {
       const newGroup = { groupname: req.body.groupname, members: ["Only you"] };
       try {
         res.json(await service.addGroup(newGroup));
-      } catch (e) {
+      } catch (e: any) {
         sendError(res, e);
       }
     });
@@ -47,7 +47,7 @@ export default class GroupRouter {
 
       try {
         res.json(await service.deleteGroup(group));
-      } catch (e) {
+      } catch (e: any) {
         sendError(res, e);
       }
     });
@@ -67,7 +67,7 @@ export default class GroupRouter {
       try {
         const result = await service.deleteMember(group, user);
         if (result) res.sendStatus(200);
-      } catch (e) {
+      } catch (e: any) {
         sendError(res, e);
       }
     });
@@ -77,7 +77,7 @@ export default class GroupRouter {
       console.log(req?.body);
       try {
         res.json(await service.addMember(group, user));
-      } catch (e) {
+      } catch (e: any) {
         sendError(res, e);
       }
     });
@@ -95,38 +95,41 @@ export default class GroupRouter {
       } = req.query;
 
       const searchDto = new SearchDTO(
-        language,
-        workMethod,
-        gradeGoal,
-        frequency,
-        size,
-        subject,
-        place,
-        school
+        language?.toString(),
+        workMethod?.toString(),
+        gradeGoal?.toString(),
+        frequency?.toString(),
+        size?.toString(),
+        subject?.toString(),
+        place?.toString(),
+        school?.toString()
       );
 
       try {
         res.json(await service.searchGroup(searchDto));
-      } catch (e) {
+      } catch (e: any) {
         sendError(res, e);
       }
     });
     return router;
   }
-}
-
-async function fetchGroupById(service, group_id, res) {
-  try {
-    res.json(await service.fetchGroupById(group_id));
-  } catch (e) {
-    sendError(res, e);
+  private async fetchGroupById(
+    service: IGroupService,
+    group_id: string,
+    res: Response
+  ) {
+    try {
+      res.json(await service.fetchGroupById(group_id));
+    } catch (e: any) {
+      sendError(res, e);
+    }
   }
-}
 
-async function fetchAllGroups(res, service) {
-  try {
-    res.json(await service.fetchAllGroups());
-  } catch (e) {
-    sendError(res, e);
+  private async fetchAllGroups(res: Response, service: IGroupService) {
+    try {
+      res.json(await service.fetchAllGroups());
+    } catch (e: any) {
+      sendError(res, e);
+    }
   }
 }

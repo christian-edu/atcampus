@@ -1,4 +1,4 @@
-import { SearchDTO } from "./dto/searchDTO.js";
+import { SearchDTO } from "./dto/searchDTO.ts";
 import { GroupCriteriaDto, GroupDto, UserDto } from "./service/groupService";
 
 export const users = [
