@@ -2,14 +2,19 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ProfileMenu from './ProfileMenu';
 import Modal from './Modal';
-import { UserGroupIcon } from '@heroicons/react/solid';
-import { UserIcon } from '@heroicons/react/solid';
-import { QuestionMarkCircleIcon } from '@heroicons/react/solid';
-import { CalendarIcon } from '@heroicons/react/solid';
+import {
+  UserGroupIcon,
+  UserIcon,
+  QuestionMarkCircleIcon,
+  CalendarIcon
+} from '@heroicons/react/solid';
 
-const BottomNavBar = () => {
+const BottomNavBar = () => { 
+  // Komponent for bunnmeny
+  
   const [showProfile, setShowProfile] = useState(false);
 
+  // Toggle visning av profil meny
   const toggleProfileMenu = () => setShowProfile((showProfile) => !showProfile);
 
   return (

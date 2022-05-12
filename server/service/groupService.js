@@ -48,6 +48,8 @@ export default class GroupService {
 
         for (const group of groups) {
             let score = 0;
+            //const intersection = group.filter(element => searchDto.includes(element));
+            // TODO: Lage en group entity / dto så jeg ikke bruker searchDto der..
             if (group.subject.toLowerCase() !== searchDto.toLowerCase()) continue;
             if (group.gradeGoal.toLowerCase() === searchDto.gradeGoal.toLowerCase()) score++;
             if (group.size == searchDto.size) score++;

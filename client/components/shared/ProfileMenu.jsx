@@ -1,11 +1,16 @@
 import { Link } from 'react-router-dom';
-import { ChevronRightIcon } from '@heroicons/react/solid';
-import { UserIcon } from '@heroicons/react/solid';
-import { CogIcon } from '@heroicons/react/solid';
-import { BellIcon } from '@heroicons/react/solid';
-import { LogoutIcon } from '@heroicons/react/outline';
+import {
+  ChevronRightIcon,
+  UserIcon,
+  CogIcon,
+  BellIcon,
+ } from '@heroicons/react/solid';
+import {LogoutIcon } from '@heroicons/react/outline';
 
 const ProfileMenu = (props) => {
+
+  // popup for Profilmeny
+
   return (
     <div>
       <button onClick={props.onClick} className='text-white'>

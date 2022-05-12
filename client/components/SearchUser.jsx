@@ -1,17 +1,19 @@
 import { useCallback, useEffect, useState } from 'react';
+import Button from './shared/Button';
 import GroupCard from './shared/GroupCard';
 import GroupCriteria from './shared/GroupCriteria';
-import Button from './shared/Button';
+import UserCard from './shared/UserCard';
 
-const SearchGroup = () => {
-  const [groups, setGroups] = useState([]);
+const SearchUser = () => {
+  const [users, setUsers] = useState([]);
   const [input, setInput] = useState('');
 
 
   const getGroups = useCallback(async () => {
-    const res = await fetch('api/v1/groups');
+    const res = await fetch('/api/v1/groups');
     const data = await res.json();
-    setGroups(data);
+    console.log(res);
+    setUsers(data.flatMap(group => group.members));
   });
 
   const inputHandler = (e) => setInput(e.target.value);
@@ -20,34 +22,33 @@ const SearchGroup = () => {
     getGroups();
   }, []);
 
-  const filteredGroups = groups.filter((group) =>
-    group.groupname.toLowerCase().includes(input.toLowerCase())
+  const filteredUsers = users.filter((user) =>
+    user.toLowerCase().includes(input.toLowerCase())
   );
 
   return (
     <>
       <div className='grid grid-cols-1 gap-4 bg-white p-6 rounded-standard border border-purple-4 mb-6'>
         <div>
-          <h2 className='text-xl font-bold'>Søk etter gruppenavn</h2>
-          <h4>Trykk på en gruppe for å sende forespørsel</h4>
+          <h2 className='text-xl font-bold'>Legg til medlem</h2>
         </div>
         <div>
-          <label htmlFor='groupName'>Gruppenavn</label>
+          <label htmlFor='userName'>Søk etter brukernavn</label>
           <input
             type='text'
-            id='groupName'
-            placeholder='Smidig Prosjekt'
+            id='userName'
+            placeholder='Torleif Jakobsen'
             className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'
             onChange={inputHandler}
           />
         </div>
         <ul className='grid gap-4'>
-          {(input && filteredGroups.length === 0) && 'Ingen grupper å vise'}
+          {(input && filteredUsers.length === 0) && 'Fant ingen brukere'}
           {input &&
-            filteredGroups.map((group) => (
-              <GroupCard
-                key={group.groupname}
-                group={group}
+            filteredUsers.map((user) => (
+              <UserCard
+                key={user}
+                user={user}
                 search={true}
               />
             ))}
@@ -61,11 +62,11 @@ const SearchGroup = () => {
         </div>
         <div className='flex flex-col gap-8'>
           <GroupCriteria />
-          <Button to="/searchGroup/searchGroupResults">Søk etter kriterier</Button>
+          <Button to="/group/members/searchUser/searchUserResults">Søk etter medlem</Button>
         </div>
       </div>
     </>
   );
 };
 
-export default SearchGroup;
+export default SearchUser;
