@@ -23,7 +23,7 @@ const UserCard = (props) => {
   return (
     <>
       {(modalIsVisible && props.edit) && <Modal onClick={toggleModal}>{content}</Modal>}
-      {(modalIsVisible && props.search) && <Modal onClick={toggleModal}><SearchRequest user={props.user} /></Modal>}
+      {(modalIsVisible && props.search) && <Modal onClick={toggleModal}><SearchRequest onClick={toggleModal} user={props.user} /></Modal>}
       {(modalIsVisible && props.match) && <Modal onClick={toggleModal}>{content}</Modal>}
       <li
         className='bg-white flex items-center p-6 rounded-standard border border-purple-4 cursor-pointer'

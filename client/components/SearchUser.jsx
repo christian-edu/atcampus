@@ -29,21 +29,20 @@ const SearchUser = () => {
     <>
       <div className='grid grid-cols-1 gap-4 bg-white p-6 rounded-standard border border-purple-4 mb-6'>
         <div>
-          <h2 className='text-xl font-bold'>Søk etter gruppenavn</h2>
-          <h4>Trykk på en gruppe for å sende forespørsel</h4>
+          <h2 className='text-xl font-bold'>Legg til medlem</h2>
         </div>
         <div>
-          <label htmlFor='groupName'>Gruppenavn</label>
+          <label htmlFor='userName'>Søk etter brukernavn</label>
           <input
             type='text'
-            id='groupName'
-            placeholder='Smidig Prosjekt'
+            id='userName'
+            placeholder='Torleif Jakobsen'
             className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'
             onChange={inputHandler}
           />
         </div>
         <ul className='grid gap-4'>
-          {/* {(!input) && 'Ingen grupper å vise'} */}
+          {(input && filteredUsers.length === 0) && 'Fant ingen brukere'}
           {input &&
             filteredUsers.map((user) => (
               <UserCard
