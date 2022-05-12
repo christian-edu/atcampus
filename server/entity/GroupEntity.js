@@ -25,12 +25,13 @@ export const GroupEntity = new EntitySchema({
     },
   },
   relations: {
-    group_member: {
+    group_members: {
       target: "group_member",
       type: "one-to-many",
       cascade: true,
+      joinColumn: "user_uuid", // usikker på denne
     },
-    group_request: {
+    group_requests: {
       target: "group_request",
       type: "one-to-many",
       cascade: true,
@@ -39,7 +40,7 @@ export const GroupEntity = new EntitySchema({
       target: "criteria",
       type: "one-to-one",
       cascade: true,
-      joinColumn: "uuid",
+      // joinColumn: "uuid",
     },
   },
 });
