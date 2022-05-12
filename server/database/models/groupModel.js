@@ -24,7 +24,6 @@ export function createGroupModel(sequelize) {
                         this.setDataValue("public", value)
                     }
                 }
-
             },
             public: {
                 type: DataTypes.BOOLEAN,
