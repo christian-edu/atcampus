@@ -10,7 +10,7 @@ const GroupMembers = () => {
 
   return (
     <div>
-      <h2>Medlemmer</h2>
+      <h2 className='text-dark-1 font-bold text-xl'>Medlemmer</h2>
       <ul className='grid grid-cols-1 gap-4'>
         {group.members.map((member) => (
           <UserCard key={member} edit={true} user={member} />

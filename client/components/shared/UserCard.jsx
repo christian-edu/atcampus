@@ -14,7 +14,7 @@ const UserCard = ({ user, edit = false }) => {
   // Dummy content for modal vindu
   const content = (
     <div className='bg-white p-16 rounded-standard'>
-      <h2 className='text-lg'>{user}</h2>
+      <h2 className='text-dark-1 text-lg'>{user}</h2>
     </div>
   );
 

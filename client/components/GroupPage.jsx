@@ -14,7 +14,7 @@ const GroupPage = () => {
 
   return (
     <div className='bg-white p-6'>
-      <h2 className='text-xl font-bold mb-8'>{group.groupname}</h2>
+      <h2 className='text-dark-1 text-xl font-bold mb-8 '>{group.groupname}</h2>
 
       <ul className='grid gap-8'>
         <li className='border-b-2 border-purple-1'>

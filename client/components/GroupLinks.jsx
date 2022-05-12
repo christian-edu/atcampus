@@ -30,7 +30,7 @@ const GroupLinks = () => {
       <div>
         <Link to={'/searchGroup'}>Søk etter gruppe</Link>
       </div>
-      <h2>Mine grupper</h2>
+      <h2 className='text-dark-1 font-bold text-xl'>Mine grupper</h2>
       <div className='grid gap-4'>
         {data.map((group) => (
           <GroupCard
