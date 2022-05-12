@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { fetchJSON } from '../fetchJSON';
 import { useLoader } from '../useLoader';
+import BtnComp from './shared/Button';
 import Loading from './shared/Loading';
 import GroupCard from './shared/GroupCard';
 
@@ -25,7 +26,11 @@ const GroupLinks = () => {
   return (
     <div>
       <div>
-        <Link to={'/createGroup'}>Opprett gruppe</Link>
+        <button class="bg-gradient-left text-white text-center font-bold py-2 px-4 rounded mx-4">
+          <Link to={"/createGroup"}>
+            Opprett gruppe
+          </Link>
+        </button>
       </div>
       <div>
         <Link to={'/searchGroup'}>Søk etter gruppe</Link>
