@@ -6,7 +6,6 @@ export function GroupCriteria() {
     // Send a request to the backend to search for the required group with the criterias
 
     const [language, setLanguage] = useState("velg")
-    const [subject, setSubject] = useState("velg");
     const [size, setSize] = useState("velg");
     const [gradeGoal, setGradeGoal] = useState("velg");
     const [frequency, setFrequency] = useState("velg");
@@ -16,6 +15,7 @@ export function GroupCriteria() {
     const [error, setError] = useState();
     const [groupResult, setGroupResult] = useState();
     const [subjectFieldsCounter, setSubjectFieldsCounter] = useState([])
+    const [subject, setSubject] = useState([]);
 
     const navigate = useNavigate();
 
@@ -23,6 +23,9 @@ export function GroupCriteria() {
         setSubjectFieldsCounter(oldArray => [...oldArray, "counter"])
 
     }
+
+
+    // need to fetch the data from all the input fields
 
 
     useEffect(() => {
@@ -36,7 +39,7 @@ export function GroupCriteria() {
 
     async function searchForGroup(){
 
-        if(language === "velg" || subject === "velg" || size === "velg" || gradeGoal === "velg" || frequency === "velg" || workMethod === "velg" || place === "velg" || school === "velg" ){
+        if(language === "velg" || size === "velg" || gradeGoal === "velg" || frequency === "velg" || workMethod === "velg" || place === "velg" || school === "velg" ){
             setError("Fyll inn alle feltene")
         }else {
 
@@ -62,13 +65,13 @@ export function GroupCriteria() {
                 </div>
                 <div>
                     <h4>Emne:</h4>
-                    <input type="text" placeholder={"Eks. 'Avansert Java'"} onChange={(e) => setSubject(e.target.value)}/>
-                    <div><button onClick={addSubjectField}>+</button></div>
-                    {subjectFieldsCounter.map((field) => (
-                        <h2>
-                            <input type="text" placeholder={"Eks. 'Avansert Java'"} onChange={(e) => setSubject(e.target.value)}/>
-                        </h2>
-                    ))}
+                        <input type="text" placeholder={"Eks. 'Avansert Java'"} onBlur={(e) => setSubject(oldArray => [...oldArray, e.target.value])}/>
+                        <div><button onClick={addSubjectField}>+</button></div>
+                        {subjectFieldsCounter.map((field) => (
+                            <h2>
+                                <input type="text" placeholder={"Eks. 'Avansert Java'"} onBlur={(e) => setSubject(oldArray => [...oldArray, e.target.value])}/>
+                            </h2>
+                        ))}
                 </div>
                 <div>
                     <select defaultValue={"velg"} name="språk" onChange={(e) => setLanguage(e.target.value)}>

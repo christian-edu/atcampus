@@ -94,7 +94,7 @@ export default class GroupRouter {
             const searchDto = new SearchDTO(language,workMethod,gradeGoal,frequency, size, subject,place, school);
 
 
-            console.log("OK DUDE " + subject)
+            console.log("Here are your subjects " + subject)
             try {
                 /*res.json(await service.searchGroup(searchDto));*/
                 // Dummy data response
