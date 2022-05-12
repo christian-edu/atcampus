@@ -1,6 +1,15 @@
+import {SearchDTO} from "./dto/searchDTO.js";
+
 export const users = [
     {username: "Hansemann"},
     {username: "Lemmy"}
+]
+
+export const groups = [
+    new SearchDTO("norwegian", "remote", "A", "2W", 5, "PG2308", "Oslo", "HK", 1),
+    new SearchDTO("norwegian", "physical", "B", "1W", 3, "PG2302", "Oslo", "HK", 2),
+    new SearchDTO("norwegian", "remote", "A", "2W", 3, "PG2303", "Oslo", "HK", 3),
+    new SearchDTO("norwegian", "physical", "C", "2M", 5, "PG2308", "Oslo", "HK", 4)
 ]
 
 export const groupNames = [{groupname: "PRO201-G8", members: ["Lil J", "Per åge", "Bernt Kåre"]},
