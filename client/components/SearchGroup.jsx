@@ -42,7 +42,7 @@ const SearchGroup = () => {
           />
         </div>
         <ul className='grid gap-4'>
-          {(!input || filteredGroups.length === 0) && 'Ingen grupper å vise'}
+          {(input && filteredGroups.length === 0) && 'Ingen grupper å vise'}
           {input &&
             filteredGroups.map((group) => (
               <GroupCard
@@ -59,8 +59,10 @@ const SearchGroup = () => {
           <h2 className='text-xl font-bold'>Søk etter gruppekriterier</h2>
           <h4>Trykk på en gruppe for å sende forespørsel</h4>
         </div>
-        <GroupCriteria />
-        <Button to="/searchGroup/searchGroupResults">Søk etter kriterier</Button>
+        <div className='flex flex-col gap-8'>
+          <GroupCriteria />
+          <Button to="/searchGroup/searchGroupResults">Søk etter kriterier</Button>
+        </div>
       </div>
     </>
   );

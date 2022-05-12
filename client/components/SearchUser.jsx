@@ -60,8 +60,10 @@ const SearchUser = () => {
           <h2 className='text-xl font-bold'>Søk etter gruppekriterier</h2>
           <h4>Trykk på en gruppe for å sende forespørsel</h4>
         </div>
-        <GroupCriteria />
-        <Button to="/group/members/searchUser/searchUserResults">Søk etter medlem</Button>
+        <div className='flex flex-col gap-8'>
+          <GroupCriteria />
+          <Button to="/group/members/searchUser/searchUserResults">Søk etter medlem</Button>
+        </div>
       </div>
     </>
   );
