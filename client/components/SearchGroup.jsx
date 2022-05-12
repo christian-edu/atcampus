@@ -7,7 +7,6 @@ const SearchGroup = () => {
   const [groups, setGroups] = useState([]);
   const [input, setInput] = useState('');
 
-
   const getGroups = useCallback(async () => {
     const res = await fetch('api/v1/groups');
     const data = await res.json();
@@ -42,14 +41,10 @@ const SearchGroup = () => {
           />
         </div>
         <ul className='grid gap-4'>
-          {(input && filteredGroups.length === 0) && 'Ingen grupper å vise'}
+          {input && filteredGroups.length === 0 && 'Ingen grupper å vise'}
           {input &&
             filteredGroups.map((group) => (
-              <GroupCard
-                key={group.groupname}
-                group={group}
-                search={true}
-              />
+              <GroupCard key={group.groupname} group={group} search={true} />
             ))}
         </ul>
       </div>
@@ -61,7 +56,9 @@ const SearchGroup = () => {
         </div>
         <div className='flex flex-col gap-8'>
           <GroupCriteria />
-          <Button to="/searchGroup/searchGroupResults">Søk etter kriterier</Button>
+          <Button to='/searchGroup/searchGroupResults'>
+            Søk etter kriterier
+          </Button>
         </div>
       </div>
     </>

@@ -2,17 +2,15 @@ import { useCallback, useEffect, useState } from 'react';
 import UserCard from './shared/UserCard';
 
 const SearchUserResults = () => {
-
   const [users, setUsers] = useState([]);
-
 
   const getGroups = useCallback(async () => {
     const res = await fetch('/api/v1/groups');
     const data = await res.json();
-    setUsers(data.flatMap(group => group.members));
+    setUsers(data.flatMap((group) => group.members));
   });
 
-    useEffect(() => {
+  useEffect(() => {
     getGroups();
   }, []);
 

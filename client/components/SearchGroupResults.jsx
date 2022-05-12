@@ -2,9 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import GroupCard from './shared/GroupCard';
 
 const SearchGroupResults = () => {
-
   const [groups, setGroups] = useState([]);
-
 
   const getGroups = useCallback(async () => {
     const res = await fetch('/api/v1/groups');
@@ -12,7 +10,7 @@ const SearchGroupResults = () => {
     setGroups(data);
   });
 
-    useEffect(() => {
+  useEffect(() => {
     getGroups();
   }, []);
 
