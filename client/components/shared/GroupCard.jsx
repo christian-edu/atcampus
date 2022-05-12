@@ -6,10 +6,15 @@ import MatchRequest from "./MatchRequest";
 import { UserGroupIcon } from '@heroicons/react/solid';
 
 const GroupCard = (props) => {
-
+  
+  // Komponent for gruppekort
+  
   const [modalIsVisible, setModalIsVisible] = useState(false);
+
+  // Mottar en gruppe som props // <GroupCard group={group} />
   const { groupname, members } = props.group;
 
+  // Toggle modal vinduer
   const clickHandler = () => {
     if (props.onClick) return props.onClick();
     setModalIsVisible((state) => !state);
@@ -31,6 +36,7 @@ const GroupCard = (props) => {
           </div>
           
         </div>
+        {/* Rendrer et pluss ikon hvis search eller match props er satt til true <GroupCard match={true} /> */}
         {(props.search || props.match) && <PlusIcon className='h-6 text-purple-1 ml-auto' />}
       </div>
     </>

@@ -9,9 +9,12 @@ import {
   CalendarIcon
 } from '@heroicons/react/solid';
 
-const BottomNavBar = () => {
+const BottomNavBar = () => { 
+  // Komponent for bunnmeny
+  
   const [showProfile, setShowProfile] = useState(false);
 
+  // Toggle visning av profil meny
   const toggleProfileMenu = () => setShowProfile((showProfile) => !showProfile);
 
   return (

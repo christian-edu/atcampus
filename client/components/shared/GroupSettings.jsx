@@ -10,6 +10,9 @@ import {
   import {LogoutIcon } from '@heroicons/react/outline';
 
 const GroupSettings = (props) => {
+
+    // Popup for gruppeinnstillinger
+
     return (
         <div>
           <button onClick={props.onClick} className='text-white'>

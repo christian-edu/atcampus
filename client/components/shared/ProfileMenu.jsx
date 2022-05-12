@@ -8,6 +8,9 @@ import {
 import {LogoutIcon } from '@heroicons/react/outline';
 
 const ProfileMenu = (props) => {
+
+  // popup for Profilmeny
+
   return (
     <div>
       <button onClick={props.onClick} className='text-white'>

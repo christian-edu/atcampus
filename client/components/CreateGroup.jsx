@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from './shared/Button';
 
 function CreateGroup() {
   const [groupname, setGroupName] = useState('');
@@ -52,7 +53,7 @@ function CreateGroup() {
               onChange={(e) => setGroupName(e.target.value)}
             />
           </div>
-          <button>Opprett gruppe</button>
+          <Button type="button">Opprett gruppe</Button>
         </form>
       </div>
     </>

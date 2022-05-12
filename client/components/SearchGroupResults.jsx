@@ -17,8 +17,8 @@ const SearchGroupResults = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Søkeresultater</h2>
+    <div className='bg-white p-6 rounded border border-purple-4'>
+      <h2 className='font-bold text-xl mb-8'>Søkeresultater</h2>
       <ul className='grid grid-cols-1 gap-4'>
         {groups.map((group) => (
           <GroupCard key={group.groupname} match={true} group={group} />
