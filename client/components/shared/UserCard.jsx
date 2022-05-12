@@ -1,5 +1,6 @@
 import { DotsHorizontalIcon, PlusIcon } from '@heroicons/react/solid';
 import { useState } from 'react';
+import MatchRequest from './MatchRequest';
 import Modal from './Modal';
 import SearchRequest from './SearchRequest';
 SearchRequest
@@ -24,7 +25,7 @@ const UserCard = (props) => {
     <>
       {(modalIsVisible && props.edit) && <Modal onClick={toggleModal}>{content}</Modal>}
       {(modalIsVisible && props.search) && <Modal onClick={toggleModal}><SearchRequest onClick={toggleModal} user={props.user} /></Modal>}
-      {(modalIsVisible && props.match) && <Modal onClick={toggleModal}>{content}</Modal>}
+      {(modalIsVisible && props.match) && <Modal onClick={toggleModal}><MatchRequest onClick={toggleModal} user={props.user} /></Modal>}
       <li
         className='bg-white flex items-center p-6 rounded-standard border border-purple-4 cursor-pointer'
         onClick={toggleModal}
