@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import UserCard from './shared/UserCard';
+import Button from './shared/Button';
 
 const GroupMembers = () => {
   const location = useLocation();
@@ -16,7 +17,7 @@ const GroupMembers = () => {
           <UserCard key={member} edit={true} user={member} />
         ))}
       </ul>
-      <button>+ Legg til medlem</button>
+      <Button to="/group/members/searchUser">+ Legg til medlem</Button>
     </div>
   );
 };
