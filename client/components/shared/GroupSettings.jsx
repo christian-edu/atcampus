@@ -21,7 +21,7 @@ const GroupSettings = (props) => {
       <div className='grid grid-cols-1 bg-gradient-left w-screen text-white px-4'>
         <ul className='divide-y divide-purple-4'>
           <Link
-            to='/'
+            to='/group/members/searchUser'
             className='flex flex-row justify-between my-1 py-3'
             onClick={props.onClick}
           >
