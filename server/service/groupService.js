@@ -1,5 +1,5 @@
 import HttpException from "../httpException.js";
-import {groupNames} from "../mockData.js";
+import {groupNames, groups} from "../mockData.js";
 
 export default class GroupService {
     constructor(groupRepo) {
@@ -43,7 +43,26 @@ export default class GroupService {
 
     async searchGroup(searchDto) {
         if (!searchDto) throw new HttpException("No searchDto provided",400);
-        throw new HttpException("Not implemented", 500);
+
+        const results = {};
+
+        for (const group of groups) {
+            let score = 0;
+            if (group.subject.toLowerCase() !== searchDto.toLowerCase()) continue;
+            if (group.gradeGoal.toLowerCase() === searchDto.gradeGoal.toLowerCase()) score++;
+            if (group.size == searchDto.size) score++;
+            if (group.place.toLowerCase() === searchDto.place.toLowerCase()) score++;
+            if (group.frequency.toLowerCase() === searchDto.frequency.toLowerCase()) score++;
+            if (group.language.toLowerCase() === searchDto.language.toLowerCase()) score++;
+            if (group.school.toLowerCase() === searchDto.school.toLowerCase()) score++;
+            if (group.workMethod.toLowerCase() === searchDto.workMethod.toLowerCase()) score++;
+            results[group.id] = {
+                group,
+                score
+            }
+        }
+
+        return results;
     }
 
 }
