@@ -1,19 +1,18 @@
 import { useCallback, useEffect, useState } from 'react';
 import Button from './shared/Button';
-import GroupCard from './shared/GroupCard';
 import GroupCriteria from './shared/GroupCriteria';
 import UserCard from './shared/UserCard';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const SearchUser = () => {
   const [users, setUsers] = useState([]);
   const [input, setInput] = useState('');
 
-
   const getGroups = useCallback(async () => {
     const res = await fetch('/api/v1/groups');
     const data = await res.json();
     console.log(res);
-    setUsers(data.flatMap(group => group.members));
+    setUsers(data.flatMap((group) => group.members));
   });
 
   const inputHandler = (e) => setInput(e.target.value);
@@ -42,17 +41,23 @@ const SearchUser = () => {
             onChange={inputHandler}
           />
         </div>
-        <ul className='grid gap-4'>
-          {(input && filteredUsers.length === 0) && 'Fant ingen brukere'}
-          {input &&
-            filteredUsers.map((user) => (
-              <UserCard
-                key={user}
-                user={user}
-                search={true}
-              />
-            ))}
-        </ul>
+        {input && filteredUsers.length === 0 && 'Fant ingen brukere'}
+
+        <motion.ul className='grid gap-4'>
+          <AnimatePresence>
+            {input &&
+              filteredUsers.map((user) => (
+                <motion.li
+                  key={user}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                >
+                  <UserCard user={user} search={true} />
+                </motion.li>
+              ))}
+          </AnimatePresence>
+        </motion.ul>
       </div>
 
       <div className='bg-white p-6 rounded-standard border border-purple-4'>
@@ -62,7 +67,9 @@ const SearchUser = () => {
         </div>
         <div className='flex flex-col gap-8'>
           <GroupCriteria />
-          <Button to="/group/members/searchUser/searchUserResults">Søk etter medlem</Button>
+          <Button to='/group/members/searchUser/searchUserResults'>
+            Søk etter medlem
+          </Button>
         </div>
       </div>
     </>

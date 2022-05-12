@@ -2,11 +2,11 @@ import { useCallback, useEffect, useState } from 'react';
 import GroupCard from './shared/GroupCard';
 import GroupCriteria from './shared/GroupCriteria';
 import Button from './shared/Button';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const SearchGroup = () => {
   const [groups, setGroups] = useState([]);
   const [input, setInput] = useState('');
-
 
   const getGroups = useCallback(async () => {
     const res = await fetch('api/v1/groups');
@@ -41,17 +41,26 @@ const SearchGroup = () => {
             onChange={inputHandler}
           />
         </div>
-        <ul className='grid gap-4'>
-          {(input && filteredGroups.length === 0) && 'Ingen grupper å vise'}
-          {input &&
-            filteredGroups.map((group) => (
-              <GroupCard
-                key={group.groupname}
-                group={group}
-                search={true}
-              />
-            ))}
-        </ul>
+        {input && filteredGroups.length === 0 && 'Ingen grupper å vise'}
+        <motion.ul
+          // transition={{ delayChildren: 0.5, staggerDirection: -1 }}
+          // exit={{ opacity: 0 }}
+          className='grid gap-4'
+        >
+          <AnimatePresence>
+            {input &&
+              filteredGroups.map((group) => (
+                <motion.li
+                  key={group.groupname}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                >
+                  <GroupCard group={group} search={true} />
+                </motion.li>
+              ))}
+          </AnimatePresence>
+        </motion.ul>
       </div>
 
       <div className='bg-white p-6 rounded-standard border border-purple-4'>
@@ -61,7 +70,9 @@ const SearchGroup = () => {
         </div>
         <div className='flex flex-col gap-8'>
           <GroupCriteria />
-          <Button to="/searchGroup/searchGroupResults">Søk etter kriterier</Button>
+          <Button to='/searchGroup/searchGroupResults'>
+            Søk etter kriterier
+          </Button>
         </div>
       </div>
     </>
