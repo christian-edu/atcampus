@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const SearchGroup = () => {
     // Send a request to the backend to search for the required group with the criterias
 
@@ -18,8 +20,6 @@ const SearchGroup = () => {
     }
 
     return <div>
-        <h2>Søk etter gruppenavn</h2>
-        <h4>Trykk på en gruppe for å sende forespørsel</h4>
         <input type="text"/>
         <div><h2>Søk etter gruppekriterier</h2>
         <h4>Velg kriterier for søket</h4>
@@ -73,3 +73,5 @@ const SearchGroup = () => {
         </div>
     </div>;
 }
+
+export default SearchGroup;
