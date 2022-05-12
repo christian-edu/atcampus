@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import Button from './shared/Button';
 import GroupCard from './shared/GroupCard';
 import GroupCriteria from './shared/GroupCriteria';
 import UserCard from './shared/UserCard';
@@ -60,6 +61,7 @@ const SearchUser = () => {
           <h4>Trykk på en gruppe for å sende forespørsel</h4>
         </div>
         <GroupCriteria />
+        <Button to="/group/members/searchUser/searchUserResults">Søk etter medlem</Button>
       </div>
     </>
   );
