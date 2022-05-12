@@ -1,4 +1,6 @@
 import { EntitySchema } from "typeorm";
+import { CriteriaEntity } from "./CriteriaEntity.js";
+import { GroupMemberEntity } from "./GroupMemberEntity.js";
 
 export const GroupEntity = new EntitySchema({
   name: "GroupEntity",
@@ -26,10 +28,10 @@ export const GroupEntity = new EntitySchema({
   },
   relations: {
     group_members: {
-      target: "group_member",
+      target: GroupMemberEntity,
       type: "one-to-many",
       cascade: true,
-      joinColumn: "user_uuid", // usikker på denne
+      // joinColumn: "user_uuid",
     },
     group_requests: {
       target: "group_request",
@@ -37,7 +39,7 @@ export const GroupEntity = new EntitySchema({
       cascade: true,
     },
     criteria: {
-      target: "criteria",
+      target: CriteriaEntity,
       type: "one-to-one",
       cascade: true,
       // joinColumn: "uuid",

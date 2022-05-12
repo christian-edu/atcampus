@@ -1,4 +1,6 @@
 import { EntitySchema } from "typeorm";
+import { SubjectEntity } from "./SubjectEntity.js";
+import { SchoolEntity } from "./SchoolEntity.js";
 
 export const CriteriaEntity = new EntitySchema({
   name: "CriteriaEntity",
@@ -44,15 +46,15 @@ export const CriteriaEntity = new EntitySchema({
   },
   relations: {
     school: {
-      target: "school",
-      type: "one-to-many",
-      joinTable: true,
+      target: SchoolEntity,
+      type: "many-to-one",
+      // joinTable: true,
       cascade: false,
     },
     subjects: {
-      target: "subject",
+      target: SubjectEntity,
       type: "many-to-many",
-      joinTable: true,
+      // joinTable: true,
       cascade: false,
     },
   },
