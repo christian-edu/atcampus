@@ -25,14 +25,12 @@ const GroupLinks = () => {
 
   return (
     <div>
-      <div>
-          <Button to="/createGroup">Hello!</Button>
-          <Button to="/searchGroup"></Button>
+      <div className='flex flex-row justify-between'>
+          <Button to="/createGroup">Opprett gruppe</Button>
+          <Button to="/searchGroup">Søk etter gruppe</Button>
       </div>
-      <div>
-        <Link to={'/searchGroup'}>Søk etter gruppe</Link>
-      </div>
-      <h2>Mine grupper</h2>
+
+      <h2 className='text-dark-1 text-xl font-bold mb-4 mt-6'>Mine grupper</h2>
       <div className='grid gap-4'>
         {data.map((group) => (
           <GroupCard
