@@ -1,9 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { fetchJSON } from '../fetchJSON';
 import { useLoader } from '../useLoader';
-import BtnComp from './shared/Button';
 import Loading from './shared/Loading';
 import GroupCard from './shared/GroupCard';
+import Button from './shared/Button';
 
 const GroupLinks = () => {
   // Should get the data for the group names you are a part of
@@ -26,11 +26,8 @@ const GroupLinks = () => {
   return (
     <div>
       <div>
-        <button class="bg-gradient-left text-white text-center font-bold py-2 px-4 rounded mx-4">
-          <Link to={"/createGroup"}>
-            Opprett gruppe
-          </Link>
-        </button>
+          <Button to="/createGroup">Hello!</Button>
+          <Button to="/searchGroup"></Button>
       </div>
       <div>
         <Link to={'/searchGroup'}>Søk etter gruppe</Link>

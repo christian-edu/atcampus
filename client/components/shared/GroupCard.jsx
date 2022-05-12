@@ -1,7 +1,8 @@
 import { PlusIcon } from '@heroicons/react/solid';
 import { useState } from 'react';
 import Modal from './Modal';
-import GroupRequest from './GroupRequest';
+import SearchRequest from './SearchRequest';
+import MatchRequest from "./MatchRequest";
 
 const GroupCard = (props) => {
 
@@ -15,7 +16,8 @@ const GroupCard = (props) => {
 
   return (
     <>
-      {modalIsVisible && <Modal onClick={clickHandler}><GroupRequest onClick={clickHandler} group={props.group} /></Modal>}
+      {(modalIsVisible && props.search) && <Modal onClick={clickHandler}><SearchRequest onClick={clickHandler} group={props.group} /></Modal>}
+      {(modalIsVisible && props.match) && <Modal onClick={clickHandler}><MatchRequest onClick={clickHandler} group={props.group} /></Modal>}
       <div
         className='bg-white flex items-center p-6 rounded-standard border border-purple-4 cursor-pointer'
         onClick={clickHandler}
@@ -24,7 +26,7 @@ const GroupCard = (props) => {
           <h2 className='font-bold'>{groupname}</h2>
           <p>Medlemmer: {members.length}</p>
         </div>
-        {props.add && <PlusIcon className='h-6 text-purple-1 ml-auto' />}
+        {(props.search || props.match) && <PlusIcon className='h-6 text-purple-1 ml-auto' />}
       </div>
     </>
   );

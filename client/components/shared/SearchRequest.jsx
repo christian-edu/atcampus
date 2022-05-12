@@ -1,4 +1,4 @@
-const GroupRequest = (props) => {
+const SearchRequest = (props) => {
   const { groupname } = props.group;
 
   return (
@@ -12,4 +12,4 @@ const GroupRequest = (props) => {
     </div>
   );
 };
-export default GroupRequest;
+export default SearchRequest;
