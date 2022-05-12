@@ -53,7 +53,7 @@ function CreateGroup() {
               onChange={(e) => setGroupName(e.target.value)}
             />
           </div>
-          <Button type="button">Opprett gruppe</Button>
+          <Button type="submit">Opprett gruppe</Button>
         </form>
       </div>
     </>
