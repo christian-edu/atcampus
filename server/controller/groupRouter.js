@@ -88,24 +88,12 @@ export default class GroupRouter {
         router.get("/search", async (req, res) => {
 
 
-            const {language, workMethod, gradeGoal, frequency, size, subject} = req.query;
+            const {language, workMethod, gradeGoal, frequency, size, subject, place, school} = req.query;
 
-            console.log({language, workMethod, gradeGoal, frequency, size, subject})
-
-
-            // Missing place and school from Jonar
-            // Should we not have size, and subject also?
-
-            /*const {language, school, place, workMethod, gradeGoal, frequency} = req?.body;*/
-            /*const searchDto = new SearchDTO(language, school, place, workMethod, gradeGoal, frequency);*/
-
-
-
+            const searchDto = new SearchDTO(language,workMethod,gradeGoal,frequency, size, subject,place, school);
 
             try {
-                /*res.json(await service.searchGroup(searchDto));*/
-                // remove the mock data
-                res.json([{name: "group 1"}, {name: "group 2"}, {name: "group 3"}])
+                res.json(await service.searchGroup(searchDto));
             } catch (e) {
                 sendError(res, e);
             }
