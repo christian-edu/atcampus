@@ -26,7 +26,7 @@ export default class GroupService {
         throw new HttpException("Not implemented", 500);
     }
 
-    async getGroupMembers(groupId) {
+    async fetchGroupMembers(groupId) {
         if (!groupId) throw new HttpException("group_id request parameter must be specified",400);
         throw new HttpException("Not implemented", 500);
     }
@@ -45,4 +45,5 @@ export default class GroupService {
         if (!searchDto) throw new HttpException("No searchDto provided",400);
         throw new HttpException("Not implemented", 500);
     }
+
 }

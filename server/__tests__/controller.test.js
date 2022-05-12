@@ -2,7 +2,7 @@ import GroupRouter from "../controller/groupRouter.js";
 import GroupService from "../service/groupService.js";
 import supertest from "supertest";
 import express, {Router} from "express";
-import {groupNames} from "../mockData";
+import {groupNames, users} from "../mockData";
 import HttpException from "../httpException.js";
 
 jest.mock("../service/groupService.js");
@@ -178,5 +178,120 @@ describe("Tests for group/member paths in controller", () => {
         expect(mockGroupService.addMember).toHaveBeenCalledTimes(1);
         console.log(result.body);
         expect(result.body.members).toContain("Bugge");
-    })
+    });
+    it("Should recieve error on adding user", async () => {
+        jest.spyOn(GroupService.prototype, 'addMember')
+            .mockImplementation(async () => {
+                throw new HttpException("Error!", 500);
+            });
+
+        const result = await agent
+            .post("/api/v1/groups/member")
+            .send({
+                group: groups[0],
+                user: {
+                    username: "Bugge"
+                }
+            })
+            .expect(500);
+    });
+
+    it("Should get the members of a group", async () => {
+        jest.spyOn(GroupService.prototype, 'fetchGroupMembers')
+            .mockImplementation(async () => users);
+
+        const result = await agent.get("/api/v1/groups/member?group_id=1")
+            .expect(200);
+
+        console.log(result.body[0].username);
+        expect(mockGroupService.fetchGroupMembers).toHaveBeenCalledTimes(1);
+        expect(result.body[0].username).toBe("Hansemann");
+    });
+
+    it("Should recieve error on getting members to group", async () => {
+        jest.spyOn(GroupService.prototype, 'fetchGroupMembers')
+            .mockImplementation(async () => {
+                throw new HttpException("Error!", 500);
+            });
+
+        const result = await agent.get("/api/v1/groups/member?group_id=1")
+            .expect(500);
+    });
+
+    it("Should delete a group member", async () => {
+        jest.spyOn(GroupService.prototype, 'deleteMember')
+            .mockImplementation(async () => true);
+
+        await agent.delete("/api/v1/groups/member?group_id=1")
+            .send({group: groupNames[0], user: users[0]})
+            .expect(200);
+    });
+
+    it("Should recieve error when deleting a group member", async () => {
+        jest.spyOn(GroupService.prototype, 'deleteMember')
+            .mockImplementation(async () => {
+                throw new HttpException("Error!", 500);
+            });
+
+        const result = await agent.delete("/api/v1/groups/member?group_id=1")
+            .expect(500);
+    });
+});
+
+describe("Search route", () => {
+    let mockGroupService = new GroupService();
+    let groupRouter = new GroupRouter(mockGroupService, new Router());
+    let agent;
+    let app;
+    let groups;
+    beforeAll(() => {
+        app = express();
+        agent = supertest.agent(app);
+        groups = [...groupNames];
+
+        app.use(express.json());
+        app.use("/api/v1/groups", groupRouter.fetchRoutes());
+    });
+
+    beforeEach(() => {
+        GroupService.mockClear();
+    });
+
+   it("Should return a search result", async () => {
+       jest.spyOn(GroupService.prototype, 'searchGroup')
+           .mockImplementation(async () => true);
+       //language, school, place, workMethod, gradeGoal, frequency
+
+       const params = new URLSearchParams({
+           language: "norwegian",
+           school: "HK",
+           place: "Oslo",
+           workMethod: "remote",
+           gradeGoal: "A",
+           frequency: "2W"
+       });
+       await agent.get(`/api/v1/groups/search?${params.toString()}`)
+           .send({group: groupNames[0], user: users[0]})
+           .expect(200);
+   });
+
+    it("Should recieve error on a search result", async () => {
+        jest.spyOn(GroupService.prototype, 'searchGroup')
+            .mockImplementation(async () => {
+                throw new HttpException("Error!", 500);
+            });
+        //language, school, place, workMethod, gradeGoal, frequency
+
+        const params = new URLSearchParams({
+            language: "norwegian",
+            school: "HK",
+            place: "Oslo",
+            workMethod: "remote",
+            gradeGoal: "A",
+            frequency: "2W"
+        });
+        await agent.get(`/api/v1/groups/search?${params.toString()}`)
+            .send({group: groupNames[0], user: users[0]})
+            .expect(500);
+    });
 });
