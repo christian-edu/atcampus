@@ -4,9 +4,11 @@ import { groupNames, subjectQuestions } from "./mockData.js";
 import GroupService from "./service/groupService.js";
 import GroupRouter from "./controller/groupRouter.js";
 import { AddressInfo } from "net";
+import DummyGroupRepo from "./repo/DummyGroupRepo";
 
 const app = express();
-const groupService = new GroupService();
+const dummyRepo = new DummyGroupRepo();
+const groupService = new GroupService(dummyRepo);
 const groupRoutes = new GroupRouter(groupService, express.Router());
 
 // TODO: Fjerne allow js når migrert

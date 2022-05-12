@@ -1,7 +1,7 @@
-import { IGroupServiceRepo } from "./IGroupServiceRepo";
+import { IGroupRepo } from "./IGroupRepo";
 import { GroupDto, UserDto } from "../service/groupService";
 
-export default class GroupRepo implements IGroupServiceRepo {
+export default class DummyGroupRepo implements IGroupRepo {
   addGroup(): GroupDto {
     throw Error("Not implemented");
   }

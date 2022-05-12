@@ -1,6 +1,6 @@
 import { GroupDto, UserDto } from "../service/groupService";
 
-export interface IGroupServiceRepo {
+export interface IGroupRepo {
   fetchAllGroups(): GroupDto[];
 
   addGroup(): GroupDto;

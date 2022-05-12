@@ -1,7 +1,8 @@
 import HttpException from "../httpException.js";
 import { groupNames, groups } from "../mockData.js";
 import { SearchDTO } from "../dto/searchDTO";
-import { IGroupServiceRepo } from "../repo/IGroupServiceRepo";
+import { IGroupRepo } from "../repo/IGroupRepo";
+import { IGroupService } from "./IGroupService";
 
 type searchResult = {
   [key: string]: {
@@ -42,30 +43,31 @@ export class GroupDto {
   ) {}
 }
 
-export default class GroupService {
-  constructor(public repo: IGroupServiceRepo) {}
+export default class GroupService implements IGroupService {
+  constructor(public groupRepo: IGroupRepo) {}
 
   async fetchAllGroups() {
     return groupNames;
   }
 
-  async addGroup(group: GroupDto) {
+  async addGroup(group: GroupDto): Promise<GroupDto> {
     groups.push(group);
+    return group;
   }
 
-  async fetchGroupById(groupId: string) {
+  async fetchGroupById(groupId: string): Promise<GroupDto> {
     throw new HttpException("Not implemented!", 500);
   }
 
-  async deleteMember(group: GroupDto, user: UserDto) {
+  async deleteMember(group: GroupDto, user: UserDto): Promise<boolean> {
     throw new HttpException("Not implemented!", 500);
   }
 
-  async addMember(group: GroupDto, user: UserDto) {
+  async addMember(group: GroupDto, user: UserDto): Promise<boolean> {
     throw new HttpException("Not implemented", 500);
   }
 
-  async fetchGroupMembers(groupId: string) {
+  async fetchGroupMembers(groupId: string): Promise<UserDto[]> {
     if (!groupId)
       throw new HttpException(
         "group_id request parameter must be specified",
@@ -74,7 +76,7 @@ export default class GroupService {
     throw new HttpException("Not implemented", 500);
   }
 
-  async updateGroup(group: GroupDto) {
+  async updateGroup(group: GroupDto): Promise<boolean> {
     if (!group)
       throw new HttpException(
         "No group found in body. Expected {\ngroup: groupName\n}",
@@ -83,7 +85,7 @@ export default class GroupService {
     throw new HttpException("Not implemented", 500);
   }
 
-  async deleteGroup(group: GroupDto) {
+  async deleteGroup(group: GroupDto): Promise<boolean> {
     if (!group)
       throw new HttpException(
         "No group found in body. Expected {\ngroup: groupName\n}",
@@ -92,7 +94,7 @@ export default class GroupService {
     throw new HttpException("Not implemented", 500);
   }
 
-  async searchGroup(searchDto: SearchDTO) {
+  async searchGroup(searchDto: SearchDTO): Promise<searchResult> {
     if (!searchDto) throw new HttpException("No searchDto provided", 400);
 
     let results: searchResult = {};
@@ -143,7 +145,6 @@ export default class GroupService {
         score,
       };
     }
-
     return results;
   }
 }
