@@ -1,3 +1,8 @@
+export const users = [
+    {username: "Hansemann"},
+    {username: "Lemmy"}
+]
+
 export const groupNames = [{groupname: "PRO201-G8", members: ["Lil J", "Per åge", "Bernt Kåre"]},
     {groupname: "TK2100", members: ["Svein Torleif", "Bjertulf sveinson", "Sigurd Knutsen"]},
     {groupname: "Smidig prosjekt", members: ["Per Erling"]},

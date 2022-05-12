@@ -2,7 +2,7 @@ import GroupRouter from "../controller/groupRouter.js";
 import GroupService from "../service/groupService.js";
 import supertest from "supertest";
 import express, {Router} from "express";
-import {groupNames} from "../mockData";
+import {groupNames, users} from "../mockData";
 import HttpException from "../httpException.js";
 
 jest.mock("../service/groupService.js");
@@ -178,5 +178,17 @@ describe("Tests for group/member paths in controller", () => {
         expect(mockGroupService.addMember).toHaveBeenCalledTimes(1);
         console.log(result.body);
         expect(result.body.members).toContain("Bugge");
-    })
+    });
+
+    it("Should get the members of a group", async () => {
+        jest.spyOn(GroupService.prototype, 'fetchGroupMembers')
+            .mockImplementation(async () => users);
+
+        const result = await agent.get("/api/v1/groups/member?group_id=1")
+            .expect(200);
+
+        console.log(result.body[0].username);
+        expect(mockGroupService.fetchGroupMembers).toHaveBeenCalledTimes(1);
+        expect(result.body[0].username).toBe("Hansemann");
+    });
 });
