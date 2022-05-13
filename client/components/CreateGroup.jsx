@@ -5,6 +5,8 @@ import Modal from './shared/Modal';
 import { XIcon, CheckIcon } from '@heroicons/react/solid';
 
 const CreateGroupPopup = (props) => {
+  // Popup that shows when creating a new group asking if you want to set up group requirements or skip.
+
   return (
     <div className='flex flex-col items-center bg-white p-8 rounded text-center shadow-xl'>
       <h2 className='text-dark-1 font-bold text-xl mb-3 w-full border-b-2 pb-4 border-purple-1'>
@@ -36,6 +38,8 @@ const CreateGroupPopup = (props) => {
 };
 
 function CreateGroup() {
+  // Added popup
+
   const [groupname, setGroupName] = useState('');
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const [error, setError] = useState();
@@ -64,8 +68,10 @@ function CreateGroup() {
     }
   }
 
+  // Navigation if user clicks cancel on popup. Needs work, should link to GroupPage for the newly created group
   const cancelHandler = () => navigate('/');
 
+  // Navigation if user wants to set up criterias for the group. Needs work.
   const confirmHandler = () => navigate('/group/groupCriteria');
 
   if (error)
@@ -78,6 +84,7 @@ function CreateGroup() {
 
   return (
     <>
+      {/* Render popup if modal is visible */}
       {modalIsVisible && (
         <Modal>
           <CreateGroupPopup

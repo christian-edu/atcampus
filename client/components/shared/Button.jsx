@@ -1,24 +1,24 @@
 import { Link } from 'react-router-dom';
 
 const Button = (props) => {
-  // felles klasser for button og link
+  // classes for button and link
   const classes = `bg-gradient-left text-white text-center font-bold py-2 px-4 rounded w-full ${
     props.className || ''
   }`;
 
-  // Rendrer button element hvis type prop er satt til button eller submit // <Button type="button">Tekst</Button>
-  if (props.type === 'button' || props.type === 'submit')
+  // return link element if props to is being used
+  if (props.to)
     return (
-      <button className={classes} type={props.type} onClick={props.onClick}>
+      <Link to={props.to} className={classes}>
         {props.children}
-      </button>
+      </Link>
     );
 
-  // Rendrer en link som standard hvis man ikke setter type prop til button eller submit //
+  // return regular button element if props to is not being used.
   return (
-    <Link to={props.to} className={classes}>
+    <button className={classes} type={props.type} onClick={props.onClick}>
       {props.children}
-    </Link>
+    </button>
   );
 };
 export default Button;

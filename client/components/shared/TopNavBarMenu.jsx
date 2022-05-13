@@ -6,7 +6,7 @@ import {
   QuestionMarkCircleIcon,
   DocumentTextIcon,
   UserGroupIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
 } from '@heroicons/react/solid';
 
 const TopNavBarMenu = (props) => {

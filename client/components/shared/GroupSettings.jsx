@@ -10,7 +10,7 @@ import {
 import { LogoutIcon } from '@heroicons/react/outline';
 
 const GroupSettings = (props) => {
-  // Popup for gruppeinnstillinger
+  // Popup for group settings
 
   return (
     <div>

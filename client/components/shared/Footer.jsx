@@ -1,5 +1,5 @@
 const Footer = () => {
-  // Footer komponent
+  // Footer component
 
   return (
     <footer className='bg-purple-4 px-4 py-6 w-full'>
