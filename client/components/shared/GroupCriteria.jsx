@@ -80,7 +80,7 @@ export function GroupCriteria() {
                     <input type="text" placeholder={"Eks. 'Høyskolen Kristiania'"} onChange={(e) => setSchool(e.target.value)}/>
                 </div>
                 <div>
-
+                    <h4>Emner:</h4>
                     <button onClick={addSubjectField}>+</button>
                     {subject.map((subInput, index) => (
                         <div key={index}>

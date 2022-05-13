@@ -11,6 +11,7 @@ function CreateGroup() {
   async function handleSubmit(e) {
     e.preventDefault();
 
+
     if (groupname.length === 0) {
       alert('Please fill in a group name');
     } else {
