@@ -1,5 +1,5 @@
 import HttpException from "../httpException.js";
-import { groups } from "../mockData.js";
+import { groups } from "../mockData";
 import { SearchDTO } from "../dto/searchDTO";
 import { IGroupRepo } from "../repo/IGroupRepo";
 import { IGroupService, searchResult } from "./IGroupService";
@@ -73,18 +73,18 @@ export default class GroupService implements IGroupService {
       )
         continue;
       if (
-        group.criteria?.gradeWanted?.toLowerCase() ===
+        group.criteria?.gradeGoal?.toLowerCase() ===
         searchDto?.gradeGoal?.toLowerCase()
       )
         score++;
-      if (group.criteria?.maxGroupSize === searchDto?.maxSize) score++;
+      if (group.criteria?.maxSize === searchDto?.maxSize) score++;
       if (
         group.criteria?.location?.toLowerCase() ===
         searchDto.location?.toLowerCase()
       )
         score++;
       if (
-        group.criteria?.frequency?.toLowerCase() ===
+        group.criteria?.workFrequency?.toLowerCase() ===
         searchDto.workFrequency?.toLowerCase()
       )
         score++;
@@ -99,7 +99,7 @@ export default class GroupService implements IGroupService {
       )
         score++;
       if (
-        group.criteria?.workMethod?.toLowerCase() ===
+        group.criteria?.workType?.toLowerCase() ===
         searchDto.workType?.toLowerCase()
       )
         score++;

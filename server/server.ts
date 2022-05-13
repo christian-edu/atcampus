@@ -1,6 +1,6 @@
 import express from "express";
 import * as path from "path";
-import { groupNames, subjectQuestions } from "./mockData.js";
+import { groupNames, subjectQuestions } from "./mockData";
 import GroupService from "./service/groupService.js";
 import GroupRouter from "./controller/groupRouter.js";
 import { AddressInfo } from "net";
