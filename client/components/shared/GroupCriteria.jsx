@@ -51,8 +51,6 @@ export function GroupCriteria() {
             setError("Fyll inn alle feltene")
         }else {
 
-            /*const res = await fetch('/api/v1/groups/search?' + new URLSearchParams({subject, size, gradeGoal, frequency, workMethod, language, place, school}));*/
-
             const res = await fetch("/api/v1/groups/search", {
                 method: "POST",
                 headers: {
@@ -88,14 +86,6 @@ export function GroupCriteria() {
                         </div>
                     ))}
 
-                   {/* <h4>Emne:</h4>
-                        <input type="text" placeholder={"Eks. 'Avansert Java'"} onBlur={(e) => setSubject(oldArray => [...oldArray, e.target.value])}/>
-                        <div><button onClick={addSubjectField}>+</button></div>
-                        {subjectFieldsCounter.map((field) => (
-                            <h2>
-                                <input type="text" placeholder={"Eks. 'Avansert Java'"} onBlur={(e) => setSubject(oldArray => [...oldArray, e.target.value])}/>
-                            </h2>
-                        ))}*/}
                 </div>
                 <div>
                     <select defaultValue={"velg"} name="språk" onChange={(e) => setLanguage(e.target.value)}>

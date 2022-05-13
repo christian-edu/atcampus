@@ -89,7 +89,6 @@ export default class GroupRouter {
         router.post("/search", async (req, res) => {
 
 
-           /* const {language, workMethod, gradeGoal, frequency, size, subject, place, school} = req.query;*/
             const {language, workMethod, gradeGoal, frequency, size, subject, place, school} = req.body;
 
             const searchDto = new SearchDTO(language,workMethod,gradeGoal,frequency, size, subject,place, school);
