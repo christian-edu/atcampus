@@ -19,7 +19,7 @@ const LeftNavBar = () => {
       <div
         className={`${
           open ? 'w-72' : 'w-20'
-        } hidden lg:block duration-300 min-h-screen h-full p-5 pt-8 bg-purple-1 relative`}
+        } hidden lg:block duration-300 h-full p-5 pt-8 bg-purple-1 relative`}
       >
         <ChevronLeftIcon
           className={` absolute cursor-pointer -right-3 top-9 w-7 border-2 border-purple-1 rounded-full bg-white text-dark-1 ${
