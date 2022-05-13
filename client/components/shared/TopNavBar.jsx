@@ -27,7 +27,7 @@ const TopNavBar = () => {
         <h2></h2>
       )}
 
-      <div className='flex flex-row py-4 px-4 bg-purple-5 items-center justify-between'>
+      <div className='flex flex-row py-4 px-4 bg-purple-5 items-center justify-between lg:hidden'>
         <button
           onClick={backButtonHandler}
           className='flex flex-col items-center p-2 outline outline-2 outline-purple-1 rounded text-white '

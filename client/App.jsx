@@ -20,9 +20,10 @@ const App = () => {
   return (
     <>
       <BrowserRouter>
-        <LeftNavBar/>
+        
         <TopNavBar/>
-        <main className='bg-dark-6 pt-16'>
+        <main className='bg-dark-6 pt-16 flex'>
+        <LeftNavBar/>
           <div className='container mx-auto pb-16'>
             <Routes>
               <Route path={'/'} element={<GroupLinks />} />
