@@ -13,11 +13,8 @@ import GroupPage from './components/GroupPage';
 import SearchUser from "./components/SearchUser"
 import SearchGroupResults from './components/SearchGroupResults';
 import SearchUserResults from './components/SearchUserResults';
-<<<<<<< Updated upstream
 import GroupCriteriaPage from './components/GroupCriteriaPage';
-=======
 import LeftNavBar from './components/shared/LeftNavBar';
->>>>>>> Stashed changes
 
 const App = () => {
   return (
