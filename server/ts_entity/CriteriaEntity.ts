@@ -1,7 +1,16 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryColumn,
+} from "typeorm";
 import { GradeGoal } from "./enums/GradeGoal";
 import { WorkFrequency } from "./enums/WorkFrequency";
 import { WorkType } from "./enums/WorkType";
+import { SubjectEntity } from "./SubjectEntity";
+import { SchoolEntity } from "./SchoolEntity";
 
 @Entity()
 export class CriteriaEntity {
@@ -11,23 +20,26 @@ export class CriteriaEntity {
   @Column({
     type: "enum",
     enum: GradeGoal,
+    name: "grade_goal",
   })
-  grade_goal: GradeGoal;
+  gradeGoal: GradeGoal;
 
   @Column({
     type: "enum",
     enum: WorkFrequency,
+    name: "work_frequency",
   })
-  work_frequency: WorkFrequency;
+  workFrequency: WorkFrequency;
 
   @Column({
     type: "enum",
     enum: WorkType,
+    name: "work_type",
   })
-  work_type: WorkType;
+  workType: WorkType;
 
-  @Column()
-  max_size: number;
+  @Column({ name: "max_size" })
+  maxSize: number;
 
   @Column()
   language: string;
@@ -35,5 +47,10 @@ export class CriteriaEntity {
   @Column()
   location: string;
 
-  // Mangler relations, fikser senere
+  @ManyToMany(() => SubjectEntity)
+  @JoinTable()
+  subjects: SubjectEntity[];
+
+  @ManyToOne(() => SchoolEntity, (school) => school.criteriaCollection)
+  school_uuid: SchoolEntity;
 }

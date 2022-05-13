@@ -1,15 +1,23 @@
-import { Column, Entity, PrimaryColumn, Unique } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
+import { CriteriaEntity } from "./CriteriaEntity";
+import { UserEntity } from "./UserEntity";
 
 @Entity()
-@Unique(["name"]) // Usikker på om det er riktig
 export class SchoolEntity {
   @PrimaryColumn()
   uuid: string;
 
   @Column({
     nullable: false,
+    unique: true,
   })
   name: string;
 
-  // Mangler kanskje relations, fikser senere
+  @OneToMany(() => CriteriaEntity, (criteria) => criteria.school_uuid, {
+    lazy: true,
+  })
+  criteriaCollection: CriteriaEntity[];
+
+  @OneToMany(() => UserEntity, (user) => user.school_uuid, { lazy: true })
+  users: UserEntity[];
 }

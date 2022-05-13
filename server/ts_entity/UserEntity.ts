@@ -1,16 +1,20 @@
-import { Column, Entity, PrimaryColumn, Unique } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { IsEmail } from "class-validator";
+import { SchoolEntity } from "./SchoolEntity";
 
 @Entity()
-@Unique(["username"]) // Usikker på om det er riktig
 export class UserEntity {
+  constructor() {}
+
   @PrimaryColumn()
   uuid: string;
 
   @Column({
     nullable: false,
+    name: "username",
+    unique: true,
   })
-  username: string;
+  userName: string;
 
   @Column({
     nullable: false,
@@ -18,11 +22,12 @@ export class UserEntity {
   @IsEmail()
   email: string;
 
-  @Column()
-  first_name: string;
+  @Column({ name: "first_name" })
+  firstName: string;
 
-  @Column()
-  last_name: string;
+  @Column({ name: "last_name" })
+  lastName: string;
 
-  // Mangler relations, fikser senere
+  @ManyToOne(() => SchoolEntity, (school) => school.users)
+  school_uuid: SchoolEntity;
 }

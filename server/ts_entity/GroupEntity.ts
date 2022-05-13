@@ -1,19 +1,27 @@
-import { Column, Entity, PrimaryColumn, Unique } from "typeorm";
+import { Column, Entity, OneToOne, PrimaryColumn } from "typeorm";
+import { CriteriaEntity } from "./CriteriaEntity";
 
 @Entity()
-@Unique(["name"]) // Usikker på om det er riktig
 export class GroupEntity {
   @PrimaryColumn()
   uuid: string;
 
-  @Column()
+  @Column({
+    unique: true,
+  })
   name: string;
 
-  @Column()
-  open_for_membership: boolean;
+  @Column({
+    type: "text",
+  })
+  rules: string;
 
-  @Column()
-  private: boolean;
+  @Column({
+    default: false,
+    name: "is_private",
+  })
+  isPrivate: boolean;
 
-  // Mangler relations, fikser senere
+  @OneToOne(() => CriteriaEntity)
+  criteria: CriteriaEntity;
 }

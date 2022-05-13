@@ -6,4 +6,6 @@ export enum WorkFrequency {
   W3 = "3 gang i uka",
   W4 = "4 gang i uka",
   W5 = "5 gang i uka",
+  W6 = "6 ganger i uka",
+  W7 = "Hver dag",
 }
