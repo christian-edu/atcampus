@@ -12,20 +12,32 @@ import { WorkType } from "./enums/WorkType";
 import { SubjectEntity } from "./SubjectEntity";
 import { SchoolEntity } from "./SchoolEntity";
 import { v4 as uuidv4 } from "uuid";
-import { GroupCriteriaDto } from "../dto/groupCriteriaDto";
 
 @Entity()
 export class CriteriaEntity {
-  constructor(dto: GroupCriteriaDto) {
+  constructor(
+    gradeGoal: GradeGoal,
+    workFrequency = WorkFrequency.ANY,
+    workType = WorkType.ANY,
+    maxSize = 255,
+    language = "",
+    location = "",
+    subjects?: SubjectEntity[],
+    school?: SchoolEntity
+  ) {
     this.uuid = uuidv4();
-    this.grade_goal = dto.gradeGoal;
-    this.work_frequency = dto.workFrequency;
-    this.work_type = dto.workType;
-    this.max_size = dto.maxSize;
-    this.language = dto.language;
-    this.location = dto.location;
-    this.subjects = dto.subject;
-    this.school_uuid = dto.school;
+    this.grade_goal = gradeGoal;
+    this.work_frequency = workFrequency;
+    this.work_type = workType;
+    this.max_size = maxSize;
+    this.language = language;
+    this.location = location;
+    if (subjects) {
+      this.subjects = subjects;
+    } else {
+      this.subjects = new Array<SubjectEntity>();
+    }
+    this.school_uuid = school;
   }
 
   @PrimaryColumn()
@@ -41,27 +53,27 @@ export class CriteriaEntity {
     type: "enum",
     enum: WorkFrequency,
   })
-  work_frequency: WorkFrequency | null;
+  work_frequency: WorkFrequency | undefined;
 
   @Column({
     type: "enum",
     enum: WorkType,
   })
-  work_type: WorkType | null;
+  work_type: WorkType | undefined;
 
   @Column()
-  max_size: number | null;
+  max_size: number | undefined;
 
   @Column()
-  language: string | null;
+  language: string | undefined;
 
-  @Column({ type: "string" })
-  location: string | null;
+  @Column()
+  location: string | undefined;
 
   @ManyToMany(() => SubjectEntity)
   @JoinTable()
-  subjects: string[] | SubjectEntity[] | null;
+  subjects: SubjectEntity[];
 
   @ManyToOne(() => SchoolEntity, (school) => school.criteriaCollection)
-  school_uuid: SchoolEntity | string | null;
+  school_uuid: SchoolEntity | undefined;
 }

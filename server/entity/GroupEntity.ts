@@ -2,9 +2,25 @@ import { Column, Entity, OneToMany, OneToOne, PrimaryColumn } from "typeorm";
 import { CriteriaEntity } from "./CriteriaEntity";
 import { GroupMemberEntity } from "./GroupMemberEntity";
 import { GroupRequestEntity } from "./GroupRequestEntity";
+import { v4 as uuidv4 } from "uuid";
 
 @Entity()
 export class GroupEntity {
+  constructor(
+    name: string,
+    criteria: CriteriaEntity,
+    isPrivate: boolean,
+    users: GroupMemberEntity[],
+    rules = ""
+  ) {
+    this.uuid = uuidv4();
+    this.name = name;
+    this.criteria = criteria;
+    this.isPrivate = isPrivate;
+    this.users = users;
+    this.rules = rules;
+    this.requests = new Array<GroupRequestEntity>();
+  }
   @PrimaryColumn()
   uuid: string;
 
@@ -16,7 +32,7 @@ export class GroupEntity {
   @Column({
     type: "text",
   })
-  rules: string;
+  rules: string | undefined;
 
   @Column({
     default: false,

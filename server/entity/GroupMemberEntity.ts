@@ -4,14 +4,14 @@ import { GroupEntity } from "./GroupEntity";
 
 @Entity()
 export class GroupMemberEntity {
-  constructor(user_uuid, group_uuid, is_admin) {
+  constructor(user_uuid: string, group_uuid: string, is_admin: boolean) {
     this.user_uuid = user_uuid;
     this.group_uuid = group_uuid;
     this.is_admin = is_admin;
   }
 
   @PrimaryColumn()
-  uuid: string;
+  uuid!: string;
 
   @Column()
   is_admin: boolean;

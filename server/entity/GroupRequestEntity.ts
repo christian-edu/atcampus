@@ -6,8 +6,21 @@ import { v4 as uuidv4 } from "uuid";
 
 @Entity()
 export class GroupRequestEntity {
-  constructor() {
+  constructor(
+    recipient: Recipient,
+    user_uuid: string,
+    group_uuid: string,
+    user: UserEntity,
+    group: GroupEntity,
+    message = ""
+  ) {
     this.uuid = uuidv4();
+    this.recipient = recipient;
+    this.message = message;
+    this.user_uuid = user_uuid;
+    this.group_uuid = group_uuid;
+    this.user = user;
+    this.group = group;
   }
 
   @PrimaryColumn()

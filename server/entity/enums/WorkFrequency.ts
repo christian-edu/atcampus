@@ -8,4 +8,5 @@ export enum WorkFrequency {
   W5 = "5 gang i uka",
   W6 = "6 ganger i uka",
   W7 = "Hver dag",
+  ANY = "Hva som helst",
 }
