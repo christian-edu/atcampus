@@ -8,8 +8,8 @@ export function GroupCriteria() {
     const [language, setLanguage] = useState("velg")
     const [size, setSize] = useState("velg");
     const [gradeGoal, setGradeGoal] = useState("velg");
-    const [frequency, setFrequency] = useState("velg");
-    const [workMethod, setWorkMethod] = useState("velg");
+    const [workFrequency, setWorkFrequency] = useState("velg");
+    const [workType, setWorkType] = useState("velg");
     const [place, setPlace] = useState("velg");
     const [school, setSchool] = useState("velg");
     const [error, setError] = useState();
@@ -34,8 +34,6 @@ export function GroupCriteria() {
     }
 
 
-    // need to fetch the data from all the input fields
-
 
     useEffect(() => {
 
@@ -48,7 +46,7 @@ export function GroupCriteria() {
 
     async function searchForGroup(){
 
-        if(language === "velg" || size === "velg" || gradeGoal === "velg" || frequency === "velg" || workMethod === "velg" || place === "velg" || school === "velg" ){
+        if(language === "velg" || size === "velg" || gradeGoal === "velg" || workFrequency === "velg" || workType === "velg" || place === "velg" || school === "velg" ){
             setError("Fyll inn alle feltene")
         }else {
 
@@ -57,7 +55,7 @@ export function GroupCriteria() {
                 headers: {
                     "content-type": "application/json"
                 },
-                body: JSON.stringify({language, size, gradeGoal, frequency, workMethod, place, school, subject})
+                body: JSON.stringify({language, size, gradeGoal, workFrequency, workType, place, school, subject})
             })
 
            setGroupResult( await res.json())
@@ -92,7 +90,8 @@ export function GroupCriteria() {
                     <select defaultValue={"velg"} name="språk" onChange={(e) => setLanguage(e.target.value)}>
                         <option value="velg" disabled>språk</option>
                         <option value="Norsk">Norsk</option>
-                        <option value="Engelsk">Engelsk</option>
+                        <option value="English">English</option>
+                        <option value="Null">Ikke viktig</option>
                     </select>
                 </div>
                 <div>
@@ -101,6 +100,7 @@ export function GroupCriteria() {
                         <option value="liten">Liten (1-4stk)</option>
                         <option value="Medium">Liten (5-7stk)</option>
                         <option value="Stor">Stor (8+)</option>
+                        <option value="Null">Ikke viktig</option>
                     </select>
                 </div>
             </div>
@@ -108,33 +108,44 @@ export function GroupCriteria() {
 
                 <select defaultValue={"velg"} name="karaktermål" onChange={(e) => setGradeGoal(e.target.value)}>
                     <option value="velg" disabled>karaktermål</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="C">C</option>
+                    <option value="Bestått">Bestått</option>
                     <option value="D">D</option>
-                    <option value="E">E</option>
-                    <option value="F">F</option>
+                    <option value="C">C</option>
+                    <option value="B">B</option>
+                    <option value="A">A</option>
+                    <option value="Null">Ikke viktig</option>
                 </select>
             </div>
             <div>
-                <select defaultValue={"velg"} name="arbeidsfrekvens" onChange={(e) => setFrequency(e.target.value)}>
+                <select defaultValue={"velg"} name="arbeidsfrekvens" onChange={(e) => setWorkFrequency(e.target.value)}>
                     <option value="velg" disabled>arbeidsfrekvens</option>
-                    <option value="Månedlig">Månedlig</option>
-                    <option value="Ukentlig">Ukentlig</option>
+                    <option value="W1">En gang i uka</option>
+                    <option value="W2">To ganger i uka</option>
+                    <option value="W3">Tre ganger i uka</option>
+                    <option value="W4">Fire ganger i uka</option>
+                    <option value="W5">Fem ganger i uka</option>
+                    <option value="W6">Seks ganger i uka</option>
+                    <option value="W7">Syv ganger i uka</option>
+                    <option value="M1">En gang i månden</option>
+                    <option value="M2">To ganger i månden</option>
+                    <option value="Null">Ikke viktig</option>
                 </select>
             </div>
             <div>
-                <input type="radio" name={"metode"} id={"fysisk"} value={"fysisk"} onChange={(e) => setWorkMethod(e.target.value)}/>
+                <input type="radio" name={"metode"} id={"fysisk"} value={"LOCAL"} onChange={(e) => setWorkType(e.target.value)}/>
                 <label htmlFor="fysisk">Fysisk</label>
-                <input type="radio" name={"metode"} id={"digitalt"} value={"digitalt"} onChange={(e) => setWorkMethod(e.target.value)}/>
+                <input type="radio" name={"metode"} id={"digitalt"} value={"REMOTE"} onChange={(e) => setWorkType(e.target.value)}/>
                 <label htmlFor="digitalt">Digitalt</label>
-                <input type="radio" name={"metode"} id={"begge"} value={"begge"} onChange={(e) => setWorkMethod(e.target.value)}/>
+                <input type="radio" name={"metode"} id={"begge"} value={"HYBRID"} onChange={(e) => setWorkType(e.target.value)}/>
                 <label htmlFor="begge">Begge</label>
+                <input type="radio" name={"metode"} id={"ikkeViktig"} value={"Null"} onChange={(e) => setWorkType(e.target.value)}/>
+                <label htmlFor="ikkeViktig">Ikke viktig</label>
                 <div >
                     {/*Byttet knapp*/}
                     <Button type="button" onClick={searchForGroup}>Søk etter kriterier</Button>
                 </div>
             </div>
+            <pre>{JSON.stringify({workFrequency})}</pre>
         </div>
         {error ? <h2>{error}</h2>: <></>}
 

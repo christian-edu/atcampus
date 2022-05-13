@@ -17,6 +17,7 @@ const SearchGroupResults = () => {
       <ul className='grid grid-cols-1 gap-4'>
         {groupResult.map((group) => (
           <GroupCard key={group.groupname} match={true} group={group} />
+            // Legge til ett group criteria card
         ))}
 
       </ul>

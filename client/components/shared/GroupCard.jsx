@@ -32,6 +32,7 @@ const GroupCard = (props) => {
           <MatchRequest onClick={clickHandler} group={props.group} />
         </Modal>
       )}
+
       <div
         className='bg-white flex items-center p-6 rounded-standard border border-purple-4 cursor-pointer'
         onClick={clickHandler}

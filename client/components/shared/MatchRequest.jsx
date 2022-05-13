@@ -3,6 +3,8 @@ import { XIcon, CheckIcon } from '@heroicons/react/solid';
 const MatchRequest = (props) => {
   // Popup som vises når man søker etter gruppe basert på kriterer
 
+
+
   return (
     <div className='flex flex-col items-center bg-white p-8 rounded text-center shadow-xl'>
       <img

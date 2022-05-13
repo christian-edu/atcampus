@@ -89,13 +89,13 @@ export default class GroupRouter {
         router.post("/search", async (req, res) => {
 
 
-            const {language, workMethod, gradeGoal, frequency, size, subject, place, school} = req.body;
+            const {language, workType, gradeGoal, workFrequency, size, subject, place, school} = req.body;
 
-            const searchDto = new SearchDTO(language,workMethod,gradeGoal,frequency, size, subject,place, school);
+            const searchDto = new SearchDTO(language,workType,gradeGoal,workFrequency, size, subject,place, school);
 
 
             console.log("Here are your search criterias: ")
-            console.log({language, workMethod, gradeGoal, frequency, size, subject, place, school})
+            console.log({language, workType, gradeGoal, workFrequency, size, subject, place, school})
 
 
 
