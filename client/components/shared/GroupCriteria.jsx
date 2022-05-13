@@ -145,7 +145,6 @@ export function GroupCriteria() {
                     <Button type="button" onClick={searchForGroup}>Søk etter kriterier</Button>
                 </div>
             </div>
-            <pre>{JSON.stringify({workFrequency})}</pre>
         </div>
         {error ? <h2>{error}</h2>: <></>}
 
