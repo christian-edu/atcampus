@@ -108,7 +108,7 @@ export function GroupCriteria() {
 
                 <select defaultValue={"velg"} name="karaktermål" onChange={(e) => setGradeGoal(e.target.value)}>
                     <option value="velg" disabled>karaktermål</option>
-                    <option value="Bestått">Bestått</option>
+                    <option value="PASS">Bestått</option>
                     <option value="D">D</option>
                     <option value="C">C</option>
                     <option value="B">B</option>
