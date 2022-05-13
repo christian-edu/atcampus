@@ -4,8 +4,16 @@ import GroupService from "./service/groupService";
 import GroupRouter from "./controller/groupRouter";
 import { AddressInfo } from "net";
 import DummyGroupRepo from "./repo/DummyGroupRepo";
+import { DataSource } from "typeorm";
 
 const app = express();
+export const AppDataSource = new DataSource({
+  type: "postgres",
+  host: "placeholder", // hentes fra process.env
+  username: "placeholder", // hentes fra process.env
+  password: "placeholder", // hentes fra process.env
+  database: "placeholder", // hentes fra process.env
+});
 const dummyRepo = new DummyGroupRepo();
 const groupService = new GroupService(dummyRepo);
 const groupRoutes = new GroupRouter(groupService, express.Router());
