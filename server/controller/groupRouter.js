@@ -86,15 +86,20 @@ export default class GroupRouter {
             }
         });
 
-        router.get("/search", async (req, res) => {
+        router.post("/search", async (req, res) => {
 
 
-            const {language, workMethod, gradeGoal, frequency, size, subject, place, school} = req.query;
+           /* const {language, workMethod, gradeGoal, frequency, size, subject, place, school} = req.query;*/
+            const {language, workMethod, gradeGoal, frequency, size, subject, place, school} = req.body;
 
             const searchDto = new SearchDTO(language,workMethod,gradeGoal,frequency, size, subject,place, school);
 
 
-            console.log("Here are your subjects " + subject)
+            console.log("Here are your search criterias: ")
+            console.log({language, workMethod, gradeGoal, frequency, size, subject, place, school})
+
+
+
             try {
                 /*res.json(await service.searchGroup(searchDto));*/
                 // Dummy data response

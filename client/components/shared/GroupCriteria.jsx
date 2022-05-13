@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-import Button from "./Button";
 import {useNavigate} from "react-router-dom";
 
 export function GroupCriteria() {
@@ -14,13 +13,22 @@ export function GroupCriteria() {
     const [school, setSchool] = useState("velg");
     const [error, setError] = useState();
     const [groupResult, setGroupResult] = useState();
-    const [subjectFieldsCounter, setSubjectFieldsCounter] = useState([])
-    const [subject, setSubject] = useState([]);
+    const [subject, setSubject] = useState([{subject: ""}]);
 
     const navigate = useNavigate();
 
-    function addSubjectField(){
-        setSubjectFieldsCounter(oldArray => [...oldArray, "counter"])
+
+    function addSubjectField () {
+        const newField = {subject: ""};
+
+        setSubject((oldArray) => [...oldArray, newField])
+    }
+
+    function handleInputChange(event, index){
+        const data = [...subject];
+        data[index][event.target.name] = event.target.value;
+
+        setSubject(data)
 
     }
 
@@ -43,7 +51,15 @@ export function GroupCriteria() {
             setError("Fyll inn alle feltene")
         }else {
 
-            const res = await fetch('/api/v1/groups/search?' + new URLSearchParams({subject, size, gradeGoal, frequency, workMethod, language, place, school}));
+            /*const res = await fetch('/api/v1/groups/search?' + new URLSearchParams({subject, size, gradeGoal, frequency, workMethod, language, place, school}));*/
+
+            const res = await fetch("/api/v1/groups/search", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({language, size, gradeGoal, frequency, workMethod, place, school, subject})
+            })
 
            setGroupResult( await res.json())
 
@@ -64,14 +80,22 @@ export function GroupCriteria() {
                     <input type="text" placeholder={"Eks. 'Høyskolen Kristiania'"} onChange={(e) => setSchool(e.target.value)}/>
                 </div>
                 <div>
-                    <h4>Emne:</h4>
+
+                    <button onClick={addSubjectField}>+</button>
+                    {subject.map((subInput, index) => (
+                        <div key={index}>
+                            <input name={"subject"} placeholder={"eks. Avansert Java"} onChange={(event => handleInputChange(event, index))} />
+                        </div>
+                    ))}
+
+                   {/* <h4>Emne:</h4>
                         <input type="text" placeholder={"Eks. 'Avansert Java'"} onBlur={(e) => setSubject(oldArray => [...oldArray, e.target.value])}/>
                         <div><button onClick={addSubjectField}>+</button></div>
                         {subjectFieldsCounter.map((field) => (
                             <h2>
                                 <input type="text" placeholder={"Eks. 'Avansert Java'"} onBlur={(e) => setSubject(oldArray => [...oldArray, e.target.value])}/>
                             </h2>
-                        ))}
+                        ))}*/}
                 </div>
                 <div>
                     <select defaultValue={"velg"} name="språk" onChange={(e) => setLanguage(e.target.value)}>
