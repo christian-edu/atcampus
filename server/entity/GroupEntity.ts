@@ -1,5 +1,7 @@
-import { Column, Entity, OneToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne, PrimaryColumn } from "typeorm";
 import { CriteriaEntity } from "./CriteriaEntity";
+import { GroupMemberEntity } from "./GroupMemberEntity";
+import { GroupRequestEntity } from "./GroupRequestEntity";
 
 @Entity()
 export class GroupEntity {
@@ -24,4 +26,10 @@ export class GroupEntity {
 
   @OneToOne(() => CriteriaEntity)
   criteria: CriteriaEntity;
+
+  @OneToMany(() => GroupMemberEntity, (gm) => gm.group)
+  users: GroupMemberEntity[];
+
+  @OneToMany(() => GroupRequestEntity, (gr) => gr.group)
+  requests: GroupRequestEntity[];
 }
