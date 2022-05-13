@@ -1,4 +1,4 @@
-import { SearchDTO } from "../dto/searchDTO.js";
+import { SearchDTO } from "../dto/searchDTO";
 import e, { IRouter, Response } from "express";
 import { IGroupService } from "../service/IGroupService";
 import HttpException from "../httpException";
@@ -12,10 +12,9 @@ function sendError(res: Response, e: HttpException) {
 export default class GroupRouter {
   constructor(private groupService: IGroupService, private router: IRouter) {}
 
-  fetchRoutes() {
+  public fetchRoutes() {
     const router = this.router;
     const service = this.groupService;
-
     router.get("/", async (req, res, next) => {
       const { group_id } = req?.query;
       if (group_id) {
@@ -51,7 +50,8 @@ export default class GroupRouter {
       try {
         res.json(await service.deleteGroup(groupId));
       } catch (e: any) {
-        sendError(res, e);
+        console.log(e);
+        sendError(res, e as HttpException);
       }
     });
 
@@ -143,6 +143,7 @@ export default class GroupRouter {
     try {
       res.json(await service.fetchAllGroups());
     } catch (e: any) {
+      console.log(e);
       sendError(res, e);
     }
   }

@@ -1,12 +1,12 @@
 export class GroupCriteriaDto {
   constructor(
     public school: string | null,
-    public gradeWanted: string | null,
-    public frequency: string | null,
+    public gradeGoal: string | null,
+    public workFrequency: string | null,
     public language: string | null,
-    public maxGroupSize: number | null,
+    public maxSize: number | null,
     public location: string | null,
-    public subject: string | null,
-    public workMethod: string | null
+    public subject: string[] | null,
+    public workType: string | null
   ) {}
 }
