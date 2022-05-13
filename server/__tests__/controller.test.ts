@@ -30,15 +30,15 @@ describe("Tests for group root paths in controller", () => {
     mockFetchAllGroups.mockImplementation(async () => JSON.stringify(groups));
     const result = await agent.get("/api/v1/groups").expect(200);
     expect(mockGroupService.fetchAllGroups).toHaveBeenCalledTimes(1);
-    console.log(result.body as GroupDto[]);
-    expect(result.body[0].name).toContain("PRO201-G8");
+    console.log((JSON.parse(result.body) as GroupDto[])[0]);
+    expect((JSON.parse(result.body) as GroupDto[])[0].name).toContain("Groyp");
   });
 
   it("Should respond with error on getting all groups", async () => {
     const mockFetchAllGroups: jest.Mock = On(mockGroupService).get(
       method((mock) => mock.fetchAllGroups)
     );
-    mockFetchAllGroups.mockReturnValue(() => {
+    mockFetchAllGroups.mockImplementation(() => {
       throw new HttpException("Error!", 500);
     });
 
@@ -56,7 +56,7 @@ describe("Tests for group root paths in controller", () => {
     const result = await agent.get("/api/v1/groups?group_id=1").expect(200);
     expect(mockFetchGroupById).toHaveBeenCalledWith("1");
     expect(mockFetchGroupById).toHaveBeenCalledTimes(1);
-    expect(result.body.groupname).toContain("PRO201-G8");
+    expect((result.body as GroupDto).name).toContain("Groyp");
   });
 
   it("Should respond with error on getting group by id", async () => {
@@ -83,7 +83,7 @@ describe("Tests for group root paths in controller", () => {
       .expect("Content-Type", /json/)
       .expect(200);
     expect(mockAddGroup).toHaveBeenCalledTimes(1);
-    expect(result.body.groupname).toEqual("PRO201-G8");
+    expect((result.body as GroupDto).name).toEqual("Groyp");
   });
 
   it("Should respond with error on adding group", async () => {
@@ -101,7 +101,7 @@ describe("Tests for group root paths in controller", () => {
       method((mock) => mock.updateGroup)
     );
     mockUpdateGroup.mockImplementation(async () => groups[0]);
-    const result = await agent
+    await agent
       .patch("/api/v1/groups")
       .send(groups[0])
       .set("content-type", "application/json")
@@ -136,10 +136,7 @@ describe("Tests for group root paths in controller", () => {
       .expect(200);
 
     expect(mockGroupService.deleteGroup).toHaveBeenCalledTimes(1);
-    expect(mockGroupService.deleteGroup).toHaveBeenCalledWith({
-      groupname: "PRO201-G8",
-      members: ["Only you"],
-    });
+    expect(mockGroupService.deleteGroup).toHaveBeenCalledWith("1");
   });
 
   it("Should respond with error when deleting a group", async () => {
