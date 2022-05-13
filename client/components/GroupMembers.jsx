@@ -16,7 +16,7 @@ const GroupMembers = () => {
           <UserCard key={member} edit={true} user={member} />
         ))}
       </ul>
-      <Button to="/group/members/searchUser">+ Legg til medlem</Button>
+      <Button to='/group/members/searchUser'>+ Legg til medlem</Button>
     </div>
   );
 };

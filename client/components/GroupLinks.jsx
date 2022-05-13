@@ -26,8 +26,8 @@ const GroupLinks = () => {
   return (
     <div>
       <div className='flex flex-row justify-between'>
-          <Button to="/createGroup">Opprett gruppe</Button>
-          <Button to="/searchGroup">Søk etter gruppe</Button>
+        <Button to='/createGroup'>Opprett gruppe</Button>
+        <Button to='/searchGroup'>Søk etter gruppe</Button>
       </div>
 
       <h2 className='text-dark-1 text-xl font-bold mb-4 mt-6'>Mine grupper</h2>
