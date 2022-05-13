@@ -7,7 +7,7 @@ export class SearchDTO {
     public gradeGoal: string | undefined,
     public workFrequency: string | undefined,
     public maxSize: string | undefined,
-    public subject: string | undefined,
+    public subject: string[] | undefined,
     public location: string | undefined,
     public school: string | undefined
   ) {}

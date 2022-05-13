@@ -9,6 +9,7 @@ import { method, On } from "ts-auto-mock/extension";
 import { GroupDto } from "../dto/groupDto";
 import mock = jest.mock;
 import { GroupMemberDto } from "../dto/groupMemberDto";
+import { SearchDTO } from "../dto/searchDTO";
 
 describe("Tests for group root paths in controller", () => {
   let mockGroupService: IGroupService;
@@ -256,64 +257,62 @@ describe("Tests for group/member paths in controller", () => {
   });
 });
 
-// describe("Search route", () => {
-//   let mockGroupService = new GroupService();
-//   let groupRouter = new GroupRouter(mockGroupService, new Router());
-//   let agent;
-//   let app;
-//   let groups;
-//   beforeAll(() => {
-//     app = express();
-//     agent = supertest.agent(app);
-//     groups = [...groupNames];
-//
-//     app.use(express.json());
-//     app.use("/api/v1/groups", groupRouter.fetchRoutes());
-//   });
-//
-//   beforeEach(() => {
-//     GroupService.mockClear();
-//   });
-//
-//   it("Should return a search result", async () => {
-//     jest
-//       .spyOn(GroupService.prototype, "searchGroup")
-//       .mockImplementation(async () => true);
-//     //language, school, place, workMethod, gradeGoal, frequency
-//
-//     const params = new URLSearchParams({
-//       language: "norwegian",
-//       school: "HK",
-//       place: "Oslo",
-//       workMethod: "remote",
-//       gradeGoal: "A",
-//       frequency: "2W",
-//     });
-//     await agent
-//       .get(`/api/v1/groups/search?${params.toString()}`)
-//       .send({ group: groupNames[0], user: users[0] })
-//       .expect(200);
-//   });
-//
-//   it("Should recieve error on a search result", async () => {
-//     jest
-//       .spyOn(GroupService.prototype, "searchGroup")
-//       .mockImplementation(async () => {
-//         throw new HttpException("Error!", 500);
-//       });
-//     //language, school, place, workMethod, gradeGoal, frequency
-//
-//     const params = new URLSearchParams({
-//       language: "norwegian",
-//       school: "HK",
-//       place: "Oslo",
-//       workMethod: "remote",
-//       gradeGoal: "A",
-//       frequency: "2W",
-//     });
-//     await agent
-//       .get(`/api/v1/groups/search?${params.toString()}`)
-//       .send({ group: groupNames[0], user: users[0] })
-//       .expect(500);
-//   });
-// });
+describe("Search route", () => {
+  let mockGroupService: IGroupService;
+  let groupRouter: GroupRouter;
+  let agent: SuperAgentTest;
+  let app;
+
+  beforeAll(() => {
+    mockGroupService = createMock<IGroupService>();
+    groupRouter = new GroupRouter(mockGroupService, Router());
+    app = express();
+    agent = supertest.agent(app);
+    app.use(express.json());
+    app.use("/api/v1/groups", groupRouter.fetchRoutes());
+  });
+
+  // it("Should return a search result", async () => {
+  //   jest
+  //     .spyOn(GroupService.prototype, "searchGroup")
+  //     .mockImplementation(async () => true);
+  //   //language, school, place, workMethod, gradeGoal, frequency
+  //
+  //   const params = new URLSearchParams({
+  //     language: "norwegian",
+  //     school: "HK",
+  //     place: "Oslo",
+  //     workMethod: "remote",
+  //     gradeGoal: "A",
+  //     frequency: "2W",
+  //   });
+  //   await agent
+  //     .get(`/api/v1/groups/search?${params.toString()}`)
+  //     .send({ group: groupNames[0], user: users[0] })
+  //     .expect(200);
+  // });
+
+  it("Should recieve error on a search result", async () => {
+    const mockSearchGroup: jest.Mock = On(mockGroupService).get(
+      method((method) => method.searchGroup)
+    );
+
+    mockSearchGroup.mockImplementation(async () => {
+      throw new HttpException("Error!", 500);
+    });
+    const searchDto = new SearchDTO(
+      "norsk",
+      "REMOTE",
+      "A",
+      "W1",
+      "4",
+      ["PGS0M3TH1N6"],
+      "Oslo",
+      "HK"
+    );
+    await agent
+      .get(`/api/v1/groups/search`)
+      .send(JSON.stringify(searchDto))
+      .expect(500);
+  });
+});

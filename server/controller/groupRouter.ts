@@ -103,7 +103,7 @@ export default class GroupRouter {
         gradeGoal?.toString(),
         frequency?.toString(),
         size?.toString(),
-        subject?.toString(),
+        subject as string[],
         place?.toString(),
         school?.toString()
       );
