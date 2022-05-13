@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const Button = (props) => {
   // felles klasser for button og link
-  const classes = `bg-gradient-left text-white text-center font-bold py-2 px-4 rounded max-w-sm ${
+  const classes = `bg-gradient-left text-white text-center font-bold py-2 px-4 rounded w-full ${
     props.className || ''
   }`;
 
@@ -14,7 +14,7 @@ const Button = (props) => {
       </button>
     );
 
-  // Rendrer en link som standard hvis man ikke setter noe type prop // <Button to="url">Tekst</Button>
+  // Rendrer en link som standard hvis man ikke setter type prop til button eller submit //
   return (
     <Link to={props.to} className={classes}>
       {props.children}

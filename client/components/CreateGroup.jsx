@@ -11,7 +11,6 @@ function CreateGroup() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-
     if (groupname.length === 0) {
       alert('Please fill in a group name');
     } else {
@@ -46,7 +45,7 @@ function CreateGroup() {
         <h2 className='text-xl font-bold'>Opprett gruppe</h2>
         <form onSubmit={handleSubmit}>
           <label>Gruppenavn:</label>
-          <div>
+          <div className='mb-6'>
             <input
               type='text'
               className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'

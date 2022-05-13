@@ -9,7 +9,6 @@ import {
   CalendarIcon,
   CogIcon,
 } from '@heroicons/react/solid';
-import ProfileMenu from './shared/ProfileMenu';
 
 const GroupPage = () => {
   const location = useLocation();
@@ -32,7 +31,10 @@ const GroupPage = () => {
             <GroupSettings />
           </Modal>
         )}
-        <CogIcon onClick={toggleSettings} className='text-dark-1 h-6 w-6' />
+        <CogIcon
+          onClick={toggleSettings}
+          className='text-dark-1 h-6 w-6 cursor-pointer'
+        />
       </div>
 
       <ul className='grid gap-8'>

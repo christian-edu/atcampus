@@ -7,7 +7,6 @@ const GroupMembers = () => {
 
   const group = location.state.group;
 
-
   return (
     <div className='bg-white p-6 rounded border border-purple-4'>
       <h2 className='font-bold text-xl mb-8'>Medlemmer</h2>
@@ -16,7 +15,9 @@ const GroupMembers = () => {
           <UserCard key={member} edit={true} user={member} />
         ))}
       </ul>
-      <Button to='/group/members/searchUser'>+ Legg til medlem</Button>
+      <div className='grid'>
+        <Button to='/group/members/searchUser'>+ Legg til medlem</Button>
+      </div>
     </div>
   );
 };
