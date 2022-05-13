@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import TopNavBar from './TopNavBar';
-import { HomeIcon } from '@heroicons/react/solid';
-import { ChevronRightIcon } from '@heroicons/react/solid';
-import { UserGroupIcon } from '@heroicons/react/solid';
-import { DocumentTextIcon } from '@heroicons/react/solid';
-import { QuestionMarkCircleIcon } from '@heroicons/react/solid';
-import { ColorSwatchIcon } from '@heroicons/react/solid';
+import {
+  HomeIcon,
+  ColorSwatchIcon,
+  QuestionMarkCircleIcon,
+  DocumentTextIcon,
+  UserGroupIcon,
+  ChevronRightIcon
+} from '@heroicons/react/solid';
 
 const TopNavBarMenu = (props) => {
   return (
