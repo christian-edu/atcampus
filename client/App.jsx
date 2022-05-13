@@ -22,9 +22,9 @@ const App = () => {
       <BrowserRouter>
         
         <TopNavBar/>
-        <main className='bg-dark-6 pt-16 flex'>
+        <main className='bg-dark-6 flex'>
         <LeftNavBar/>
-          <div className='container mx-auto pb-16'>
+          <div className='container mx-auto py-16'>
             <Routes>
               <Route path={'/'} element={<GroupLinks />} />
               <Route path={'/searchGroup'} element={<SearchGroup />} />
