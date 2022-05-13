@@ -18,5 +18,4 @@ RUN npm install
 EXPOSE 3000
 
 # Start express-serveren med "node server.js"
-CMD [ "node-ts", "server.ts" ]
-
+CMD ["npm", "run", "start"]

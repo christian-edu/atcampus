@@ -1,4 +1,4 @@
-import HttpException from "../httpException.js";
+import HttpException from "../httpException";
 import { groups } from "../mockData";
 import { SearchDTO } from "../dto/searchDTO";
 import { IGroupRepo } from "../repo/IGroupRepo";
@@ -67,11 +67,11 @@ export default class GroupService implements IGroupService {
       if (!group.uuid) continue; // TODO: Fjerne denne når vi har entities på plass.
       //const intersection = group.filter(element => searchDto.includes(element));
       // TODO: Lage en group entity / dto så jeg ikke bruker searchDto der..
-      if (
-        group?.criteria?.subject?.toLowerCase() !==
-        searchDto?.subject?.toLowerCase()
-      )
-        continue;
+      // if (
+      //   group?.criteria?.subject?.toLowerCase() !==
+      //   searchDto?.subject?.toLowerCase()
+      // )
+      //   continue;
       if (
         group.criteria?.gradeGoal?.toLowerCase() ===
         searchDto?.gradeGoal?.toLowerCase()
