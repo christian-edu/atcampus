@@ -1,5 +1,7 @@
 import { SearchDTO } from "./dto/searchDTO.ts";
-import { GroupCriteriaDto, GroupDto, UserDto } from "./service/groupService";
+import { GroupDto } from "./dto/groupDto";
+import { GroupCriteriaDto } from "./dto/groupCriteriaDto";
+import { UserDto } from "./dto/userDto";
 
 export const users = [
   new UserDto("Christian", "Gregersen", "chgr", "chgr007@egms.no", "drowssap"),

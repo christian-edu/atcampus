@@ -1,5 +1,6 @@
 import { IGroupRepo } from "./IGroupRepo";
-import { GroupDto, UserDto } from "../service/groupService";
+import { GroupDto } from "../dto/groupDto";
+import { UserDto } from "../dto/userDto";
 
 export default class DummyGroupRepo implements IGroupRepo {
   addGroup(): GroupDto {

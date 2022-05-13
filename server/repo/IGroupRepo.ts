@@ -1,4 +1,5 @@
-import { GroupDto, UserDto } from "../service/groupService";
+import { GroupDto } from "../dto/groupDto";
+import { UserDto } from "../dto/userDto";
 
 export interface IGroupRepo {
   fetchAllGroups(): GroupDto[];

@@ -1,40 +1,10 @@
 import HttpException from "../httpException.js";
-import { groupNames, groups } from "../mockData.js";
+import { groups } from "../mockData.js";
 import { SearchDTO } from "../dto/searchDTO";
 import { IGroupRepo } from "../repo/IGroupRepo";
 import { IGroupService, searchResult } from "./IGroupService";
-
-export class GroupCriteriaDto {
-  constructor(
-    public school: string | null,
-    public gradeWanted: string | null,
-    public frequency: string | null,
-    public language: string | null,
-    public maxGroupSize: number | null,
-    public location: string | null,
-    public subject: string | null,
-    public workMethod: string | null
-  ) {}
-}
-
-export class UserDto {
-  constructor(
-    public firstName: string,
-    public lastName: string | null,
-    public username: string,
-    public email: string,
-    public password: string
-  ) {}
-}
-
-export class GroupDto {
-  constructor(
-    public isOpen: boolean | null,
-    public groupCriteria: GroupCriteriaDto | null,
-    public groupId: string | null,
-    public groupMembers: UserDto[] | null
-  ) {}
-}
+import { GroupDto } from "../dto/groupDto";
+import { UserDto } from "../dto/userDto";
 
 export default class GroupService implements IGroupService {
   constructor(public groupRepo: IGroupRepo) {}
@@ -52,11 +22,11 @@ export default class GroupService implements IGroupService {
     throw new HttpException("Not implemented!", 500);
   }
 
-  async deleteMember(group: GroupDto, user: UserDto): Promise<boolean> {
+  async deleteMember(groupId: string, userId: string): Promise<GroupDto> {
     throw new HttpException("Not implemented!", 500);
   }
 
-  async addMember(group: GroupDto, user: UserDto): Promise<boolean> {
+  async addMember(group: GroupDto, user: UserDto): Promise<GroupDto> {
     throw new HttpException("Not implemented", 500);
   }
 
@@ -69,7 +39,7 @@ export default class GroupService implements IGroupService {
     throw new HttpException("Not implemented", 500);
   }
 
-  async updateGroup(group: GroupDto): Promise<boolean> {
+  async updateGroup(group: GroupDto): Promise<GroupDto> {
     if (!group)
       throw new HttpException(
         "No group found in body. Expected {\ngroup: groupName\n}",
@@ -78,10 +48,10 @@ export default class GroupService implements IGroupService {
     throw new HttpException("Not implemented", 500);
   }
 
-  async deleteGroup(group: GroupDto): Promise<boolean> {
-    if (!group)
+  async deleteGroup(groupId: string): Promise<boolean> {
+    if (!groupId)
       throw new HttpException(
-        "No group found in body. Expected {\ngroup: groupName\n}",
+        "No groupId found. Expected {\ngroupId: id\n}",
         400
       );
     throw new HttpException("Not implemented", 500);
@@ -94,46 +64,46 @@ export default class GroupService implements IGroupService {
 
     for (const group of groups) {
       let score = 0;
-      if (!group.groupId) continue; // TODO: Fjerne denne når vi har entities på plass.
+      if (!group.uuid) continue; // TODO: Fjerne denne når vi har entities på plass.
       //const intersection = group.filter(element => searchDto.includes(element));
       // TODO: Lage en group entity / dto så jeg ikke bruker searchDto der..
       if (
-        group?.groupCriteria?.subject?.toLowerCase() !==
+        group?.criteria?.subject?.toLowerCase() !==
         searchDto?.subject?.toLowerCase()
       )
         continue;
       if (
-        group.groupCriteria?.gradeWanted?.toLowerCase() ===
+        group.criteria?.gradeWanted?.toLowerCase() ===
         searchDto?.gradeGoal?.toLowerCase()
       )
         score++;
-      if (group.groupCriteria?.maxGroupSize === searchDto?.size) score++;
+      if (group.criteria?.maxGroupSize === searchDto?.maxSize) score++;
       if (
-        group.groupCriteria?.location?.toLowerCase() ===
-        searchDto.place.toLowerCase()
+        group.criteria?.location?.toLowerCase() ===
+        searchDto.location?.toLowerCase()
       )
         score++;
       if (
-        group.groupCriteria?.frequency?.toLowerCase() ===
-        searchDto.frequency.toLowerCase()
+        group.criteria?.frequency?.toLowerCase() ===
+        searchDto.workFrequency?.toLowerCase()
       )
         score++;
       if (
-        group.groupCriteria?.language?.toLowerCase() ===
-        searchDto.language.toLowerCase()
+        group.criteria?.language?.toLowerCase() ===
+        searchDto.language?.toLowerCase()
       )
         score++;
       if (
-        group.groupCriteria?.school?.toLowerCase() ===
-        searchDto.school.toLowerCase()
+        group.criteria?.school?.toLowerCase() ===
+        searchDto.school?.toLowerCase()
       )
         score++;
       if (
-        group.groupCriteria?.workMethod?.toLowerCase() ===
-        searchDto?.workMethod.toLowerCase()
+        group.criteria?.workMethod?.toLowerCase() ===
+        searchDto.workType?.toLowerCase()
       )
         score++;
-      results[group.groupId] = {
+      results[group.uuid] = {
         group,
         score,
       };

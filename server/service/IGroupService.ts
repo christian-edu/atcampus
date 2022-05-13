@@ -1,6 +1,7 @@
 import { IGroupRepo } from "../repo/IGroupRepo";
 import { SearchDTO } from "../dto/searchDTO";
-import { GroupDto, UserDto } from "./groupService";
+import { GroupDto } from "../dto/groupDto";
+import { UserDto } from "../dto/userDto";
 
 export type searchResult = {
   [key: string]: {
@@ -17,15 +18,15 @@ export interface IGroupService {
 
   fetchGroupById(groupId: string): Promise<GroupDto>;
 
-  deleteMember(group: GroupDto, user: UserDto): Promise<boolean>;
+  deleteMember(groupId: string, userId: string): Promise<GroupDto>;
 
-  addMember(group: GroupDto, user: UserDto): Promise<boolean>;
+  addMember(group: GroupDto, user: UserDto): Promise<GroupDto>;
 
   fetchGroupMembers(groupId: string): Promise<UserDto[]>;
 
-  updateGroup(group: GroupDto): Promise<boolean>;
+  updateGroup(group: GroupDto): Promise<GroupDto>;
 
-  deleteGroup(group: GroupDto): Promise<boolean>;
+  deleteGroup(group: string): Promise<boolean>;
 
   searchGroup(searchDto: SearchDTO): Promise<searchResult>;
 }
