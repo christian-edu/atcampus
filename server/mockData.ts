@@ -8,7 +8,7 @@ export const users = [
   new UserDto("Roman", "Morso", "romo", "roman@morso.no", "drowssap"),
 ];
 
-const groupMembers = [
+export const groupMembers = [
   new GroupMemberDto(users[0], true),
   new GroupMemberDto(users[1], false),
 ];

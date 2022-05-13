@@ -6,12 +6,12 @@ import {
   UserGroupIcon,
   UserIcon,
   QuestionMarkCircleIcon,
-  CalendarIcon
+  CalendarIcon,
 } from '@heroicons/react/solid';
 
-const BottomNavBar = () => { 
+const BottomNavBar = () => {
   // Komponent for bunnmeny
-  
+
   const [showProfile, setShowProfile] = useState(false);
 
   // Toggle visning av profil meny

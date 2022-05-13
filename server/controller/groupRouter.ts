@@ -65,10 +65,10 @@ export default class GroupRouter {
       }
     });
     router.delete("/member", async (req, res) => {
-      const { group, user } = req?.body;
+      const { groupId, userId } = req?.body;
 
       try {
-        const result = await service.deleteMember(group, user);
+        const result = await service.deleteMember(userId, groupId);
         if (result) res.sendStatus(200);
       } catch (e: any) {
         sendError(res, e);
@@ -103,7 +103,7 @@ export default class GroupRouter {
         gradeGoal?.toString(),
         frequency?.toString(),
         size?.toString(),
-        subject?.toString(),
+        subject as string[],
         place?.toString(),
         school?.toString()
       );
