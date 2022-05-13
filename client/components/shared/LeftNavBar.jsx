@@ -5,7 +5,8 @@ import {
     QuestionMarkCircleIcon,
     DocumentTextIcon,
     UserGroupIcon,
-    ChevronRightIcon
+    ChevronRightIcon,
+    UserIcon
 } from "@heroicons/react/solid";
 import { useState } from "react";
 const LeftNavBar = () => {
@@ -34,7 +35,7 @@ const LeftNavBar = () => {
                     Meny
                 </h2>
             </div>
-            <ul className="pt-8">
+            <ul className="flex flex-col gap-4 pt-14">
                 <li className='text-purple-5 flex items-center justify-between cursor-pointer p-2 hover:bg-purple-2 rounded'>
                     <div className="flex gap-x-4">
                         <HomeIcon className='h-6 w-6'/>
@@ -44,7 +45,6 @@ const LeftNavBar = () => {
                     </div>
                     <ChevronRightIcon className={`${!open && "hidden"} h-6 w-6 origin-left duration-200`}/>
                 </li>
-
                 <li className='text-purple-5 flex items-center justify-between cursor-pointer p-2 hover:bg-purple-2 rounded'>
                     <div className="flex gap-x-4">
                         <UserGroupIcon className='h-6 w-6'/>
@@ -54,7 +54,52 @@ const LeftNavBar = () => {
                     </div>
                     <ChevronRightIcon className={`${!open && "hidden"} h-6 w-6 origin-left duration-200`}/>
                 </li>
+                <li className='text-purple-5 flex items-center justify-between cursor-pointer p-2 hover:bg-purple-2 rounded'>
+                    <div className="flex gap-x-4">
+                        <ColorSwatchIcon className='h-6 w-6'/>
+                        <span className={`${!open && "hidden"} origin-left duration-200`}>
+                            Flashcards
+                        </span>
+                    </div>
+                    <ChevronRightIcon className={`${!open && "hidden"} h-6 w-6 origin-left duration-200`}/>
+                </li>
+                <li className='text-purple-5 flex items-center justify-between cursor-pointer p-2 hover:bg-purple-2 rounded'>
+                    <div className="flex gap-x-4">
+                        <DocumentTextIcon className='h-6 w-6'/>
+                        <span className={`${!open && "hidden"} origin-left duration-200`}>
+                            Dokumentdeling
+                        </span>
+                    </div>
+                    <ChevronRightIcon className={`${!open && "hidden"} h-6 w-6 origin-left duration-200`}/>
+                </li>
+                <li className='text-purple-5 flex items-center justify-between cursor-pointer p-2 hover:bg-purple-2 rounded'>
+                    <div className="flex gap-x-4">
+                        <QuestionMarkCircleIcon className='h-6 w-6'/>
+                        <span className={`${!open && "hidden"} origin-left duration-200`}>
+                            Mine spørsmål
+                        </span>
+                    </div>
+                    <ChevronRightIcon className={`${!open && "hidden"} h-6 w-6 origin-left duration-200`}/>
+                </li>
+                <li className='text-purple-5 flex items-center justify-between cursor-pointer p-2 hover:bg-purple-2 rounded'>
+                    <div className="flex gap-x-4">
+                        <QuestionMarkCircleIcon className='h-6 w-6'/>
+                        <span className={`${!open && "hidden"} origin-left duration-200`}>
+                            Mine svar
+                        </span>
+                    </div>
+                    <ChevronRightIcon className={`${!open && "hidden"} h-6 w-6 origin-left duration-200`}/>
+                </li>
             </ul>
+            <div className='text-purple-5 flex items-center justify-between bottom-4 cursor-pointer p-2 hover:bg-purple-2 rounded'>
+                <div className="flex gap-x-4">
+                    <UserIcon className='h-6 w-6'/>
+                    <span className={`${!open && "hidden"} origin-left duration-200`}>
+                        Profil
+                    </span>
+                </div>
+                <ChevronRightIcon className={`${!open && "hidden"} h-6 w-6 origin-left duration-200`}/>
+            </div>
         </div>
 
     </div>
