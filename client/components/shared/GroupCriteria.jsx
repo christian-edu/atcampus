@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import Button from "./Button"
 
 export function GroupCriteria() {
     // Send a request to the backend to search for the required group with the criterias
@@ -130,8 +131,8 @@ export function GroupCriteria() {
                 <input type="radio" name={"metode"} id={"begge"} value={"begge"} onChange={(e) => setWorkMethod(e.target.value)}/>
                 <label htmlFor="begge">Begge</label>
                 <div >
-                    {/*Button css needs styling fix*/}
-                    <button onClick={searchForGroup}>Søk etter kriterier</button>
+                    {/*Byttet knapp*/}
+                    <Button type="button" onClick={searchForGroup}>Søk etter kriterier</Button>
                 </div>
             </div>
         </div>
