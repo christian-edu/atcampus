@@ -4,19 +4,25 @@ import { GroupEntity } from "./GroupEntity";
 
 @Entity()
 export class GroupMemberEntity {
+  constructor(user_uuid, group_uuid, is_admin) {
+    this.user_uuid = user_uuid;
+    this.group_uuid = group_uuid;
+    this.is_admin = is_admin;
+  }
+
   @PrimaryColumn()
   uuid: string;
 
-  @Column({ name: "is_admin" })
-  isAdmin: boolean;
+  @Column()
+  is_admin: boolean;
 
   // Dokumentasjon påstår jeg må ha denne med
-  @Column({ name: "user_uuid" })
-  userUuid: string;
+  @Column()
+  user_uuid: string;
 
   // Dokumentasjon påstår jeg må ha denne med
-  @Column({ name: "group_uuid" })
-  groupUuid: string;
+  @Column()
+  group_uuid: string;
 
   @ManyToOne(() => UserEntity, (user) => user.groups)
   user!: UserEntity;
