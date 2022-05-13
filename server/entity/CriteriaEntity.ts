@@ -18,14 +18,14 @@ import { GroupCriteriaDto } from "../dto/groupCriteriaDto";
 export class CriteriaEntity {
   constructor(dto: GroupCriteriaDto) {
     this.uuid = uuidv4();
-    this.grade_goal = dto.gradeWanted;
-    this.work_frequency = work_frequency;
-    this.work_type = work_type;
-    this.max_size = max_size;
-    this.language = language;
-    this.location = location;
-    this.subjects = subjects;
-    this.school_uuid = school_uuid;
+    this.grade_goal = dto.gradeGoal;
+    this.work_frequency = dto.workFrequency;
+    this.work_type = dto.workType;
+    this.max_size = dto.maxSize;
+    this.language = dto.language;
+    this.location = dto.location;
+    this.subjects = dto.subject;
+    this.school_uuid = dto.school;
   }
 
   @PrimaryColumn()
@@ -41,27 +41,27 @@ export class CriteriaEntity {
     type: "enum",
     enum: WorkFrequency,
   })
-  work_frequency: WorkFrequency;
+  work_frequency: WorkFrequency | null;
 
   @Column({
     type: "enum",
     enum: WorkType,
   })
-  work_type: WorkType;
+  work_type: WorkType | null;
 
   @Column()
-  max_size: number;
+  max_size: number | null;
 
   @Column()
-  language: string;
+  language: string | null;
 
-  @Column()
-  location: string;
+  @Column({ type: "string" })
+  location: string | null;
 
   @ManyToMany(() => SubjectEntity)
   @JoinTable()
-  subjects: SubjectEntity[];
+  subjects: string[] | SubjectEntity[] | null;
 
   @ManyToOne(() => SchoolEntity, (school) => school.criteriaCollection)
-  school_uuid: SchoolEntity;
+  school_uuid: SchoolEntity | string | null;
 }
