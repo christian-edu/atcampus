@@ -13,13 +13,18 @@ import GroupPage from './components/GroupPage';
 import SearchUser from "./components/SearchUser"
 import SearchGroupResults from './components/SearchGroupResults';
 import SearchUserResults from './components/SearchUserResults';
+<<<<<<< Updated upstream
 import GroupCriteriaPage from './components/GroupCriteriaPage';
+=======
+import LeftNavBar from './components/shared/LeftNavBar';
+>>>>>>> Stashed changes
 
 const App = () => {
   return (
     <>
       <BrowserRouter>
-        <TopNavBar />
+        <LeftNavBar/>
+        <TopNavBar/>
         <main className='bg-dark-6 pt-16'>
           <div className='container mx-auto pb-16'>
             <Routes>
