@@ -13,6 +13,7 @@ import GroupPage from './components/GroupPage';
 import SearchUser from "./components/SearchUser"
 import SearchGroupResults from './components/SearchGroupResults';
 import SearchUserResults from './components/SearchUserResults';
+import GroupCriteriaPage from './components/GroupCriteriaPage';
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
               <Route path={'/searchGroup/searchGroupResults'} element={<SearchGroupResults />} />
               <Route path={'/createGroup'} element={<CreateGroup />} />
               <Route path={'/group/specific'} element={<GroupPage />} />
+              <Route path={'/group/groupCriteria'} element={<GroupCriteriaPage />} />
               <Route path={'/group/members'} element={<GroupMembers />} />
               <Route path={'/group/members/searchUser'} element={<SearchUser />} />
               <Route path={'/group/members/searchUser/searchUserResults'} element={<SearchUserResults />} />
