@@ -2,7 +2,7 @@ import ReactDom from 'react-dom';
 
 const Modal = (props) => {
   // Modal komponent
-  
+
   const content = (
     <>
       <div

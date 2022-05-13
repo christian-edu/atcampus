@@ -4,11 +4,10 @@ import {
   UserIcon,
   CogIcon,
   BellIcon,
- } from '@heroicons/react/solid';
-import {LogoutIcon } from '@heroicons/react/outline';
+} from '@heroicons/react/solid';
+import { LogoutIcon } from '@heroicons/react/outline';
 
 const ProfileMenu = (props) => {
-
   // popup for Profilmeny
 
   return (

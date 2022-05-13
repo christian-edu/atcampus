@@ -8,12 +8,11 @@ const SearchUser = () => {
   const [users, setUsers] = useState([]);
   const [input, setInput] = useState('');
 
-
   const getGroups = useCallback(async () => {
     const res = await fetch('/api/v1/groups');
     const data = await res.json();
     console.log(res);
-    setUsers(data.flatMap(group => group.members));
+    setUsers(data.flatMap((group) => group.members));
   });
 
   const inputHandler = (e) => setInput(e.target.value);
@@ -43,14 +42,10 @@ const SearchUser = () => {
           />
         </div>
         <ul className='grid gap-4'>
-          {(input && filteredUsers.length === 0) && 'Fant ingen brukere'}
+          {input && filteredUsers.length === 0 && 'Fant ingen brukere'}
           {input &&
             filteredUsers.map((user) => (
-              <UserCard
-                key={user}
-                user={user}
-                search={true}
-              />
+              <UserCard key={user} user={user} search={true} />
             ))}
         </ul>
       </div>
@@ -62,7 +57,9 @@ const SearchUser = () => {
         </div>
         <div className='flex flex-col gap-8'>
           <GroupCriteria />
-          <Button to="/group/members/searchUser/searchUserResults">Søk etter medlem</Button>
+          <Button to='/group/members/searchUser/searchUserResults'>
+            Søk etter medlem
+          </Button>
         </div>
       </div>
     </>

@@ -7,7 +7,7 @@ import {
   UserGroupIcon,
   ChatIcon,
   CalendarIcon,
-  CogIcon
+  CogIcon,
 } from '@heroicons/react/solid';
 import ProfileMenu from './shared/ProfileMenu';
 
@@ -23,18 +23,17 @@ const GroupPage = () => {
 
   return (
     <div className='bg-white p-6'>
-      
       <div className='flex flex-row justify-between'>
-        <h2 className='text-dark-1 text-xl font-bold mb-8'>{group.groupname}</h2>
+        <h2 className='text-dark-1 text-xl font-bold mb-8'>
+          {group.groupname}
+        </h2>
         {showSettings && (
           <Modal onClick={toggleSettings}>
-            <GroupSettings/>
+            <GroupSettings />
           </Modal>
         )}
-        <CogIcon onClick={toggleSettings} className='text-dark-1 h-6 w-6'/>
-
+        <CogIcon onClick={toggleSettings} className='text-dark-1 h-6 w-6' />
       </div>
-      
 
       <ul className='grid gap-8'>
         <li className='border-b-2 border-purple-1'>

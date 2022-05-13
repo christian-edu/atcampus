@@ -11,6 +11,7 @@ function CreateGroup() {
   async function handleSubmit(e) {
     e.preventDefault();
 
+
     if (groupname.length === 0) {
       alert('Please fill in a group name');
     } else {
@@ -53,7 +54,7 @@ function CreateGroup() {
               onChange={(e) => setGroupName(e.target.value)}
             />
           </div>
-          <Button type="button">Opprett gruppe</Button>
+          <Button type='submit'>Opprett gruppe</Button>
         </form>
       </div>
     </>
