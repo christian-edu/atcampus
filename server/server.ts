@@ -1,8 +1,7 @@
 import express from "express";
 import * as path from "path";
-import { groupNames, subjectQuestions } from "./mockData";
-import GroupService from "./service/groupService.js";
-import GroupRouter from "./controller/groupRouter.js";
+import GroupService from "./service/groupService";
+import GroupRouter from "./controller/groupRouter";
 import { AddressInfo } from "net";
 import DummyGroupRepo from "./repo/DummyGroupRepo";
 
@@ -16,12 +15,6 @@ const groupRoutes = new GroupRouter(groupService, express.Router());
 app.use(express.json());
 
 app.use("/api/v1/groups", groupRoutes.fetchRoutes());
-
-app.get("/api/questions", (req, res) => {
-  console.log("U hit the right spot");
-
-  res.json(subjectQuestions);
-});
 
 app.use(express.static("../client/dist"));
 
