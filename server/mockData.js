@@ -63,4 +63,9 @@ export const subjectQuestions = [
     }
 ]
 
-   export const groupSearchResults =  [{groupname: "group match 1", members: ["Per åge", "Ole kristiansen"]}, {groupname: "group match 2",  members: ["Svein", "Per persen", "Ole paus"]}, {groupname: "matching group 3", members: ["Per åge"]}, {groupname: "matching group 4",  members: ["Pål Pålsen", "Ole kristiansen"]}, {groupname: "group 5",  members: ["Per åge", "Ole kristiansen"]}, {groupname: "group 6",  members: ["Per åge", "Ole kristiansen"]}, {groupname: "group 7",  members: ["Per åge", "Ole kristiansen"]}]
+   export const groupSearchResults =  [{groupname: "group match 1", members: ["Per åge", "Ole kristiansen"], school: "kristiania", size: "liten", gradeGoal: "A", workType: "LOCAL", workFrequency: "W1", place: "Oslo", language: "Norsk", subject: ["TK"]},
+       {groupname: "group match 2",  members: ["Svein", "Per persen", "Ole paus"], school: "HK", size: "stor", gradeGoal: "C", workType: "REMOTE", workFrequency: "M2", place: "Bergen", language: "Norsk", subject: ["Algdat", "advJava"]},
+       {groupname: "matching group 3", members: ["Per åge"], school: "Not kristiania", size: "medium", gradeGoal: "B", workType: "BOTH", workFrequency: "W4", place: "Tromsø", language: "English", subject: ["Interpretive dance", "Matte"]},
+       {groupname: "matching group 4",  members: ["Pål Pålsen", "Ole kristiansen"], school: "Noroff", size: "stor", gradeGoal: "D", workType:"LOCAL", workFrequency: "W3", place: "Trondheim", language: "English", subject: ["TK", "Programmering", "Android"]},
+       {groupname: "group 5",  members: ["Per åge", "Ole kristiansen"], school: "Cool school name", size: "liten", gradeGoal:"Pass", workType: "BOTH", workFrequency: "W4", place: "Gokk", language: "Norsk", subject: ["Advance Java"]},
+       {groupname: "group 6",  members: ["Per åge", "Ole kristiansen"], school: "kristiania", size: "liten", gradeGoal: "A", workType:"REMOTE", workFrequency: "M1", place: "Oslo", language: "Norsk", subject: ["TK", "c++ programming", "Object oriented programming"]}]
