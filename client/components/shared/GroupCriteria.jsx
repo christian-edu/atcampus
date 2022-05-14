@@ -33,8 +33,6 @@ export function GroupCriteria() {
 
     }
 
-
-
     useEffect(() => {
 
         if(groupResult !== undefined){
@@ -46,7 +44,9 @@ export function GroupCriteria() {
 
     async function searchForGroup(){
 
-        if(language === "velg" || size === "velg" || gradeGoal === "velg" || workFrequency === "velg" || workType === "velg" || place === "velg" || school === "velg" ){
+
+
+        if(language === "velg" || size === "velg" || gradeGoal === "velg" || workFrequency === "velg" || workType === "velg" || place === "velg" || school === "velg" || subject[0].subject.length === 0 ){
             setError("Fyll inn alle feltene")
         }else {
 
@@ -145,7 +145,6 @@ export function GroupCriteria() {
                     <Button type="button" onClick={searchForGroup}>Søk etter kriterier</Button>
                 </div>
             </div>
-            <pre>{JSON.stringify({workFrequency})}</pre>
         </div>
         {error ? <h2>{error}</h2>: <></>}
 

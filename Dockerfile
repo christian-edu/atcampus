@@ -1,5 +1,6 @@
 #Node-versjon
 FROM node:16
+USER node
 #hvor appen legges i containeren
 WORKDIR /usr/src/app
 #kopiere package og package-lock til workdir
@@ -18,5 +19,4 @@ RUN npm install
 EXPOSE 3000
 
 # Start express-serveren med "node server.js"
-CMD [ "node", "server.js" ]
-
+CMD ["npm", "run", "start"]

@@ -1,7 +1,10 @@
 import { XIcon, CheckIcon } from '@heroicons/react/solid';
 
 const MatchRequest = (props) => {
-  // Popup that shows when clicking on a user or group searching for group or user with criterias
+  // Popup som vises når man søker etter gruppe basert på kriterer
+
+    console.log("In the match request")
+    console.log(props.group)
 
   return (
     <div className='flex flex-col items-center bg-white p-8 rounded text-center shadow-xl'>
@@ -15,22 +18,32 @@ const MatchRequest = (props) => {
       </h2>
       <div className='flex flex-col gap-2 mt-6 mb-4'>
         <p className='text-dark-1 text-sm font-bold px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
-          Skolenavn
+          Skolenavn: {props.group?.school}
+        </p>
+          <p className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
+              Sted: {props.group?.place}
+          </p>
+          <p className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
+              Språk: {props.group?.language}
+          </p>
+        <p className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
+          Fag: <ul>
+            {props.group?.subject.map((sub) => (
+                <li key={sub}>{sub}</li>
+            ))}
+        </ul>
         </p>
         <p className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
-          Fag: {props.group?.groupname}
+          Gruppestørrelse: {props.group?.size}
         </p>
         <p className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
-          Gruppestørrelse:
+          Karaktermål: {props.group?.gradeGoal}
         </p>
         <p className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
-          Karaktermål:
+          Metode: {props.group?.workType}
         </p>
         <p className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
-          Metode:
-        </p>
-        <p className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
-          Arbeidsfrekvens:
+          Arbeidsfrekvens: {props.group?.workFrequency}
         </p>
       </div>
 
