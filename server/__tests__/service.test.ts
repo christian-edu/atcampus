@@ -2,7 +2,7 @@ import GroupService from "../service/groupService";
 import { IGroupRepo } from "../repo/IGroupRepo";
 import { createMock } from "ts-auto-mock";
 import { method, On } from "ts-auto-mock/extension";
-import { groups } from "../__mocks__/mockData";
+import { groups, users } from "../__mocks__/mockData";
 import { IGroupService } from "../service/IGroupService";
 
 describe("it should run tests on all services", () => {
@@ -63,5 +63,16 @@ describe("it should run tests on all services", () => {
 
     expect(res.name).toBe(groups[0].name);
     expect(mockAddMember).toHaveBeenCalledWith("1", "2");
+  });
+
+  it("Should return group members", async () => {
+    const mockFetchMembers: jest.Mock = On(fakeGroupRepo).get(
+      method((method) => method.fetchGroupMembers)
+    );
+    mockFetchMembers.mockImplementation(async () => users);
+
+    const res = await groupService.fetchGroupMembers("1");
+    expect(res.length > 0).toBe(true);
+    expect(res[0].email).toBe(users[0].email);
   });
 });
