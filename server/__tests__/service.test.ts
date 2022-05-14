@@ -39,7 +39,7 @@ describe("it should run tests on all services", () => {
       method((method) => method.fetchGroupById)
     );
     mockFetchById.mockImplementation(async () => groups[0]);
-    const res = await fakeGroupRepo.fetchGroupById("1");
+    const res = await groupService.fetchGroupById("1");
     expect(res.name).toBe(groups[0].name);
   });
 
@@ -48,8 +48,20 @@ describe("it should run tests on all services", () => {
       method((method) => method.deleteMember)
     );
     mockDeleteMember.mockImplementation(async () => groups[0]);
-    const res = await fakeGroupRepo.deleteMember("1", "2");
+    const res = await groupService.deleteMember("1", "2");
     expect(res.name).toBe(groups[0].name);
     expect(mockDeleteMember).toHaveBeenCalledWith("1", "2");
+  });
+
+  it("Should add a member", async () => {
+    const mockAddMember: jest.Mock = On(fakeGroupRepo).get(
+      method((method) => method.addMember)
+    );
+    mockAddMember.mockImplementation(async () => groups[0]);
+
+    const res = await groupService.addMember("1", "2");
+
+    expect(res.name).toBe(groups[0].name);
+    expect(mockAddMember).toHaveBeenCalledWith("1", "2");
   });
 });
