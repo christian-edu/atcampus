@@ -1,8 +1,9 @@
 #Node-versjon
 FROM node:16
-USER node
-#hvor appen legges i containeren
 WORKDIR /usr/src/app
+
+#hvor appen legges i containeren
+
 #kopiere package og package-lock til workdir
 ADD package*.json ./
 RUN npm install
@@ -17,6 +18,7 @@ RUN npm install
 
 # Intern port i containeren
 EXPOSE 3000
-
+RUN chown node /usr/src/app
+USER node
 # Start express-serveren med "node server.js"
 CMD ["npm", "run", "start"]
