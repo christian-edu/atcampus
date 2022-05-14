@@ -20,7 +20,7 @@ export interface IGroupService {
 
   deleteMember(groupId: string, userId: string): Promise<GroupDto>;
 
-  addMember(group: GroupDto, user: UserDto): Promise<GroupDto>;
+  addMember(group: string, user: string): Promise<GroupDto>;
 
   fetchGroupMembers(groupId: string): Promise<UserDto[]>;
 

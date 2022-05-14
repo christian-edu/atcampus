@@ -1,5 +1,6 @@
 #Node-versjon
 FROM node:16
+USER node
 #hvor appen legges i containeren
 WORKDIR /usr/src/app
 #kopiere package og package-lock til workdir

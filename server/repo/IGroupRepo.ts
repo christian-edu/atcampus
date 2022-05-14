@@ -1,22 +1,23 @@
 import { GroupDto } from "../dto/groupDto";
 import { UserDto } from "../dto/userDto";
+import { SearchDTO } from "../dto/searchDTO";
 
 export interface IGroupRepo {
-  fetchAllGroups(): GroupDto[];
+  fetchAllGroups(): Promise<GroupDto[]>;
 
-  addGroup(): GroupDto;
+  addGroup(group: GroupDto): Promise<GroupDto>;
 
-  fetchGroupById(): GroupDto;
+  fetchGroupById(groupId: string): Promise<GroupDto>;
 
-  deleteMember(): boolean;
+  deleteMember(groupId: string, memberId: string): Promise<GroupDto>;
 
-  addMember(): boolean;
+  addMember(groupId: string, memberId: string): Promise<GroupDto>;
 
-  fetchGroupMembers(): UserDto[];
+  fetchGroupMembers(groupId: string): Promise<UserDto[]>;
 
-  updateGroup(): boolean;
+  updateGroup(group: GroupDto): Promise<GroupDto>;
 
-  deleteGroup(): boolean;
+  deleteGroup(groupId: string): Promise<boolean>;
 
-  searchGroup(): GroupDto[];
+  searchGroup(searchDto: SearchDTO): Promise<GroupDto[]>;
 }

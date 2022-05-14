@@ -1,32 +1,32 @@
-import HttpException from "../httpException";
-import { groups } from "../__mocks__/mockData";
-import { SearchDTO } from "../dto/searchDTO";
 import { IGroupRepo } from "../repo/IGroupRepo";
-import { IGroupService, searchResult } from "./IGroupService";
 import { GroupDto } from "../dto/groupDto";
+import HttpException from "../httpException";
 import { UserDto } from "../dto/userDto";
+import { SearchDTO } from "../dto/searchDTO";
+import { IGroupService, searchResult } from "../service/IGroupService";
+import { groups, users } from "./mockData";
 
-export default class GroupService implements IGroupService {
+export default class MockGroupService implements IGroupService {
   constructor(public groupRepo: IGroupRepo) {}
 
   async fetchAllGroups(): Promise<GroupDto[]> {
-    return this.groupRepo.fetchAllGroups();
+    return groups;
   }
 
   async addGroup(group: GroupDto): Promise<GroupDto> {
-    return this.groupRepo.addGroup(group);
+    return group;
   }
 
   async fetchGroupById(groupId: string): Promise<GroupDto> {
-    return this.groupRepo.fetchGroupById(groupId);
+    return groups[0];
   }
 
   async deleteMember(groupId: string, userId: string): Promise<GroupDto> {
-    return this.groupRepo.deleteMember(groupId, userId);
+    return groups[0];
   }
 
   async addMember(groupId: string, userId: string): Promise<GroupDto> {
-    return this.groupRepo.addMember(groupId, userId);
+    return groups[0];
   }
 
   async fetchGroupMembers(groupId: string): Promise<UserDto[]> {
@@ -35,7 +35,7 @@ export default class GroupService implements IGroupService {
         "group_id request parameter must be specified",
         400
       );
-    return this.groupRepo.fetchGroupMembers(groupId);
+    return users;
   }
 
   async updateGroup(group: GroupDto): Promise<GroupDto> {
@@ -44,7 +44,7 @@ export default class GroupService implements IGroupService {
         "No group found in body. Expected {\ngroup: groupName\n}",
         400
       );
-    return this.groupRepo.updateGroup(group);
+    return group;
   }
 
   async deleteGroup(groupId: string): Promise<boolean> {
@@ -53,7 +53,7 @@ export default class GroupService implements IGroupService {
         "No groupId found. Expected {\ngroupId: id\n}",
         400
       );
-    return this.groupRepo.deleteGroup(groupId);
+    return true;
   }
 
   async searchGroup(searchDto: SearchDTO): Promise<searchResult> {
