@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from './shared/Button';
 import Modal from './shared/Modal';
 import { XIcon, CheckIcon } from '@heroicons/react/solid';
+import GroupCriteriaPage from "./GroupCriteriaPage";
 
 const CreateGroupPopup = (props) => {
   // Popup that shows when creating a new group asking if you want to set up group requirements or skip.
@@ -105,8 +106,9 @@ function CreateGroup() {
               onChange={(e) => setGroupName(e.target.value)}
             />
           </div>
-          <Button type='submit'>Opprett gruppe</Button>
         </form>
+        <GroupCriteriaPage createdGroup={true} />
+        <Button type='submit'>Opprett gruppe</Button>
       </div>
     </>
   );

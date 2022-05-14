@@ -111,6 +111,7 @@ export default class GroupRouter {
     }
 
     router.post("/search", async (req, res) => {
+
       const searchDto = extractSearchDtoFromRequest(req);
 
       try {

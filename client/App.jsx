@@ -15,6 +15,11 @@ import SearchGroupResults from './components/SearchGroupResults';
 import SearchUserResults from './components/SearchUserResults';
 import GroupCriteriaPage from './components/GroupCriteriaPage';
 import LeftNavBar from './components/shared/LeftNavBar';
+import {EditGroupProfile} from "./components/EditGroupProfile";
+import {EditRoles} from "./components/EditRoles";
+
+
+
 
 const App = () => {
   return (
@@ -36,9 +41,11 @@ const App = () => {
                 <Route path={'/group/specific'} element={<GroupPage />} />
                 <Route
                   path={'/group/groupCriteria'}
-                  element={<GroupCriteriaPage />}
+                  element={<GroupCriteriaPage  editGroup={true}/>}
                 />
                 <Route path={'/group/members'} element={<GroupMembers />} />
+                <Route path={'/group/editProfile'} element={<EditGroupProfile />} />
+                <Route path={'/group/editRoles'} element={<EditRoles />} />
                 <Route
                   path={'/group/members/searchUser'}
                   element={<SearchUser />}
