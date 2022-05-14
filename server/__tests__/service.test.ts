@@ -21,4 +21,25 @@ describe("it should run tests on all services", () => {
     const result = await groupService.fetchAllGroups();
     expect(result.length > 0).toBe(true);
   });
+
+  it("Should return group on add", async () => {
+    const mockAddGroup: jest.Mock = On(fakeGroupRepo).get(
+      method((method) => method.addGroup)
+    );
+    mockAddGroup.mockImplementation(async () => {
+      return groups[0];
+    });
+
+    const res = await groupService.addGroup(groups[0]);
+    expect(res.name).toBe(groups[0].name);
+  });
+
+  it("Should return group by ID", async () => {
+    const mockFetchById: jest.Mock = On(fakeGroupRepo).get(
+      method((method) => method.fetchGroupById)
+    );
+    mockFetchById.mockImplementation(async () => groups[0]);
+    const res = await fakeGroupRepo.fetchGroupById("1");
+    expect(res.name).toBe(groups[0].name);
+  });
 });
