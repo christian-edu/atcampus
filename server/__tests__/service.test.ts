@@ -42,4 +42,14 @@ describe("it should run tests on all services", () => {
     const res = await fakeGroupRepo.fetchGroupById("1");
     expect(res.name).toBe(groups[0].name);
   });
+
+  it("Should delete a member from a group", async () => {
+    const mockDeleteMember: jest.Mock = On(fakeGroupRepo).get(
+      method((method) => method.deleteMember)
+    );
+    mockDeleteMember.mockImplementation(async () => groups[0]);
+    const res = await fakeGroupRepo.deleteMember("1", "2");
+    expect(res.name).toBe(groups[0].name);
+    expect(mockDeleteMember).toHaveBeenCalledWith("1", "2");
+  });
 });
