@@ -272,25 +272,30 @@ describe("Search route", () => {
     app.use("/api/v1/groups", groupRouter.fetchRoutes());
   });
 
-  // it("Should return a search result", async () => {
-  //   jest
-  //     .spyOn(GroupService.prototype, "searchGroup")
-  //     .mockImplementation(async () => true);
-  //   //language, school, place, workMethod, gradeGoal, frequency
-  //
-  //   const params = new URLSearchParams({
-  //     language: "norwegian",
-  //     school: "HK",
-  //     place: "Oslo",
-  //     workMethod: "remote",
-  //     gradeGoal: "A",
-  //     frequency: "2W",
-  //   });
-  //   await agent
-  //     .get(`/api/v1/groups/search?${params.toString()}`)
-  //     .send({ group: groupNames[0], user: users[0] })
-  //     .expect(200);
-  // });
+  it("Should return a search result", async () => {
+    const searchDto = new SearchDTO(
+      "Norsk",
+      "HYBRID",
+      "W2",
+      "A",
+      "8",
+      ["PG2351"],
+      "Oslo",
+      "HK"
+    );
+
+    const mockSearch: jest.Mock = On(mockGroupService).get(
+      method((method) => method.searchGroup)
+    );
+    mockSearch.mockImplementation(async () => groups);
+
+    const res = await agent
+      .post(`/api/v1/groups/search`)
+      .send(searchDto)
+      .expect(200);
+
+    expect(Object.keys(res).length > 0).toBe(true);
+  });
 
   it("Should recieve error on a search result", async () => {
     const mockSearchGroup: jest.Mock = On(mockGroupService).get(
@@ -311,7 +316,7 @@ describe("Search route", () => {
       "HK"
     );
     await agent
-      .get(`/api/v1/groups/search`)
+      .post(`/api/v1/groups/search`)
       .send(JSON.stringify(searchDto))
       .expect(500);
   });

@@ -4,6 +4,8 @@ import { createMock } from "ts-auto-mock";
 import { method, On } from "ts-auto-mock/extension";
 import { groups, users } from "../__mocks__/mockData";
 import { IGroupService } from "../service/IGroupService";
+import mock = jest.mock;
+import { SearchDTO } from "../dto/searchDTO";
 
 describe("it should run tests on all services", () => {
   let fakeGroupRepo: IGroupRepo;
@@ -74,5 +76,46 @@ describe("it should run tests on all services", () => {
     const res = await groupService.fetchGroupMembers("1");
     expect(res.length > 0).toBe(true);
     expect(res[0].email).toBe(users[0].email);
+  });
+
+  it("Should update a group", async () => {
+    const mockUpdateGroup: jest.Mock = On(fakeGroupRepo).get(
+      method((method) => method.updateGroup)
+    );
+    mockUpdateGroup.mockImplementation(async () => groups[0]);
+    const res = await groupService.updateGroup(groups[0]);
+
+    expect(res.name).toBe(groups[0].name);
+  });
+
+  it("Should delete a group", async () => {
+    const mockDeleteGroup: jest.Mock = On(fakeGroupRepo).get(
+      method((method) => method.deleteGroup)
+    );
+    mockDeleteGroup.mockImplementation(async () => true);
+
+    const res = await groupService.deleteGroup("1");
+    expect(res).toBe(true);
+  });
+
+  it("Should search for a group", async () => {
+    const searchDto = new SearchDTO(
+      "Norsk",
+      "HYBRID",
+      "W2",
+      "A",
+      "8",
+      ["PG2351"],
+      "Oslo",
+      "HK"
+    );
+
+    const mockSearch: jest.Mock = On(fakeGroupRepo).get(
+      method((method) => method.searchGroup)
+    );
+    mockSearch.mockImplementation(async () => groups);
+
+    const res = await groupService.searchGroup(searchDto);
+    expect(Object.keys(res).length > 0).toBe(true);
   });
 });
