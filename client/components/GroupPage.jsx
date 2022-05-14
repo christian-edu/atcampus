@@ -24,7 +24,7 @@ const GroupPage = () => {
     <div className='bg-white p-6'>
       <div className='flex flex-row justify-between'>
         <h2 className='text-dark-1 text-xl font-bold mb-8'>
-          {group.groupname}
+          {group.name}
         </h2>
         {showSettings && (
           <Modal onClick={toggleSettings}>
