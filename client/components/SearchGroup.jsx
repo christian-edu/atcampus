@@ -22,7 +22,7 @@ const SearchGroup = () => {
   }, []);
 
   const filteredGroups = groups.filter((group) =>
-    group.groupname.toLowerCase().includes(input.toLowerCase())
+    group.name.toLowerCase().includes(input.toLowerCase())
   );
 
   return (
