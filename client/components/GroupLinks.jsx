@@ -27,7 +27,9 @@ const GroupLinks = () => {
     <div>
       <div className='grid gap-4 sm:grid-cols-1 md:grid-cols-4 mb-8'>
         <Button to='/createGroup'>Opprett gruppe</Button>
-        <Button to='/searchGroup' className="md:col-start-4">Søk etter gruppe</Button>
+        <Button to='/searchGroup' className='md:col-start-4'>
+          Søk etter gruppe
+        </Button>
       </div>
 
       <h2 className='text-dark-1 text-xl font-bold mb-4'>Mine grupper</h2>
@@ -35,7 +37,7 @@ const GroupLinks = () => {
         {data.map((group) => (
           <GroupCard
             group={group}
-            key={group.groupname}
+            key={group.name}
             onClick={() => navigate('/group/specific', { state: { group } })}
           />
         ))}
