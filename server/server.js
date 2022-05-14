@@ -16,8 +16,6 @@ app.use(express.json())
 app.use("/api/v1/groups", groupRoutes.fetchRoutes());
 
 app.get("/api/questions", (req, res) => {
-    console.log("U hit the right spot")
-
     res.json(subjectQuestions)
 })
 
