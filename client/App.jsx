@@ -24,7 +24,7 @@ const App = () => {
         <main className='bg-dark-6 flex'>
           <LeftNavBar />
           <div className='w-full h-screen overflow-scroll'>
-            <div className='container mx-auto py-16'>
+            <div className='container mx-auto py-16 w-full'>
               <Routes>
                 <Route path={'/'} element={<GroupLinks />} />
                 <Route path={'/searchGroup'} element={<SearchGroup />} />

@@ -57,10 +57,10 @@ module.exports = {
     },
     container: {
       padding: {
-        sm: '0.5rem',
-        md: "1rem",
-        lg: '0.5rem',
-        xl: '5rem',
+        DEFAULT: '1rem',
+        md: "2rem",
+        lg: '2rem',
+        xl: 'rem',
         '2xl': '6rem',
       },
     },
