@@ -94,11 +94,6 @@ export default class GroupRouter {
             const searchDto = new SearchDTO(language,workType,gradeGoal,workFrequency, size, subject,place, school);
 
 
-            console.log("Here are your search criterias: ")
-            console.log({language, workType, gradeGoal, workFrequency, size, subject, place, school})
-
-
-
             try {
                 /*res.json(await service.searchGroup(searchDto));*/
                 // Dummy data response
