@@ -46,7 +46,7 @@ const SearchGroup = () => {
           {input && filteredGroups.length === 0 && 'Ingen grupper å vise'}
           {input &&
             filteredGroups.map((group) => (
-              <GroupCard key={group.groupname} group={group} search={true} />
+              <GroupCard key={group.name} group={group} search={true} />
             ))}
         </ul>
       </div>

@@ -6,7 +6,7 @@ const SearchRequest = (props) => {
   return (
     <div className='flex flex-col items-center bg-white p-8 rounded text-center shadow-xl'>
       <h2 className='text-dark-1 font-bold text-xl mb-3 w-full border-b-2 pb-4 border-purple-1'>
-        {props.group?.groupname || props.user}
+        {props.group?.name || props.user}
       </h2>
       <p className='mb-4'>
         {props.group
