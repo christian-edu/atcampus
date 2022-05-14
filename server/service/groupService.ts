@@ -73,7 +73,11 @@ export default class GroupService implements IGroupService {
         searchDto?.gradeGoal?.toLowerCase()
       )
         score++;
-      if (group.criteria?.maxSize === searchDto?.maxSize) score++;
+      if (
+        searchDto?.maxSize &&
+        group.criteria?.maxSize === parseInt(searchDto.maxSize!)
+      )
+        score++;
       if (
         group.criteria?.location?.toLowerCase() ===
         searchDto.location?.toLowerCase()
