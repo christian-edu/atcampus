@@ -4,6 +4,7 @@ import Modal from "./Modal";
 import SearchRequest from "./SearchRequest";
 import MatchRequest from "./MatchRequest";
 import { UserGroupIcon } from "@heroicons/react/solid";
+import React from "react";
 
 const GroupCard = (props) => {
   // Group Card component
