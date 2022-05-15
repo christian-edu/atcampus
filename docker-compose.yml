@@ -1,25 +1,27 @@
 version: "3.9"
 services:
-  atcampus-db:
-    container_name: 'atcampus-db'
-    image: postgres:alpine
-    environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - '5432:5432'
+#  atcampus-db:
+#    container_name: 'atcampus-db'
+#    image: postgres:alpine
+#    environment:
+#      POSTGRES_DB: postgres
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
+#    ports:
+#      - '5432:5432'
 
   atcampus-app:
     container_name: 'atcampus-app'
+    env_file:
+      - server/.env
     build:
       context: .
     environment:
-      DB_SCHEMA: postgres
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_HOST: postgres
-    depends_on:
-      - atcampus-db
+      USERNAME: ${USERNAME}
+      PASSWORD: ${PASSWORD}
+      HOST: ${HOST}
+      DATABASE: ${DATABASE}
+#    depends_on:
+#      - atcampus-db
     ports:
-      - '3000:3000'
+      - '8080:8080'

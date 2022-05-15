@@ -16,6 +16,14 @@ RUN npm install
 
 # Intern port i containeren
 EXPOSE 3000
+ARG username
+ARG password
+ARG host
+ARG database
+ENV USERNAME=$username
+ENV PASSWORD=$password
+ENV HOST=$host
+ENV DATABASE=$database
 
 # Start express-serveren med "node server.js"
 CMD ["npm", "run", "start"]

@@ -5,14 +5,16 @@ import GroupRouter from "./controller/groupRouter";
 import { AddressInfo } from "net";
 import DummyGroupRepo from "./repo/DummyGroupRepo";
 import { DataSource } from "typeorm";
+import * as dotenv from "dotenv";
 
+dotenv.config();
 const app = express();
 export const AppDataSource = new DataSource({
-  type: "postgres",
-  host: "placeholder", // hentes fra process.env
-  username: "placeholder", // hentes fra process.env
-  password: "placeholder", // hentes fra process.env
-  database: "placeholder", // hentes fra process.env
+  type: "mariadb",
+  host: process.env.HOST, // hentes fra process.env
+  username: process.env.USERNAME, // hentes fra process.env
+  password: process.env.PASSWORD, // hentes fra process.env
+  database: process.env.DATABASE, // hentes fra process.env
 });
 const dummyRepo = new DummyGroupRepo();
 const groupService = new GroupService(dummyRepo);
