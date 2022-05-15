@@ -14,7 +14,7 @@ jobs:
           node-version: 16.x
           github-token: ${{ secrets.SECRET_TOKEN }}
       - name: install dependencies
-        run: npm install
+        run: npm ci
       - run: npm test
       - name: Collect coverage for server
         uses: ArtiomTr/jest-coverage-report-action@v2

@@ -20,5 +20,8 @@
   "devDependencies": {
     "concurrently": "^7.1.0",
     "prettier": "^2.6.2"
+  },
+  "dependencies": {
+    "jest": "^28.1.0"
   }
 }
