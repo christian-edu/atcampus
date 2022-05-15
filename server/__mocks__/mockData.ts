@@ -2,6 +2,9 @@ import { GroupDto } from "../dto/groupDto";
 import { GroupCriteriaDto } from "../dto/groupCriteriaDto";
 import { UserDto } from "../dto/userDto";
 import { GroupMemberDto } from "../dto/groupMemberDto";
+import { GradeGoal } from "../entity/enums/GradeGoal";
+import { WorkFrequency } from "../entity/enums/WorkFrequency";
+import { WorkType } from "../entity/enums/WorkType";
 
 export const users = [
   new UserDto("Christian", "Gregersen", "chgr", "chgr007@egms.no", "drowssap"),
@@ -19,13 +22,13 @@ export const groups = [
     "Rules",
     new GroupCriteriaDto(
       "HK",
-      "A",
-      "W2",
+      GradeGoal.A,
+      WorkFrequency.W1,
       "Norsk",
       8,
       "Oslo",
       ["PG2351"],
-      "HYBRID"
+      WorkType.HYBRID
     ),
     "UUID",
     groupMembers

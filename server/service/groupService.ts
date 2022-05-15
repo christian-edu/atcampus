@@ -64,10 +64,10 @@ export default class GroupService implements IGroupService {
     for (const group of groups) {
       let score = 0;
       if (!group.uuid) continue; // TODO: Fjerne denne når vi har entities på plass.
-      const intersection = group.criteria?.subject?.filter((element) =>
-        searchDto.subject?.includes(element)
-      );
-      if (!intersection || intersection.length === 0) continue;
+      // const intersection = group.criteria?.subject?.filter((element) =>
+      //   searchDto.subject?.includes(element)
+      // );
+      // if (!intersection || intersection.length === 0) continue;
       if (
         group.criteria?.gradeGoal?.toLowerCase() ===
         searchDto?.gradeGoal?.toLowerCase()
@@ -93,11 +93,11 @@ export default class GroupService implements IGroupService {
         searchDto.language?.toLowerCase()
       )
         score++;
-      if (
-        group.criteria?.school?.toLowerCase() ===
-        searchDto.school?.toLowerCase()
-      )
-        score++;
+      // if (
+      //   group.criteria?.school?.toLowerCase() ===
+      //   searchDto.school?.toLowerCase()
+      // )
+      //   score++;
       if (
         group.criteria?.workType?.toLowerCase() ===
         searchDto.workType?.toLowerCase()
