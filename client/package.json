@@ -11,8 +11,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/preset-env": "^7.17.10",
+    "@babel/preset-react": "^7.16.7",
     "autoprefixer": "^10.4.7",
+    "babel-jest": "^28.1.0",
     "buffer": "^6.0.3",
+    "jest": "^28.1.0",
+    "jest-environment-jsdom": "^28.1.0",
     "parcel": "^2.3.2",
     "postcss": "^8.4.13",
     "process": "^0.11.10",
@@ -24,5 +29,27 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.3.0"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-react",
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "collectCoverageFrom": [
+      "**/*.jsx",
+      "**/*.js",
+      "!dist/**",
+      "!coverage/**"
+    ]
   }
 }
