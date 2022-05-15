@@ -16,41 +16,39 @@ import { SchoolEntity } from "./entity/SchoolEntity";
 
 dotenv.config();
 const app = express();
-export let AppDataSource: DataSource;
-new DataSource({
+export const AppDataSource = new DataSource({
   type: "mariadb",
   host: process.env.HOST, // hentes fra process.env
   username: process.env.USERNAME, // hentes fra process.env
   password: process.env.PASSWORD, // hentes fra process.env
   database: process.env.DATABASE, // hentes fra process.env
-})
-  .initialize()
-  .then((r) => {
-    AppDataSource = r;
+});
+AppDataSource.initialize().then((r) => {
+  console.info("Connected to db");
 
-    const server = app.listen(process.env.PORT || 8345, () => {
-      const criteriaRepo = CriteriaRepo;
-      criteriaRepo
-        .save(
-          new CriteriaEntity(
-            GradeGoal.A,
-            WorkFrequency.W1,
-            WorkType.HYBRID,
-            5,
-            "Norsk",
-            "Oslo",
-            [new SubjectEntity("test")],
-            new SchoolEntity("HK")
-          )
+  const server = app.listen(process.env.PORT || 8345, () => {
+    const criteriaRepo = CriteriaRepo;
+    criteriaRepo
+      .save(
+        new CriteriaEntity(
+          GradeGoal.A,
+          WorkFrequency.W1,
+          WorkType.HYBRID,
+          5,
+          "Norsk",
+          "Oslo",
+          [new SubjectEntity("test")],
+          new SchoolEntity("HK")
         )
-        .then((r) => console.log(r.uuid));
-      console.log(
-        `Server started at http://localhost:${
-          (server.address() as AddressInfo).port
-        }`
-      );
-    });
+      )
+      .then((r) => console.log(r.uuid));
+    console.log(
+      `Server started at http://localhost:${
+        (server.address() as AddressInfo).port
+      }`
+    );
   });
+});
 
 const dummyRepo = new MockGroupRepo();
 const groupService = new MockGroupService(dummyRepo);
@@ -70,4 +68,27 @@ app.use((req, res, next) => {
   } else {
     next();
   }
+});
+
+const server = app.listen(process.env.PORT || 8345, () => {
+  const criteriaRepo = CriteriaRepo;
+  criteriaRepo
+    .save(
+      new CriteriaEntity(
+        GradeGoal.A,
+        WorkFrequency.W1,
+        WorkType.HYBRID,
+        5,
+        "Norsk",
+        "Oslo",
+        [new SubjectEntity("test")],
+        new SchoolEntity("HK")
+      )
+    )
+    .then((r) => console.log(r.uuid));
+  console.log(
+    `Server started at http://localhost:${
+      (server.address() as AddressInfo).port
+    }`
+  );
 });
