@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Button from "./Button"
 
-export function GroupCriteria() {
+export function GroupCriteria({title, fetchLink, buttonText, dontShowButton}) {
     // Send a request to the backend to search for the required group with the criterias
 
     const [language, setLanguage] = useState("velg")
@@ -45,12 +45,13 @@ export function GroupCriteria() {
     async function searchForGroup(){
 
 
-
         if(language === "velg" || size === "velg" || gradeGoal === "velg" || workFrequency === "velg" || workType === "velg" || place === "velg" || school === "velg" || subject[0].subject.length === 0 ){
             setError("Fyll inn alle feltene")
         }else {
 
-            const res = await fetch("/api/v1/groups/search", {
+
+
+            const res = await fetch(fetchLink, {
                 method: "POST",
                 headers: {
                     "content-type": "application/json"
@@ -65,8 +66,8 @@ export function GroupCriteria() {
 
     return <div>
         <div>
-            <h2 className='text-xl font-bold'>Søk etter gruppekriterier</h2>
-        <h4>Velg kriterier for søket</h4>
+            <h2 className='text-xl font-bold'>{title}</h2>
+        <h4>Velg kriterier</h4>
             <div>
                 <div>
                     <h4>Sted:</h4>
@@ -142,7 +143,8 @@ export function GroupCriteria() {
                 <label htmlFor="ikkeViktig">Ikke viktig</label>
                 <div >
                     {/*Byttet knapp*/}
-                    <Button type="button" onClick={searchForGroup}>Søk etter kriterier</Button>
+                    {dontShowButton?<></>: <Button type="button" onClick={searchForGroup}>{buttonText}</Button>}
+
                 </div>
             </div>
         </div>

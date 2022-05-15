@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import GroupCard from './shared/GroupCard';
-import {GroupCriteria} from "./shared/GroupCriteria";
+import GroupCriteriaPage from "./GroupCriteriaPage";
 
 
 
@@ -53,7 +53,7 @@ const SearchGroup = () => {
 
       <div className='bg-white p-6 rounded-standard border border-purple-4'>
         <div className='flex flex-col gap-8'>
-          <GroupCriteria />
+          <GroupCriteriaPage lookingForGroup={true}/>
         </div>
       </div>
     </>

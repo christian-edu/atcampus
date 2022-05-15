@@ -4,21 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npm run server:test",
+    "test": "npm run server:test && npm run client:test",
     "dev": "concurrently npm:server:dev npm:client:dev",
     "client:test": "cd client && npm run test",
     "server:test": "cd server && npm run test",
     "client:dev": "cd client && npm run dev",
     "server:dev": "cd server && npm run dev",
     "install:client": "cd client && npm install --include=dev",
-    "install:server": "cd server && npm install"
+    "install:server": "cd server && npm install --include=dev"
   },
-  "postinstall": "cd server && npm install",
+  "postinstall": "npm run install:server && npm run install:client",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^7.1.0",
     "prettier": "^2.6.2"
+  },
+  "dependencies": {
+    "jest": "^28.1.0"
   }
 }
