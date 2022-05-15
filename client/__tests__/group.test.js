@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import React from "react";
 import GroupCard from "../components/shared/GroupCard";
 import { act } from "react-dom/test-utils";
+import { GroupCriteria } from "../components/shared/GroupCriteria";
 const groups = [
   {
     name: "Group 8",
@@ -14,8 +15,20 @@ const groups = [
         email: "email",
       },
     ],
+    criteria: {
+      school: "HK",
+      gradeGoal: "A",
+      workFrequency: "W2",
+      language: "Norsk",
+      maxSize: 8,
+      location: "Oslo",
+      subject: ["PGSomething"],
+      workType: "HYBRID",
+    },
   },
 ];
+
+// Mock http-kall https://github.com/mswjs/msw
 
 describe("", () => {
   let container;
@@ -36,4 +49,10 @@ describe("", () => {
     });
     expect(container.querySelector("h3").innerHTML).toContain("Group 8");
   });
+
+  // it("Should render group criteria", () => {
+  //   act(() => {
+  //     ReactDOM.render(<GroupCriteria )
+  //   })
+  // });
 });
