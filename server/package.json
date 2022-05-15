@@ -62,7 +62,8 @@
     "collectCoverageFrom": [
       "**/*.ts|js",
       "!dist/**",
-      "!coverage/**"
+      "!coverage/**",
+      "!__mocks__/**"
     ],
     "preset": "ts-jest",
     "transform": {

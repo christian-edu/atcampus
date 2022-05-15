@@ -8,7 +8,7 @@ import {
 import { LogoutIcon } from '@heroicons/react/outline';
 
 const ProfileMenu = (props) => {
-  // popup for Profilmeny
+  // Profile menu popup
 
   return (
     <div>

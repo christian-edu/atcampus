@@ -3,7 +3,8 @@ import * as path from "path";
 import GroupService from "./service/groupService";
 import GroupRouter from "./controller/groupRouter";
 import { AddressInfo } from "net";
-import DummyGroupRepo from "./repo/DummyGroupRepo";
+import MockGroupRepo from "./__mocks__/mockGroupRepo";
+import MockGroupService from "./__mocks__/mockGroupService";
 import { DataSource } from "typeorm";
 import * as dotenv from "dotenv";
 
@@ -16,8 +17,9 @@ export const AppDataSource = new DataSource({
   password: process.env.PASSWORD, // hentes fra process.env
   database: process.env.DATABASE, // hentes fra process.env
 });
-const dummyRepo = new DummyGroupRepo();
-const groupService = new GroupService(dummyRepo);
+
+const dummyRepo = new MockGroupRepo();
+const groupService = new MockGroupService(dummyRepo);
 const groupRoutes = new GroupRouter(groupService, express.Router());
 
 // TODO: Fjerne allow js når migrert

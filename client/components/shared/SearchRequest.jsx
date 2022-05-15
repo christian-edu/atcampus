@@ -1,12 +1,12 @@
 import { XIcon, CheckIcon } from '@heroicons/react/solid';
 
 const SearchRequest = (props) => {
-  // Popup som vises når man søker etter gruppe på navn og trykker på den
+  // Popup that shows when clicking on a user or group while searching for user or group by name
 
   return (
     <div className='flex flex-col items-center bg-white p-8 rounded text-center shadow-xl'>
       <h2 className='text-dark-1 font-bold text-xl mb-3 w-full border-b-2 pb-4 border-purple-1'>
-        {props.group?.groupname || props.user}
+        {props.group?.name || props.user}
       </h2>
       <p className='mb-4'>
         {props.group

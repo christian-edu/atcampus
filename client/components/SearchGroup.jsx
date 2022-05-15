@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import GroupCard from './shared/GroupCard';
-import {GroupCriteria} from "./shared/GroupCriteria";
+import GroupCriteriaPage from "./GroupCriteriaPage";
 
 
 
@@ -22,7 +22,7 @@ const SearchGroup = () => {
   }, []);
 
   const filteredGroups = groups.filter((group) =>
-    group.groupname.toLowerCase().includes(input.toLowerCase())
+    group.name.toLowerCase().includes(input.toLowerCase())
   );
 
   return (
@@ -46,14 +46,14 @@ const SearchGroup = () => {
           {input && filteredGroups.length === 0 && 'Ingen grupper å vise'}
           {input &&
             filteredGroups.map((group) => (
-              <GroupCard key={group.groupname} group={group} search={true} />
+              <GroupCard key={group.name} group={group} search={true} />
             ))}
         </ul>
       </div>
 
       <div className='bg-white p-6 rounded-standard border border-purple-4'>
         <div className='flex flex-col gap-8'>
-          <GroupCriteria />
+          <GroupCriteriaPage lookingForGroup={true}/>
         </div>
       </div>
     </>

@@ -1,7 +1,7 @@
 import ReactDom from 'react-dom';
 
 const Modal = (props) => {
-  // Modal komponent
+  // Reusable modal component
 
   const content = (
     <>

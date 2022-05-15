@@ -10,7 +10,7 @@ import {
 import { LogoutIcon } from '@heroicons/react/outline';
 
 const GroupSettings = (props) => {
-  // Popup for gruppeinnstillinger
+  // Popup for group settings
 
   return (
     <div>
@@ -32,7 +32,7 @@ const GroupSettings = (props) => {
             <ChevronRightIcon className='h-6 w-6 text-white' />
           </Link>
           <Link
-            to='/'
+            to='/group/editProfile'
             className='flex flex-row justify-between my-1 py-3'
             onClick={props.onClick}
           >
@@ -43,7 +43,7 @@ const GroupSettings = (props) => {
             <ChevronRightIcon className='h-6 w-6 text-white' />
           </Link>
           <Link
-            to='/'
+            to='/group/editRoles'
             className='flex flex-row justify-between my-1 py-3'
             onClick={props.onClick}
           >
@@ -54,7 +54,7 @@ const GroupSettings = (props) => {
             <ChevronRightIcon className='h-6 w-6 text-white' />
           </Link>
           <Link
-            to='/'
+            to='/group/groupCriteria'
             className='flex flex-row justify-between my-1 py-3'
             onClick={props.onClick}
           >

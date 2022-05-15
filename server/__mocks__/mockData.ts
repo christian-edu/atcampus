@@ -1,7 +1,7 @@
-import { GroupDto } from "./dto/groupDto";
-import { GroupCriteriaDto } from "./dto/groupCriteriaDto";
-import { UserDto } from "./dto/userDto";
-import { GroupMemberDto } from "./dto/groupMemberDto";
+import { GroupDto } from "../dto/groupDto";
+import { GroupCriteriaDto } from "../dto/groupCriteriaDto";
+import { UserDto } from "../dto/userDto";
+import { GroupMemberDto } from "../dto/groupMemberDto";
 
 export const users = [
   new UserDto("Christian", "Gregersen", "chgr", "chgr007@egms.no", "drowssap"),

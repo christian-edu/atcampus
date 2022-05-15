@@ -10,15 +10,17 @@ import {
 } from '@heroicons/react/solid';
 
 const BottomNavBar = () => {
-  // Komponent for bunnmeny
+  // Component for bottom menu on mobile
 
+  // State for showing profile menu
   const [showProfile, setShowProfile] = useState(false);
 
-  // Toggle visning av profil meny
+  // Toggle showing profile menu
   const toggleProfileMenu = () => setShowProfile((showProfile) => !showProfile);
 
   return (
     <div>
+      {/* Render modal if showProfile is true*/}
       {showProfile && (
         <Modal onClick={toggleProfileMenu}>
           <ProfileMenu onClick={toggleProfileMenu} />

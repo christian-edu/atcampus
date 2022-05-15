@@ -95,7 +95,7 @@ export default class GroupRouter {
         subject,
         place,
         school,
-      } = req.query;
+      } = req.body;
 
       const searchDto = new SearchDTO(
         language?.toString(),
@@ -110,7 +110,8 @@ export default class GroupRouter {
       return searchDto;
     }
 
-    router.get("/search", async (req, res) => {
+    router.post("/search", async (req, res) => {
+
       const searchDto = extractSearchDtoFromRequest(req);
 
       try {
