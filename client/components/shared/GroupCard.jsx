@@ -1,22 +1,33 @@
-import { PlusIcon } from "@heroicons/react/solid";
-import { useState } from "react";
-import Modal from "./Modal";
-import SearchRequest from "./SearchRequest";
-import MatchRequest from "./MatchRequest";
-import { UserGroupIcon } from "@heroicons/react/solid";
+import { PlusIcon } from '@heroicons/react/solid';
+import { useState } from 'react';
+import Modal from './Modal';
+import SearchRequest from './SearchRequest';
+import MatchRequest from './MatchRequest';
+import { UserGroupIcon, LockClosedIcon } from '@heroicons/react/solid';
+import { LockOpenIcon } from '@heroicons/react/outline';
 
 const GroupCard = (props) => {
   // Group Card component
 
+  // classes for private icon
+  const privateIconClasses = 'h-4 absolute top-4 right-4';
+
   // State for modals
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
-  // Mottar en gruppe som props // <GroupCard group={group} />
-  const { name, groupMember } = props.group;
+  // Recieves group as props // <GroupCard group={group} />
+  const { name, groupMember, isPrivate } = props.group;
 
-  // Toggle modal vinduer
+  // Render cloesed icon if group is private, render open icon is group is not private
+  const privateIcon = isPrivate ? (
+    <LockClosedIcon className={privateIconClasses} />
+  ) : (
+    <LockOpenIcon className={privateIconClasses} />
+  );
+
+  // Toggle modal window
   const clickHandler = () => {
-    // If component recives onClick as a prop it will return props onClick and not render modal windows
+    // If component recives onClick as a prop it will return props.onClick and not render modal windows
     if (props.onClick) return props.onClick();
     setModalIsVisible((state) => !state);
   };
@@ -37,20 +48,22 @@ const GroupCard = (props) => {
       )}
 
       <div
-        className="bg-white flex items-center p-6 rounded-standard border border-purple-4 cursor-pointer"
+        className='bg-white flex items-center relative p-6 rounded-standard border border-purple-4 cursor-pointer'
         onClick={clickHandler}
       >
         <div>
-          <h3 className="text-dark-1 text-lg font-bold">{name}</h3>
-          <div className="flex flex-row items-center text-dark-3 mt-2">
-            <UserGroupIcon className="h-5 w-5 mr-2" />
-            <p className="text-md">Medlemmer: {groupMember.length}</p>
+          <h3 className='text-dark-1 text-lg font-bold'>{name}</h3>
+          <div className='flex flex-row items-center text-dark-3 mt-2'>
+            <UserGroupIcon className='h-5 w-5 mr-2' />
+            <p className='text-md'>Medlemmer: {groupMember.length}</p>
           </div>
         </div>
         {/* Render plus icon if search or match is true */}
         {(props.search || props.match) && (
-          <PlusIcon className="h-6 text-purple-1 ml-auto" />
+          <PlusIcon className='h-6 text-purple-1 ml-auto' />
         )}
+
+        {!(props.search || props.search) && privateIcon}
       </div>
     </>
   );
