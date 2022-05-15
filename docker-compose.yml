@@ -17,10 +17,10 @@ services:
     build:
       context: .
     environment:
-      USERNAME: ${USERNAME}
-      PASSWORD: ${PASSWORD}
-      HOST: ${HOST}
-      DATABASE: ${DATABASE}
+      USERNAME: ${DB_USERNAME}
+      PASSWORD: ${DB_PASSWORD}
+      HOST: ${DB_HOST}
+      DATABASE: ${DB_DATABASE}
 #    depends_on:
 #      - atcampus-db
     ports:

@@ -20,10 +20,10 @@ ARG username
 ARG password
 ARG host
 ARG database
-ENV USERNAME=$username
-ENV PASSWORD=$password
-ENV HOST=$host
-ENV DATABASE=$database
+ENV DB_USERNAME=$username
+ENV DB_PASSWORD=$password
+ENV DB_HOST=$host
+ENV DB_DATABASE=$database
 
 # Start express-serveren med "node server.js"
 CMD ["npm", "run", "start"]
