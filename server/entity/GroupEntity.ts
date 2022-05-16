@@ -10,14 +10,14 @@ export class GroupEntity {
     name: string,
     criteria: CriteriaEntity,
     isPrivate: boolean,
-    users: GroupMemberEntity[],
+    //users: GroupMemberEntity[],
     rules = ""
   ) {
     this.uuid = uuidv4();
     this.name = name;
     this.criteria = criteria;
     this.isPrivate = isPrivate;
-    this.users = users;
+    this.users = new Array<GroupMemberEntity>();
     this.rules = rules;
     this.requests = new Array<GroupRequestEntity>();
   }

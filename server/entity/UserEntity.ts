@@ -10,16 +10,18 @@ export class UserEntity {
   constructor(
     userName: string,
     email: string,
+    password: string,
+    school: SchoolEntity,
     firstName = "",
-    lastName = "",
-    school_uuid: SchoolEntity
+    lastName = ""
   ) {
     this.uuid = uuidv4();
     this.userName = userName;
     this.email = email;
+    this.password = password;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.school_uuid = school_uuid;
+    this.school = school;
     this.groups = new Array<GroupMemberEntity>();
     this.requests = new Array<GroupRequestEntity>();
   }
@@ -40,6 +42,9 @@ export class UserEntity {
   @IsEmail()
   email: string;
 
+  @Column()
+  password: string;
+
   @Column({ name: "first_name" })
   firstName: string;
 
@@ -47,7 +52,7 @@ export class UserEntity {
   lastName: string;
 
   @ManyToOne(() => SchoolEntity, (school) => school.users)
-  school_uuid: SchoolEntity;
+  school: SchoolEntity;
 
   @OneToMany(() => GroupMemberEntity, (gm) => gm.user)
   groups: GroupMemberEntity[];

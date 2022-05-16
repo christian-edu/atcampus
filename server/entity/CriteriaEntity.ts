@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -23,7 +24,7 @@ export class CriteriaEntity {
     language = "",
     location = "",
     subjects?: SubjectEntity[],
-    school?: SchoolEntity
+    school = new SchoolEntity("Ikke satt")
   ) {
     this.uuid = uuidv4();
     this.grade_goal = gradeGoal;
@@ -37,7 +38,7 @@ export class CriteriaEntity {
     } else {
       this.subjects = new Array<SubjectEntity>();
     }
-    this.school_uuid = school;
+    this.school = school;
   }
 
   @PrimaryColumn()
@@ -53,27 +54,28 @@ export class CriteriaEntity {
     type: "enum",
     enum: WorkFrequency,
   })
-  work_frequency: WorkFrequency | undefined;
+  work_frequency: WorkFrequency;
 
   @Column({
     type: "enum",
     enum: WorkType,
   })
-  work_type: WorkType | undefined;
+  work_type: WorkType;
 
   @Column()
-  max_size: number | undefined;
+  max_size: number;
 
   @Column()
-  language: string | undefined;
+  language: string;
 
   @Column()
-  location: string | undefined;
+  location: string;
 
   @ManyToMany(() => SubjectEntity)
   @JoinTable()
+  @JoinColumn({ name: "subject_uuid" })
   subjects: SubjectEntity[];
 
   @ManyToOne(() => SchoolEntity, (school) => school.criteriaCollection)
-  school_uuid: SchoolEntity | undefined;
+  school: SchoolEntity;
 }
