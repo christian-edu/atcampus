@@ -21,11 +21,11 @@ export class SchoolEntity {
   })
   name: string;
 
-  @OneToMany(() => CriteriaEntity, (criteria) => criteria.school_uuid, {
+  @OneToMany(() => CriteriaEntity, (criteria) => criteria.school, {
     lazy: true,
   })
   criteriaCollection: CriteriaEntity[];
 
-  @OneToMany(() => UserEntity, (user) => user.school_uuid, { lazy: true })
+  @OneToMany(() => UserEntity, (user) => user.school, { lazy: true })
   users: UserEntity[];
 }

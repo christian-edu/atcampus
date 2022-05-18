@@ -72,10 +72,11 @@ export class CriteriaEntity {
   location: string;
 
   @ManyToMany(() => SubjectEntity)
-  @JoinTable()
+  @JoinTable({ name: "criteria_subjects" })
   @JoinColumn({ name: "subject_uuid" })
   subjects: SubjectEntity[];
 
   @ManyToOne(() => SchoolEntity, (school) => school.criteriaCollection)
+  @JoinColumn({ name: "school_uuid" })
   school: SchoolEntity;
 }

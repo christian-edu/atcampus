@@ -5,15 +5,24 @@ import { IGroupRepo } from "../repo/IGroupRepo";
 import { IGroupService, searchResult } from "./IGroupService";
 import { GroupDto } from "../dto/groupDto";
 import { UserDto } from "../dto/userDto";
+import { Repository } from "typeorm";
+import { GroupEntity } from "../entity/GroupEntity";
+import { CriteriaEntity } from "../entity/CriteriaEntity";
+import { SubjectRepo } from "../repo/SubjectRepo";
+import { SubjectEntity } from "../entity/SubjectEntity";
+import { SchoolRepo } from "../repo/SchoolRepo";
+import { SchoolEntity } from "../entity/SchoolEntity";
+import { UserRepo } from "../repo/UserRepo";
 
 export default class GroupService implements IGroupService {
-  constructor(public groupRepo: IGroupRepo) {}
+  constructor(public groupRepo: Repository<GroupEntity>) {}
 
-  async fetchAllGroups(): Promise<GroupDto[]> {
-    return this.groupRepo.fetchAllGroups();
+  async fetchAllGroups(): Promise<GroupEntity[]> {
+    return this.groupRepo.find();
   }
 
   async addGroup(group: GroupDto): Promise<GroupDto> {
+    const newGroup = createGroupEntityFromDto(group);
     return this.groupRepo.addGroup(group);
   }
 
@@ -111,5 +120,40 @@ export default class GroupService implements IGroupService {
     if (Object.keys(results).length === 0)
       throw new HttpException("No matching groups", 204);
     return results;
+  }
+
+  async createGroupEntityFromDto(dto: GroupDto, user_uuid: string) {
+    const newGroupSubjects = new Array<SubjectEntity>();
+
+    dto.criteria.subject?.forEach(async (subject) => {
+      const newSubject = await SubjectRepo.findOrCreate(
+        new SubjectEntity(subject)
+      );
+      newGroupSubjects.push(newSubject);
+    });
+
+    let newSchool;
+    if (dto.criteria.school) {
+      newSchool = await SchoolRepo.findOrCreate(
+        new SchoolEntity(dto.criteria.school)
+      );
+    }
+
+    const newCriteria = new CriteriaEntity(
+      dto.criteria.gradeGoal,
+      dto.criteria?.workFrequency,
+      dto.criteria?.workType,
+      dto.criteria?.maxSize,
+      dto.criteria?.language,
+      dto.criteria?.location,
+      newGroupSubjects,
+      newSchool
+    );
+
+    const admin = await UserRepo.findOne({ where: { uuid: user_uuid } });
+
+    if (admin) {
+      return new GroupEntity(dto.name, newCriteria, dto.isPrivate, admin);
+    }
   }
 }

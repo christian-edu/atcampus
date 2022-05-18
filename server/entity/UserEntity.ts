@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+} from "typeorm";
 import { IsEmail } from "class-validator";
 import { SchoolEntity } from "./SchoolEntity";
 import { GroupMemberEntity } from "./GroupMemberEntity";
@@ -52,6 +59,7 @@ export class UserEntity {
   lastName: string;
 
   @ManyToOne(() => SchoolEntity, (school) => school.users)
+  @JoinColumn({ name: "school_uuid" })
   school: SchoolEntity;
 
   @OneToMany(() => GroupMemberEntity, (gm) => gm.user)

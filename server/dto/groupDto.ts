@@ -3,11 +3,11 @@ import { GroupMemberDto } from "./groupMemberDto";
 
 export class GroupDto {
   constructor(
-    public isPrivate: boolean | null,
+    public isPrivate: boolean,
     public name: string,
-    public rules: string | null,
-    public criteria: GroupCriteriaDto | null,
-    public uuid: string | null,
-    public groupMember: GroupMemberDto[] | null
+    public criteria: GroupCriteriaDto,
+    public groupMembers: GroupMemberDto[],
+    public rules?: string,
+    public uuid?: string
   ) {}
 }
