@@ -33,7 +33,7 @@ const App = () => {
                   path={"/searchGroup/searchGroupResults"}
                   element={<SearchGroupResults />}
                 />
-                <Route path={"/createGroup"} element={<CreateGroup />} />
+                <Route path={"/createGroup"} element={<GroupCriteriaPage createdGroup={true} />} />
                 <Route path={"/group/specific"} element={<GroupPage />} />
                 <Route
                   path={"/group/groupCriteria"}

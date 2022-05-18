@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Button from "./Button"
 
-export function GroupCriteria({title, fetchLink, buttonText, dontShowButton}) {
+export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupName, createGroup}) {
     // Send a request to the backend to search for the required group with the criterias
 
     const [language, setLanguage] = useState("velg")
@@ -15,6 +15,7 @@ export function GroupCriteria({title, fetchLink, buttonText, dontShowButton}) {
     const [error, setError] = useState();
     const [groupResult, setGroupResult] = useState();
     const [subject, setSubject] = useState([{subject: ""}]);
+    const [isPrivate, setIsPrivate] = useState();
 
     const navigate = useNavigate();
 
@@ -35,8 +36,8 @@ export function GroupCriteria({title, fetchLink, buttonText, dontShowButton}) {
 
     useEffect(() => {
 
-        if(groupResult !== undefined){
-            navigate("/searchGroup/searchGroupResults", { state: { groupResult} })
+        if(groupResult !== undefined && createGroup){
+            navigate("/", { state: { groupResult} })
         }
 
     }, [groupResult])
@@ -51,15 +52,31 @@ export function GroupCriteria({title, fetchLink, buttonText, dontShowButton}) {
 
 
 
-            const res = await fetch(fetchLink, {
-                method: "POST",
-                headers: {
-                    "content-type": "application/json"
-                },
-                body: JSON.stringify({language, size, gradeGoal, workFrequency, workType, place, school, subject})
-            })
+            if(patchGroup){
+                const res = await fetch(fetchLink, {
+                    method: "PATCH",
+                    headers: {
+                        "content-type": "application/json"
+                    },
+                    body: JSON.stringify({language, size, gradeGoal, workFrequency, workType, place, school, subject, groupName, isPrivate})
+                })
 
-           setGroupResult( await res.json())
+                setGroupResult( await res.json())
+
+            }else {
+                const res = await fetch(fetchLink, {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json"
+                    },
+                    body: JSON.stringify({language, size, gradeGoal, workFrequency, workType, place, school, subject, groupName, isPrivate})
+                })
+
+                setGroupResult( await res.json())
+            }
+
+
+
 
         }
     }
@@ -69,6 +86,14 @@ export function GroupCriteria({title, fetchLink, buttonText, dontShowButton}) {
             <h2 className='text-xl font-bold'>{title}</h2>
         <h4>Velg kriterier</h4>
             <div>
+                <div>
+                    {patchGroup||createGroup?<div>
+                        <input type="radio" name={"private"} id={"public"} value={"Public"} onChange={(e) => setIsPrivate(false)}/>
+                        <label htmlFor="public">Public</label>
+                        <input type="radio" name={"private"} id={"private"} value={"Private"} onChange={(e) => setIsPrivate(true)}/>
+                        <label htmlFor="private">Private</label>
+                    </div>:<></>}
+                </div>
                 <div>
                     <h4>Sted:</h4>
                     <input type="text" placeholder={"Eks. 'Oslo'"} onChange={(e) => setPlace(e.target.value)}/>
@@ -142,9 +167,7 @@ export function GroupCriteria({title, fetchLink, buttonText, dontShowButton}) {
                 <input type="radio" name={"metode"} id={"ikkeViktig"} value={"Null"} onChange={(e) => setWorkType(e.target.value)}/>
                 <label htmlFor="ikkeViktig">Ikke viktig</label>
                 <div >
-                    {/*Byttet knapp*/}
-                    {dontShowButton?<></>: <Button type="button" onClick={searchForGroup}>{buttonText}</Button>}
-
+                    <Button type="button" onClick={searchForGroup}>{buttonText}</Button>
                 </div>
             </div>
         </div>

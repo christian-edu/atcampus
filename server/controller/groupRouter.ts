@@ -25,6 +25,10 @@ export default class GroupRouter {
     });
 
     router.post("/", async (req, res) => {
+
+      console.log("Hit the create group")
+      console.log(req.body)
+
       const newGroup = this.extractGroupDtoFromRequest(req);
       try {
         res.json(await service.addGroup(newGroup));
@@ -34,6 +38,10 @@ export default class GroupRouter {
     });
 
     router.patch("/", async (req, res) => {
+
+      console.log("Hit the edit group")
+      console.log(req.body)
+
       const group = this.extractGroupDtoFromRequest(req);
       try {
         res.json(await service.updateGroup(group));
@@ -111,6 +119,11 @@ export default class GroupRouter {
     }
 
     router.post("/search", async (req, res) => {
+
+
+      console.log("Hit the search")
+      console.log(req.body)
+
 
       const searchDto = extractSearchDtoFromRequest(req);
 

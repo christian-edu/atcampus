@@ -25,6 +25,8 @@ const SearchGroup = () => {
     group.name.toLowerCase().includes(input.toLowerCase())
   );
 
+
+
   return (
     <>
       <div className='grid grid-cols-1 gap-4 bg-white p-6 rounded-standard border border-purple-4 mb-6'>
