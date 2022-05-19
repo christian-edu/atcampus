@@ -76,25 +76,25 @@ export const leftNavBarMenu = [
   },
 ];
 
-// export const bottomNavBarMenu = [
-//   {
-//     title: 'Spørsmål',
-//     path: '/',
-//     Icon: QuestionMarkCircleIcon,
-//   },
-//   {
-//     title: 'Kalender',
-//     path: '/',
-//     Icon: CalendarIcon,
-//   },
-//   {
-//     title: 'Grupper',
-//     path: '/',
-//     Icon: UserGroupIcon,
-//   },
-//   {
-//     title: 'Profil',
-//     path: '/',
-//     Icon: UserIcon,
-//   },
-// ];
+export const bottomNavBarMenu = [
+  {
+    title: 'Spørsmål',
+    path: '/',
+    Icon: QuestionMarkCircleIcon,
+  },
+  {
+    title: 'Kalender',
+    path: '/',
+    Icon: CalendarIcon,
+  },
+  {
+    title: 'Grupper',
+    path: '/',
+    Icon: UserGroupIcon,
+  },
+  {
+    title: 'Profil',
+    path: '/',
+    Icon: UserIcon,
+  },
+];
