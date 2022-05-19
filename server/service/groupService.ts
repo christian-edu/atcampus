@@ -13,7 +13,7 @@ import { SubjectEntity } from "../entity/SubjectEntity";
 import { SchoolRepo } from "../repo/SchoolRepo";
 import { SchoolEntity } from "../entity/SchoolEntity";
 import { UserRepo } from "../repo/UserRepo";
-import { GroupCriteriaDto } from "../dto/groupCriteriaDto";
+import { CriteriaDto } from "../dto/criteriaDto";
 import { GroupMemberRepo } from "../repo/GroupMemberRepo";
 import { UserEntity } from "../entity/UserEntity";
 import { GroupMemberEntity } from "../entity/GroupMemberEntity";

@@ -18,15 +18,15 @@ export class GroupEntity {
     name: string,
     criteria: CriteriaEntity,
     isPrivate: boolean,
-    admin: UserEntity,
-    rules = ""
+    members: Array<GroupMemberEntity>,
+    rules = "",
+    uuid = uuidv4()
   ) {
-    this.uuid = uuidv4();
+    this.uuid = uuid;
     this.name = name;
     this.criteria = criteria;
     this.isPrivate = isPrivate;
-    this.users = new Array<GroupMemberEntity>();
-    this.users.push(new GroupMemberEntity(admin, this, true));
+    this.users = members!;
     this.rules = rules;
     this.requests = new Array<GroupRequestEntity>();
   }

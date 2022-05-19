@@ -18,11 +18,12 @@ export class UserEntity {
     userName: string,
     email: string,
     password: string,
-    school: SchoolEntity,
+    uuid = uuidv4(),
+    school = new SchoolEntity(),
     firstName = "",
     lastName = ""
   ) {
-    this.uuid = uuidv4();
+    this.uuid = uuid;
     this.userName = userName;
     this.email = email;
     this.password = password;
@@ -34,7 +35,7 @@ export class UserEntity {
   }
 
   @PrimaryColumn()
-  uuid: string;
+  public uuid: string;
 
   @Column({
     nullable: false,

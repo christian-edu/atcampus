@@ -23,8 +23,8 @@ export class CriteriaEntity {
     maxSize = 255,
     language = "",
     location = "",
-    subjects?: SubjectEntity[],
-    school = new SchoolEntity()
+    school = new SchoolEntity(),
+    subjects?: SubjectEntity[]
   ) {
     this.uuid = uuidv4();
     this.grade_goal = gradeGoal;

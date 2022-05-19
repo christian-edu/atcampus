@@ -1,5 +1,5 @@
 import { GroupDto } from "../dto/groupDto";
-import { GroupCriteriaDto } from "../dto/groupCriteriaDto";
+import { CriteriaDto } from "../dto/criteriaDto";
 import { UserDto } from "../dto/userDto";
 import { GroupMemberDto } from "../dto/groupMemberDto";
 import { GradeGoal } from "../entity/enums/GradeGoal";
@@ -20,7 +20,7 @@ export const groups = [
     true,
     "Groyp",
     "Rules",
-    new GroupCriteriaDto(
+    new CriteriaDto(
       "HK",
       GradeGoal.A,
       WorkFrequency.W1,
