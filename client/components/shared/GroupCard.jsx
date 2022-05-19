@@ -5,6 +5,7 @@ import SearchRequest from './SearchRequest';
 import MatchRequest from './MatchRequest';
 import { UserGroupIcon, LockClosedIcon } from '@heroicons/react/solid';
 import { LockOpenIcon } from '@heroicons/react/outline';
+import Image from './Image';
 
 const GroupCard = (props) => {
   // Group Card component
@@ -48,12 +49,13 @@ const GroupCard = (props) => {
       )}
 
       <div
-        className='bg-white flex items-center relative p-6 rounded-standard border border-purple-4 cursor-pointer'
+        className='bg-white flex items-center gap-2 relative p-6 rounded-standard border border-purple-4 cursor-pointer'
         onClick={clickHandler}
       >
+        <Image group className='h-14 w-14' />
         <div>
-          <h3 className='text-dark-1 text-lg font-bold'>{name}</h3>
-          <div className='flex flex-row items-center text-dark-3 mt-2'>
+          <h3 className='text-dark-1 text-lg font-bold mb-1'>{name}</h3>
+          <div className='flex flex-row items-center text-dark-3'>
             <UserGroupIcon className='h-5 w-5 mr-2' />
 
             <p className='text-md'>Medlemmer: {groupMember.length}</p>

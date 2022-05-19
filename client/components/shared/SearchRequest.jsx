@@ -1,4 +1,5 @@
 import { XIcon, CheckIcon } from '@heroicons/react/solid';
+import Image from './Image';
 
 const SearchRequest = (props) => {
   // Popup that shows when clicking on a user or group while searching for user or group by name
@@ -7,6 +8,7 @@ const SearchRequest = (props) => {
 
   return (
     <div className='flex flex-col items-center bg-white p-8 rounded text-center shadow-xl'>
+      <Image group className="h-24 mb-4" />
       <h2 className='text-dark-1 font-bold text-xl mb-3 w-full border-b-2 pb-4 border-purple-1'>
         {props.group?.name || props.user}
       </h2>
