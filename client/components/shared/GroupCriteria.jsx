@@ -141,35 +141,41 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                     </div>:<></>}
                 </div>
                 <div>
-                    <h4>Sted:</h4>
+                    <h4 className="text-dark-1">Sted:</h4>
                     <input type="text" placeholder={"Eks. 'Oslo'"} onChange={(e) => setPlace(e.target.value)}
                      className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'/>
                 </div>
                 <div>
-                    <h4>Skole:</h4>
-                    <input type="text" placeholder={"Eks. 'Høyskolen Kristiania'"} onChange={(e) => setSchool(e.target.value)}/>
+                    <h4 className="text-dark-1">Skole:</h4>
+                    <input type="text" placeholder={"Eks. 'Høyskolen Kristiania'"} onChange={(e) => setSchool(e.target.value)}
+                    className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'/>
                 </div>
                 <div>
-                    <h4>Emner:</h4>
+                    <h4 className="text-dark-1">Emner:</h4>
                     <button onClick={addSubjectField}>+</button>
                     {subject.map((subInput, index) => (
                         <div key={index}>
-                            <input name={"subject"} placeholder={"eks. Avansert Java"} onChange={(event => handleInputChange(event, index))} />
+                            <input name={"subject"} placeholder={"eks. Avansert Java"} onChange={(event => handleInputChange(event, index))}
+                            className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'/>
                         </div>
                     ))}
 
                 </div>
                 <div>
-                    <select defaultValue={"velg"} name="språk" onChange={(e) => setLanguage(e.target.value)}>
-                        <option value="velg" disabled>språk</option>
+                    <select
+                    defaultValue={"velg"} name="språk" onChange={(e) => setLanguage(e.target.value)}
+                    className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
+                        <option value="velg" disabled>Språk</option>
                         <option value="Norsk">Norsk</option>
                         <option value="English">English</option>
                         <option value="Null">Ikke viktig</option>
                     </select>
                 </div>
                 <div>
-                    <select defaultValue={"velg"} name="størrelse" onChange={(e) => setSize(e.target.value)}>
-                        <option value="velg" disabled>gruppestørrelse</option>
+                    <select
+                    defaultValue={"velg"} name="størrelse" onChange={(e) => setSize(e.target.value)}
+                    className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
+                        <option value="velg" disabled>Gruppestørrelse</option>
                         <option value="liten">Liten (1-4stk)</option>
                         <option value="Medium">Liten (5-7stk)</option>
                         <option value="Stor">Stor (8+)</option>
@@ -179,8 +185,10 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
             </div>
             <div>
 
-                <select defaultValue={"velg"} name="karaktermål" onChange={(e) => setGradeGoal(e.target.value)}>
-                    <option value="velg" disabled>karaktermål</option>
+                <select
+                defaultValue={"velg"} name="karaktermål" onChange={(e) => setGradeGoal(e.target.value)}
+                className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
+                    <option value="velg" disabled>Karaktermål</option>
                     <option value="PASS">Bestått</option>
                     <option value="D">D</option>
                     <option value="C">C</option>
@@ -190,8 +198,10 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                 </select>
             </div>
             <div>
-                <select defaultValue={"velg"} name="arbeidsfrekvens" onChange={(e) => setWorkFrequency(e.target.value)}>
-                    <option value="velg" disabled>arbeidsfrekvens</option>
+                <select
+                defaultValue={"velg"} name="arbeidsfrekvens" onChange={(e) => setWorkFrequency(e.target.value)}
+                className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
+                    <option value="velg" disabled>Arbeidsfrekvens</option>
                     <option value="W1">En gang i uka</option>
                     <option value="W2">To ganger i uka</option>
                     <option value="W3">Tre ganger i uka</option>
@@ -204,18 +214,26 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                     <option value="Null">Ikke viktig</option>
                 </select>
             </div>
-            <div>
-                <input type="radio" name={"metode"} id={"fysisk"} value={"LOCAL"} onChange={(e) => setWorkType(e.target.value)}/>
-                <label htmlFor="fysisk">Fysisk</label>
-                <input type="radio" name={"metode"} id={"digitalt"} value={"REMOTE"} onChange={(e) => setWorkType(e.target.value)}/>
-                <label htmlFor="digitalt">Digitalt</label>
-                <input type="radio" name={"metode"} id={"begge"} value={"HYBRID"} onChange={(e) => setWorkType(e.target.value)}/>
-                <label htmlFor="begge">Begge</label>
-                <input type="radio" name={"metode"} id={"ikkeViktig"} value={"Null"} onChange={(e) => setWorkType(e.target.value)}/>
-                <label htmlFor="ikkeViktig">Ikke viktig</label>
-                <div >
-                    <Button type="button" onClick={searchForGroup}>{buttonText}</Button>
+            <div className="flex gap-3 items-center whitespace-nowrap mt-4 mb-8">
+                <div>
+                    <input type="radio" name={"metode"} id={"fysisk"} value={"LOCAL"} onChange={(e) => setWorkType(e.target.value)}/>
+                    <label htmlFor="fysisk" className="ml-1">Fysisk</label>
                 </div>
+                <div>
+                    <input type="radio" name={"metode"} id={"digitalt"} value={"REMOTE"} onChange={(e) => setWorkType(e.target.value)}/>
+                    <label htmlFor="digitalt" className="ml-1">Digitalt</label>
+                </div>
+                <div>
+                    <input type="radio" name={"metode"} id={"begge"} value={"HYBRID"} onChange={(e) => setWorkType(e.target.value)}/>
+                    <label htmlFor="begge" className="ml-1">Begge</label>
+                </div>
+                <div>
+                    <input type="radio" name={"metode"} id={"ikkeViktig"} value={"Null"} onChange={(e) => setWorkType(e.target.value)}/>
+                    <label htmlFor="ikkeViktig" className="ml-1">Ikke viktig</label>
+                </div>
+            </div>
+            <div>
+                <Button type="button" onClick={searchForGroup}>{buttonText}</Button>
             </div>
         </div>
         {error ? <h2>{error}</h2>: <></>}
