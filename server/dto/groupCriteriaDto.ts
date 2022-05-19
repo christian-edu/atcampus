@@ -1,7 +1,6 @@
 import { GradeGoal } from "../entity/enums/GradeGoal";
 import { WorkFrequency } from "../entity/enums/WorkFrequency";
 import { WorkType } from "../entity/enums/WorkType";
-import { SubjectEntity } from "../entity/SubjectEntity";
 
 export class GroupCriteriaDto {
   constructor(

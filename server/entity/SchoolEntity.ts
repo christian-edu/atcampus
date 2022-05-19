@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 @Entity()
 export class SchoolEntity {
-  constructor(name: string) {
+  constructor(name = "Ikke satt") {
     this.uuid = uuidv4();
     this.name = name;
     this.criteriaCollection = new Array<CriteriaEntity>();

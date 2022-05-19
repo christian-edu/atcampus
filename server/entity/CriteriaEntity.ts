@@ -24,7 +24,7 @@ export class CriteriaEntity {
     language = "",
     location = "",
     subjects?: SubjectEntity[],
-    school = new SchoolEntity("Ikke satt")
+    school = new SchoolEntity()
   ) {
     this.uuid = uuidv4();
     this.grade_goal = gradeGoal;
