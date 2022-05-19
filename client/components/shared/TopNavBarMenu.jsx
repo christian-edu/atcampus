@@ -12,10 +12,13 @@ import {
 const TopNavBarMenu = (props) => {
   return (
     <div>
-      <button onClick={props.onClick} className='text-white'>
-        X
-      </button>
-      <div className='grid grid-cols-1 bg-gradient-left w-screen text-white px-4'>
+      <div className='flex justify-end'>
+        <button onClick={props.onClick} className='flex justify-end text-white px-4 py-2 mb-2 outline outline-white text-center bg-purple-1 rounded-full'>
+          X
+        </button>
+      </div>
+      
+      <div className='grid grid-cols-1 bg-gradient-left w-screen text-white px-4 max-w-2xl mx-auto'>
         <ul className='divide-y divide-purple-4'>
           <Link
             to='/'

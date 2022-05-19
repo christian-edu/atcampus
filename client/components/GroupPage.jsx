@@ -30,7 +30,7 @@ const GroupPage = () => {
   }
 
   return (
-    <div className='bg-white p-6'>
+    <div className='bg-white p-6 max-w-xl mx-auto'>
       <div className='flex flex-row justify-between'>
         <h2 className='text-dark-1 text-xl font-bold mb-8'>
           {group.name}
