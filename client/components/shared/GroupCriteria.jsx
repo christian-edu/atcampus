@@ -127,17 +127,21 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
 
     }
 
-    return <div>
+    return <div className="text-dark-1">
         <div>
-            <h2 className='text-xl font-bold text-dark-1'>{title}</h2>
-        <h4>Velg kriterier</h4>
-            <div>
+            <h2 className='text-xl font-bold mb-4'>{title}</h2>
+            <h4 className="text-dark-3">Velg kriterier</h4>
+            <div className="flex flex-col gap-3">
                 <div>
-                    {patchGroup||createGroup?<div>
-                        <input type="radio" name={"private"} id={"public"} value={"Public"} onChange={(e) => setIsPrivate(false)}/>
-                        <label htmlFor="public">Public</label>
-                        <input type="radio" name={"private"} id={"private"} value={"Private"} onChange={(e) => setIsPrivate(true)}/>
-                        <label htmlFor="private">Private</label>
+                    {patchGroup||createGroup?<div className="flex gap-3 items-center my-4">
+                        <div>
+                            <input type="radio" name={"private"} id={"public"} value={"Public"} onChange={(e) => setIsPrivate(false)}/>
+                            <label htmlFor="public" className="ml-1">Offentlig</label>
+                        </div>
+                        <div>
+                            <input type="radio" name={"private"} id={"private"} value={"Private"} onChange={(e) => setIsPrivate(true)}/>
+                            <label htmlFor="private" className="ml-1">Privat</label>
+                        </div>
                     </div>:<></>}
                 </div>
                 <div>
@@ -152,14 +156,13 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                 </div>
                 <div>
                     <h4 className="text-dark-1">Emner:</h4>
-                    <button onClick={addSubjectField}>+</button>
+                    <button onClick={addSubjectField} className="px-2 py-1 outline outline-1 rounded outline-dark-3">+ Legg til</button>
                     {subject.map((subInput, index) => (
                         <div key={index}>
                             <input name={"subject"} placeholder={"eks. Avansert Java"} onChange={(event => handleInputChange(event, index))}
                             className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'/>
                         </div>
                     ))}
-
                 </div>
                 <div>
                     <select
@@ -182,9 +185,7 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                         <option value="Null">Ikke viktig</option>
                     </select>
                 </div>
-            </div>
-            <div>
-
+                <div>
                 <select
                 defaultValue={"velg"} name="karaktermål" onChange={(e) => setGradeGoal(e.target.value)}
                 className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
@@ -235,6 +236,8 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
             <div>
                 <Button type="button" onClick={searchForGroup}>{buttonText}</Button>
             </div>
+        </div>
+            
         </div>
         {error ? <h2>{error}</h2>: <></>}
 

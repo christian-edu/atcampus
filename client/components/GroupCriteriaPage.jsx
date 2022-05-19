@@ -17,7 +17,7 @@ const GroupCriteriaPage = ({createdGroup, lookingForGroup, editGroup}) => {
    if(createdGroup){
        return (
 
-           <div className='bg-white p-6 grid gap-4 rounded-standard max-w-2xl mx-auto'>
+           <div className='bg-white p-6 grid gap-4 rounded-standard max-w-2xl mx-auto text-dark-1'>
                <h2 className='text-xl font-bold'>Opprett gruppe</h2>
                <form >
                    <label>Gruppenavn:</label>
@@ -37,7 +37,7 @@ const GroupCriteriaPage = ({createdGroup, lookingForGroup, editGroup}) => {
    }
 
    if(editGroup){
-       return <div className='bg-white p-6'>
+       return <div className='bg-white p-6 text-dark-1'>
            <h2 className='text-xl font-bold'>Endre navn</h2>
            <form >
                <label>Gruppenavn:</label>
