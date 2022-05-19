@@ -5,7 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "test": "jest --collectCoverage --detectOpenHandles",
-    "start": "ts-node server.ts",
+    "start": "ts-node --files server.ts",
     "dev": "nodemon --ext ts,js,json --exec npm start",
     "format": "prettier --write **/*.{tsx,jsx,ts,js,html,json}",
     "format:check": "prettier --check **/*.{tsx,jsx,ts,js,html,json}"
@@ -18,6 +18,7 @@
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.5.1",
+    "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^17.0.32",
     "@types/supertest": "^2.0.12",
     "@types/ws": "^8.5.3",
@@ -33,6 +34,7 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "jsonwebtoken": "^8.5.1",
