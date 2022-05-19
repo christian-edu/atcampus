@@ -28,8 +28,7 @@ const TopNavBar = () => {
           onClick={toggleNavBarHandler}
           className='flex flex-col items-center'
         >
-          <MenuIcon className='h-7 w-7 text-purple-1' />
-          Menu
+          <MenuIcon className='w-12 text-purple-1'/>
         </button>
       </div>
     </>

@@ -24,15 +24,15 @@ const GroupPage = () => {
 
   let visible = '';
   if (group.isPrivate) {
-    visible = 'Private';
+    visible = 'Privat';
   } else {
-    visible = 'Public';
+    visible = 'Offentlig';
   }
 
   return (
     <div className='bg-white p-6 max-w-xl mx-auto rounded-standard'>
       <div className='flex flex-row justify-between'>
-        <h2 className='text-dark-1 text-xl font-bold mb-8'>{group.name}</h2>
+        <h2 className='text-dark-1 text-xl font-bold mb-2'>{group.name}</h2>
         {showSettings && (
           <Modal onClick={toggleSettings}>
             <GroupSettings />
@@ -43,8 +43,8 @@ const GroupPage = () => {
           className='text-dark-1 h-6 w-6 cursor-pointer'
         />
       </div>
-      <h4>({visible})</h4>
-      <ul className='grid gap-4'>
+      <h4 className='font-bold text-dark-3 mb-8'>({visible})</h4>
+      <ul className='grid gap-4 text-md text-dark-1'>
         <li className='border-b-2 border-purple-1 hover:bg-dark-6'>
           <Link to='/' className='flex gap-2 items-center text-lg py-4'>
             <ChatIcon className='h-6 text-purple-1' />

@@ -129,7 +129,7 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
 
     return <div>
         <div>
-            <h2 className='text-xl font-bold'>{title}</h2>
+            <h2 className='text-xl font-bold text-dark-1'>{title}</h2>
         <h4>Velg kriterier</h4>
             <div>
                 <div>
@@ -142,7 +142,8 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                 </div>
                 <div>
                     <h4>Sted:</h4>
-                    <input type="text" placeholder={"Eks. 'Oslo'"} onChange={(e) => setPlace(e.target.value)}/>
+                    <input type="text" placeholder={"Eks. 'Oslo'"} onChange={(e) => setPlace(e.target.value)}
+                     className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'/>
                 </div>
                 <div>
                     <h4>Skole:</h4>
