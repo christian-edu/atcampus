@@ -3,7 +3,6 @@ import e, { IRouter, Response } from "express";
 import { IGroupService } from "../service/IGroupService";
 import HttpException from "../httpException";
 import { GroupDto } from "../dto/groupDto";
-
 function sendError(res: Response, e: HttpException) {
   res.status(e.status);
   res.send({ message: e.message });
@@ -111,7 +110,6 @@ export default class GroupRouter {
     }
 
     router.post("/search", async (req, res) => {
-
       const searchDto = extractSearchDtoFromRequest(req);
 
       try {
