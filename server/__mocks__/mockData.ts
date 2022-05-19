@@ -12,7 +12,7 @@ export const users = [
 export const groupMembers = [
   new GroupMemberDto(users[0], true),
   new GroupMemberDto(users[1], false),
-  new GroupMemberDto(users[3], false),
+  // new GroupMemberDto(users[3], false),
 ];
 
 export const groups = [

@@ -11,9 +11,10 @@ const BackButton = () => {
   return (
     <button
       onClick={backButtonHandler}
-      className='flex flex-col items-center p-2 outline outline-2 outline-purple-1 rounded text-white '
+      className='flex flex-row items-center gap-1 p-2 outline outline-2 outline-purple-1 rounded text-purple-1 '
     >
       <ArrowLeftIcon className='h-6 w-6 text-purple-1' />
+      <span className='hidden lg:block'>Tilbake</span>
     </button>
   );
 };
