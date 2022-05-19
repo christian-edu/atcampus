@@ -20,21 +20,19 @@ const GroupPage = () => {
 
   const toggleSettings = () => setShowSettings((showSettings) => !showSettings);
 
-  console.log(group)
+  console.log(group);
 
-  let visible = ""
-  if(group.isPrivate){
-    visible = "Private"
-  }else {
-    visible = "Public"
+  let visible = '';
+  if (group.isPrivate) {
+    visible = 'Private';
+  } else {
+    visible = 'Public';
   }
 
   return (
     <div className='bg-white p-6'>
       <div className='flex flex-row justify-between'>
-        <h2 className='text-dark-1 text-xl font-bold mb-8'>
-          {group.name}
-        </h2>
+        <h2 className='text-dark-1 text-xl font-bold mb-8'>{group.name}</h2>
         {showSettings && (
           <Modal onClick={toggleSettings}>
             <GroupSettings />
