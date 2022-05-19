@@ -48,7 +48,7 @@ const GroupCard = (props) => {
       )}
 
       <div
-        className='bg-white flex items-center relative p-6 rounded-standard border border-purple-4 cursor-pointer hover:drop-shadow-xl duration-300'
+        className='bg-white flex items-center relative p-6 rounded-standard border border-purple-4 cursor-pointer'
         onClick={clickHandler}
       >
         <div>
