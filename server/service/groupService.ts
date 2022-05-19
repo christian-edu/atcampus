@@ -17,83 +17,88 @@ import { CriteriaDto } from "../dto/criteriaDto";
 import { GroupMemberRepo } from "../repo/GroupMemberRepo";
 import { UserEntity } from "../entity/UserEntity";
 import { GroupMemberEntity } from "../entity/GroupMemberEntity";
+import { groupDtoToEntity, groupEntityToDto } from "../dto/utils/groupMappers";
+import { userEntityToDto } from "../dto/utils/userMappers";
 
 export default class GroupService /*implements IGroupService*/ {
   constructor(public groupRepo: Repository<GroupEntity>) {}
 
-  async fetchAllGroups(): Promise<GroupEntity[]> {
-    return await this.groupRepo.find();
-  }
-
-  async addGroup(group: GroupDto, user_uuid: string): Promise<GroupEntity> {
-    this.createGroupEntityFromDto(group, user_uuid).then(async (group) => {
-      return await this.groupRepo.save(group);
+  async fetchAllGroups(): Promise<GroupDto[]> {
+    return await this.groupRepo.find().then((entities) => {
+      return entities.map((entity) => {
+        return groupEntityToDto(entity);
+      });
     });
-    throw new Error("Something went wrong during saving");
   }
 
-  async fetchGroupById(groupId: string): Promise<GroupEntity | null> {
+  async addGroup(group: GroupDto): Promise<GroupDto> {
+    return await this.groupRepo
+      .save(groupDtoToEntity(group))
+      .then((entity) => groupEntityToDto(entity));
+  }
+
+  async fetchGroupById(groupId: string): Promise<GroupDto> {
     if (!groupId)
       throw new HttpException(
         "group_id request parameter must be specified",
         400
       );
-    return this.groupRepo.findOneBy({ uuid: groupId });
+    return this.groupRepo.findOneBy({ uuid: groupId }).then((entity) => {
+      if (!entity) throw new Error("Idk, aliens?");
+      return groupEntityToDto(entity);
+    });
   }
 
-  async deleteMember(groupId: string, userId: string): Promise<GroupEntity> {
+  async deleteMember(groupId: string, userId: string): Promise<GroupDto> {
     const { user, group } = await this.fetchUserAndGroup(userId, groupId);
 
     const rowsAffected = await GroupMemberRepo.delete({
       user: user,
       group: group,
     }).then((response) => {
-      if (response) {
-        return response.affected;
-      } else {
-        throw new Error("Idk, aliens?");
-      }
+      return response.affected;
     });
 
-    if (rowsAffected) {
-      return this.groupRepo.findOneBy({ uuid: groupId }).then((group) => {
-        if (!group) {
-          throw new Error("Idk, aliens?");
-        }
-        return group;
-      });
+    if (!rowsAffected) {
+      throw new Error("Deletion failed");
     }
-    throw new Error("Idk, aliens?");
+    return this.groupRepo.findOneBy({ uuid: groupId }).then((group) => {
+      if (!group) {
+        throw new Error("Idk, aliens?");
+      }
+      return groupEntityToDto(group);
+    });
   }
 
-  async addMember(groupId: string, userId: string): Promise<GroupEntity> {
+  async addMember(groupId: string, userId: string): Promise<GroupDto> {
     const { user, group } = await this.fetchUserAndGroup(userId, groupId);
 
     const newMember = new GroupMemberEntity(user, group, false);
 
     return await GroupMemberRepo.save(newMember).then((gme) => {
-      return gme.group;
+      return groupEntityToDto(gme.group);
     });
   }
 
-  async fetchGroupMembers(groupId: string): Promise<UserEntity[]> {
+  async fetchGroupMembers(groupId: string): Promise<UserDto[]> {
     if (!groupId)
       throw new HttpException(
         "group_id request parameter must be specified",
         400
       );
-    const members = new Array<UserEntity>();
+    const members = new Array<UserDto>();
     await this.groupRepo.findOneBy({ uuid: groupId }).then(async (group) => {
-      if (group) {
-        await GroupMemberRepo.find({
-          where: { group },
-          relations: ["user"],
-        }).then((it) => {
-          it.forEach((memberRow) => {
-            members.push(memberRow.user);
-          });
+      if (!group) throw new Error("Group not found");
+
+      await GroupMemberRepo.find({
+        where: { group },
+        relations: ["user"],
+      }).then((it) => {
+        if (!it) throw new Error("Users not found");
+        it.forEach((memberRow) => {
+          members.push(userEntityToDto(memberRow.user));
         });
-      }
+      });
     });
     if (members.length > 0) {
       return members;
@@ -103,12 +108,16 @@ export default class GroupService /*implements IGroupService*/ {
   }
 
   async updateGroup(group: GroupDto): Promise<GroupDto> {
-    if (!group)
+    if (!group.uuid)
       throw new HttpException(
-        "No group found in body. Expected {\ngroup: groupName\n}",
+        "No group uuid found in body. Expected {\ngroup: groupName\n}",
         400
       );
-    return this.groupRepo.updateGroup(group);
+
+    const groupEntity = groupDtoToEntity(group);
+    return await this.groupRepo
+      .save(groupEntity)
+      .then((entity) => groupEntityToDto(entity));
   }
 
   async deleteGroup(groupId: string): Promise<boolean> {
@@ -180,54 +189,15 @@ export default class GroupService /*implements IGroupService*/ {
     return results;
   }
 
-  private async createGroupEntityFromDto(
-    dto: GroupDto,
-    user_uuid: string
-  ): Promise<GroupEntity> {
-    let newSchool: SchoolEntity;
-    if (dto.criteria.school) {
-      newSchool = await SchoolRepo.findOrCreate(
-        new SchoolEntity(dto.criteria.school)
-      );
-    } else {
-      newSchool = await SchoolRepo.findOrCreate(new SchoolEntity());
-    }
-
-    let newGroupSubjects: SubjectEntity[];
-    if (dto.criteria.subject) {
-      newGroupSubjects = this.createNewSubjects(dto.criteria.subject);
-    } else {
-      newGroupSubjects = new Array<SubjectEntity>();
-    }
-
-    const newCriteria = new CriteriaEntity(
-      dto.criteria.gradeGoal,
-      dto.criteria?.workFrequency,
-      dto.criteria?.workType,
-      dto.criteria?.maxSize,
-      dto.criteria?.language,
-      dto.criteria?.location,
-      newGroupSubjects,
-      newSchool
-    );
-
-    const admin = await UserRepo.findOne({ where: { uuid: user_uuid } });
-
-    if (admin) {
-      return new GroupEntity(dto.name, newCriteria, dto.isPrivate, admin);
-    } else {
-      throw new Error("No user with given ID found");
-    }
-  }
-
   private createNewSubjects(subjectStrings: string[]) {
     const newSubjectEntities = new Array<SubjectEntity>();
 
     subjectStrings.forEach(async (subject) => {
-      const newSubject = await SubjectRepo.findOrCreate(
-        new SubjectEntity(subject)
+      await SubjectRepo.findOrCreate(new SubjectEntity(subject)).then(
+        (entity) => {
+          newSubjectEntities.push(entity);
+        }
       );
-      newSubjectEntities.push(newSubject);
     });
 
     return newSubjectEntities;
