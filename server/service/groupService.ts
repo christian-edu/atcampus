@@ -1,19 +1,15 @@
 import HttpException from "../httpException";
 import { groups } from "../__mocks__/mockData";
 import { SearchDTO } from "../dto/searchDTO";
-import { IGroupRepo } from "../repo/IGroupRepo";
-import { IGroupService, searchResult } from "./IGroupService";
+import { searchResult } from "./IGroupService";
 import { GroupDto } from "../dto/groupDto";
 import { UserDto } from "../dto/userDto";
-import { DeepPartial, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { GroupEntity } from "../entity/GroupEntity";
-import { CriteriaEntity } from "../entity/CriteriaEntity";
 import { SubjectRepo } from "../repo/SubjectRepo";
 import { SubjectEntity } from "../entity/SubjectEntity";
 import { SchoolRepo } from "../repo/SchoolRepo";
-import { SchoolEntity } from "../entity/SchoolEntity";
 import { UserRepo } from "../repo/UserRepo";
-import { CriteriaDto } from "../dto/criteriaDto";
 import { GroupMemberRepo } from "../repo/GroupMemberRepo";
 import { UserEntity } from "../entity/UserEntity";
 import { GroupMemberEntity } from "../entity/GroupMemberEntity";
@@ -32,8 +28,9 @@ export default class GroupService /*implements IGroupService*/ {
   }
 
   async addGroup(group: GroupDto): Promise<GroupDto> {
+    const groupEntity = await this.checkSubjectsAndSchool(group);
     return await this.groupRepo
-      .save(groupDtoToEntity(group))
+      .save(groupEntity)
       .then((entity) => groupEntityToDto(entity));
   }
 
@@ -43,8 +40,8 @@ export default class GroupService /*implements IGroupService*/ {
         "group_id request parameter must be specified",
         400
       );
-    return this.groupRepo.findOneBy({ uuid: groupId }).then((entity) => {
-      if (!entity) throw new Error("Idk, aliens?");
+    return await this.groupRepo.findOneBy({ uuid: groupId }).then((entity) => {
+      if (!entity) throw new Error("Group not found");
       return groupEntityToDto(entity);
     });
   }
@@ -64,7 +61,7 @@ export default class GroupService /*implements IGroupService*/ {
     }
     return this.groupRepo.findOneBy({ uuid: groupId }).then((group) => {
       if (!group) {
-        throw new Error("Idk, aliens?");
+        throw new Error("This error really shouldn't happen. Idk, aliens?");
       }
       return groupEntityToDto(group);
     });
@@ -103,7 +100,7 @@ export default class GroupService /*implements IGroupService*/ {
     if (members.length > 0) {
       return members;
     } else {
-      throw new Error("Idk, aliens");
+      throw new Error("Idk, aliens?");
     }
   }
 
@@ -114,7 +111,7 @@ export default class GroupService /*implements IGroupService*/ {
         400
       );
 
-    const groupEntity = groupDtoToEntity(group);
+    const groupEntity = await this.checkSubjectsAndSchool(group);
     return await this.groupRepo
       .save(groupEntity)
       .then((entity) => groupEntityToDto(entity));
@@ -189,18 +186,16 @@ export default class GroupService /*implements IGroupService*/ {
     return results;
   }
 
-  private createNewSubjects(subjectStrings: string[]) {
-    const newSubjectEntities = new Array<SubjectEntity>();
+  private async checkSubjects(
+    subjects: SubjectEntity[]
+  ): Promise<SubjectEntity[]> {
+    const checkedSubjects = new Array<SubjectEntity>();
 
-    subjectStrings.forEach(async (subject) => {
-      await SubjectRepo.findOrCreate(new SubjectEntity(subject)).then(
-        (entity) => {
-          newSubjectEntities.push(entity);
-        }
-      );
-    });
-
-    return newSubjectEntities;
+    for (let i = 0; i < subjects.length; i++) {
+      const checked = await SubjectRepo.findOrCreate(subjects[i]);
+      checkedSubjects.push(checked);
+    }
+    return checkedSubjects;
   }
 
   private async fetchUserAndGroup(userId: string, groupId: string) {
@@ -217,5 +212,18 @@ export default class GroupService /*implements IGroupService*/ {
     if (!user || !group) throw Error("Idk, aliens?");
 
     return { user, group };
+  }
+
+  private async checkSubjectsAndSchool(
+    groupDto: GroupDto
+  ): Promise<GroupEntity> {
+    const groupEntity = groupDtoToEntity(groupDto);
+    groupEntity.criteria.subjects = await this.checkSubjects(
+      groupEntity.criteria.subjects
+    );
+    groupEntity.criteria.school = await SchoolRepo.findOrCreate(
+      groupEntity.criteria.school
+    );
+    return groupEntity;
   }
 }
