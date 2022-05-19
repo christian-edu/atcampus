@@ -16,6 +16,7 @@ import { UserRepo } from "../repo/UserRepo";
 import { GroupCriteriaDto } from "../dto/groupCriteriaDto";
 import { GroupMemberRepo } from "../repo/GroupMemberRepo";
 import { UserEntity } from "../entity/UserEntity";
+import { GroupMemberEntity } from "../entity/GroupMemberEntity";
 
 export default class GroupService /*implements IGroupService*/ {
   constructor(public groupRepo: Repository<GroupEntity>) {}
@@ -41,32 +42,38 @@ export default class GroupService /*implements IGroupService*/ {
   }
 
   async deleteMember(groupId: string, userId: string): Promise<GroupEntity> {
-    let user: UserEntity | null = null;
-    let group: GroupEntity | null = null;
+    const { user, group } = await this.fetchUserAndGroup(userId, groupId);
 
-    await UserRepo.findOneBy({ uuid: userId }).then((it) => {
-      if (it) user = it;
+    const rowsAffected = await GroupMemberRepo.delete({
+      user: user,
+      group: group,
+    }).then((response) => {
+      if (response) {
+        return response.affected;
+      } else {
+        throw new Error("Idk, aliens?");
+      }
     });
-    await this.groupRepo.findOneBy({ uuid: groupId }).then((it) => {
-      if (it) group = it;
-    });
 
-    if (!user || !group) throw Error("Idk, aliens?");
-
-    await GroupMemberRepo.delete({ user: user, group: group }).then(
-      (response) => {
-        if (response) {
-          return group;
-        } else {
+    if (rowsAffected) {
+      return this.groupRepo.findOneBy({ uuid: groupId }).then((group) => {
+        if (!group) {
           throw new Error("Idk, aliens?");
         }
-      }
-    );
+        return group;
+      });
+    }
     throw new Error("Idk, aliens?");
   }
 
-  async addMember(groupId: string, userId: string): Promise<GroupDto> {
-    return this.groupRepo.addMember(groupId, userId);
+  async addMember(groupId: string, userId: string): Promise<GroupEntity> {
+    const { user, group } = await this.fetchUserAndGroup(userId, groupId);
+
+    const newMember = new GroupMemberEntity(user, group, false);
+
+    return await GroupMemberRepo.save(newMember).then((gme) => {
+      return gme.group;
+    });
   }
 
   async fetchGroupMembers(groupId: string): Promise<UserEntity[]> {
@@ -224,5 +231,21 @@ export default class GroupService /*implements IGroupService*/ {
     });
 
     return newSubjectEntities;
+  }
+
+  private async fetchUserAndGroup(userId: string, groupId: string) {
+    let user: UserEntity | null = null;
+    let group: GroupEntity | null = null;
+
+    await UserRepo.findOneBy({ uuid: userId }).then((it) => {
+      if (it) user = it;
+    });
+    await this.groupRepo.findOneBy({ uuid: groupId }).then((it) => {
+      if (it) group = it;
+    });
+
+    if (!user || !group) throw Error("Idk, aliens?");
+
+    return { user, group };
   }
 }
