@@ -3,19 +3,16 @@ import {useState} from "react";
 
 const GroupCriteriaPage = ({createdGroup, lookingForGroup, editGroup}) => {
   // Side for å sette opp gruppekriterier når du oppretter gruppe eller går på gruppeinnstillinger og velger gruppekriterier
-  // Midlertidig
+
 
     const [groupname, setGroupName] = useState("");
 
 
    if(lookingForGroup){
 
-        return <GroupCriteria title={"Søk etter gruppekriterier"} buttonText={"Søk etter kriterier"} fetchLink={"/api/v1/groups/search"} />
+        return <GroupCriteria title={"Søk etter gruppekriterier"} buttonText={"Søk etter kriterier"} fetchLink={"/api/v1/groups/search"} searchGroup={true} />
     }
 
-   // need to fetch a different link when we create a group and when we edit a group
-
-    // Created group needs to send in a name field also for group name
 
    if(createdGroup){
        return (

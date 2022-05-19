@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import CreateGroup from "./components/CreateGroup";
 import GroupLinks from "./components/GroupLinks";
 import SearchGroup from "./components/SearchGroup";
 import GroupMembers from "./components/GroupMembers";

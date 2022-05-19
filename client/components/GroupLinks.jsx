@@ -12,6 +12,8 @@ const GroupLinks = () => {
 
   const { data, error, loading } = useLoader(() => fetchJSON('/api/v1/groups'));
 
+
+
   if (loading) return <Loading />;
 
   if (error) {
@@ -40,7 +42,9 @@ const GroupLinks = () => {
             key={group.name}
             onClick={() => navigate('/group/specific', { state: { group } })}
           />
+
         ))}
+
       </div>
     </div>
   );

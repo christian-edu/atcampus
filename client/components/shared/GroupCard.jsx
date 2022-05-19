@@ -55,6 +55,7 @@ const GroupCard = (props) => {
           <h3 className='text-dark-1 text-lg font-bold'>{name}</h3>
           <div className='flex flex-row items-center text-dark-3 mt-2'>
             <UserGroupIcon className='h-5 w-5 mr-2' />
+
             <p className='text-md'>Medlemmer: {groupMember.length}</p>
           </div>
         </div>

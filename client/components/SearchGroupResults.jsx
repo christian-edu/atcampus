@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useState } from 'react';
 import GroupCard from './shared/GroupCard';
 import {useLocation} from "react-router-dom";
 
@@ -8,6 +7,8 @@ const SearchGroupResults = () => {
     const location = useLocation();
 
     const groupResult = location.state.groupResult;
+
+    console.log(groupResult)
 
 
 

@@ -20,6 +20,15 @@ const GroupPage = () => {
 
   const toggleSettings = () => setShowSettings((showSettings) => !showSettings);
 
+  console.log(group)
+
+  let visible = ""
+  if(group.isPrivate){
+    visible = "Private"
+  }else {
+    visible = "Public"
+  }
+
   return (
     <div className='bg-white p-6'>
       <div className='flex flex-row justify-between'>
@@ -36,7 +45,7 @@ const GroupPage = () => {
           className='text-dark-1 h-6 w-6 cursor-pointer'
         />
       </div>
-
+      <h4>({visible})</h4>
       <ul className='grid gap-8'>
         <li className='border-b-2 border-purple-1'>
           <Link to='/' className='flex gap-2 items-center text-lg pb-4'>

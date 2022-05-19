@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Button from "./Button"
 
-export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupName, createGroup}) {
+export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupName, createGroup, searchGroup}) {
     // Send a request to the backend to search for the required group with the criterias
 
     const [language, setLanguage] = useState("velg")
@@ -36,9 +36,31 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
 
     useEffect(() => {
 
+        console.log("group results")
+        console.log(groupResult)
+
         if(groupResult !== undefined && createGroup){
-            navigate("/", { state: { groupResult} })
+            const group = groupResult
+            navigate('/group/specific', { state: { group } })
         }
+
+        // DONT WORK
+        if(searchGroup && groupResult !== undefined){
+            // since response is 203 no content, it will be undefined
+
+            // We know we searched for group
+            console.log("U searched for group redirect")
+            navigate("/searchGroup/searchGroupResults", { state: { groupResult} })
+
+        }
+
+        if(patchGroup && groupResult === "No Content"){
+
+            console.log("Patch redirect")
+            navigate("/")
+        }
+
+
 
     }, [groupResult])
 
@@ -46,24 +68,47 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
     async function searchForGroup(){
 
 
-        if(language === "velg" || size === "velg" || gradeGoal === "velg" || workFrequency === "velg" || workType === "velg" || place === "velg" || school === "velg" || subject[0].subject.length === 0 ){
-            setError("Fyll inn alle feltene")
-        }else {
+
+
 
 
 
             if(patchGroup){
-                const res = await fetch(fetchLink, {
-                    method: "PATCH",
-                    headers: {
-                        "content-type": "application/json"
-                    },
-                    body: JSON.stringify({language, size, gradeGoal, workFrequency, workType, place, school, subject, groupName, isPrivate})
-                })
 
-                setGroupResult( await res.json())
+                if(isPrivate === undefined ) {
+                    setError("Velg public eller private")
+                }else{
+                    const res = await fetch(fetchLink, {
+                        method: "PATCH",
+                        headers: {
+                            "content-type": "application/json"
+                        },
+                        body: JSON.stringify({language, size, gradeGoal, workFrequency, workType, place, school, subject, groupName, isPrivate})
+                    })
 
-            }else {
+                    setGroupResult( "No Content")
+
+                }
+
+
+
+            }else if(createGroup) {
+
+                if(language === "velg" || size === "velg" || gradeGoal === "velg" || workFrequency === "velg" || workType === "velg" || place === "velg" || school === "velg" || subject[0].subject.length === 0 ) {
+                    setError("Fyll inn alle feltene")
+                }else{
+                    const res = await fetch(fetchLink, {
+                        method: "PATCH",
+                        headers: {
+                            "content-type": "application/json"
+                        },
+                        body: JSON.stringify({language, size, gradeGoal, workFrequency, workType, place, school, subject, groupName, isPrivate})
+                    })
+
+                    setGroupResult( await res.json())
+                }
+            }else if(searchGroup) {
+                // Here we search for the group
                 const res = await fetch(fetchLink, {
                     method: "POST",
                     headers: {
@@ -71,14 +116,15 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                     },
                     body: JSON.stringify({language, size, gradeGoal, workFrequency, workType, place, school, subject, groupName, isPrivate})
                 })
+                /*setGroupResult( await res.json())*/
+                //Doesnt return data??
 
+                //Temp fix with mock data
                 setGroupResult( await res.json())
+
+
             }
 
-
-
-
-        }
     }
 
     return <div>

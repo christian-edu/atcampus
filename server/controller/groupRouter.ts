@@ -3,6 +3,7 @@ import e, { IRouter, Response } from "express";
 import { IGroupService } from "../service/IGroupService";
 import HttpException from "../httpException";
 import { GroupDto } from "../dto/groupDto";
+import {groups} from "../__mocks__/mockData";
 
 function sendError(res: Response, e: HttpException) {
   res.status(e.status);
@@ -26,9 +27,6 @@ export default class GroupRouter {
 
     router.post("/", async (req, res) => {
 
-      console.log("Hit the create group")
-      console.log(req.body)
-
       const newGroup = this.extractGroupDtoFromRequest(req);
       try {
         res.json(await service.addGroup(newGroup));
@@ -38,9 +36,6 @@ export default class GroupRouter {
     });
 
     router.patch("/", async (req, res) => {
-
-      console.log("Hit the edit group")
-      console.log(req.body)
 
       const group = this.extractGroupDtoFromRequest(req);
       try {
@@ -120,15 +115,13 @@ export default class GroupRouter {
 
     router.post("/search", async (req, res) => {
 
-
-      console.log("Hit the search")
-      console.log(req.body)
-
-
       const searchDto = extractSearchDtoFromRequest(req);
 
       try {
-        res.json(await service.searchGroup(searchDto));
+        /*res.json(await service.searchGroup(searchDto));*/
+
+        res.json(groups)
+
       } catch (e: any) {
         sendError(res, e);
       }
