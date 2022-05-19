@@ -1,51 +1,45 @@
 import { XIcon, CheckIcon } from '@heroicons/react/solid';
+import Image from './Image';
 
 const MatchRequest = (props) => {
   // Popup som vises når man søker etter gruppe basert på kriterer
 
-    console.log("In the match request")
-    console.log(props.group)
+  console.log('In the match request');
+
+  const { criteria } = props.group || props.user;
+
+  console.log(criteria);
+
+  const criterias = {
+    Skolenavn: criteria.school,
+    Sted: criteria.location,
+    Språk: criteria.language,
+    Fag: criteria.subject.join(', '),
+    Gruppestørrelse: criteria.maxSize,
+    Karaktermål: criteria.gradeGoal,
+    Metode: criteria.workType,
+    Arbeidsfrekvens: criteria.workFrequency,
+  };
+
+  console.log(criterias);
 
   return (
     <div className='flex flex-col items-center bg-white p-8 rounded text-center shadow-xl'>
-      <img
-        src='https://i.ibb.co/4WTkXk5/Asset-1.png'
-        alt='card-image'
-        className='h-20 w-20 -mt-16 mb-2'
-      />
+      <Image group className='h-20 mb-4' />
       <h2 className='text-dark-1 font-bold text-xl w-full border-b-2 pb-4 border-purple-1'>
-        {props.group?.groupname || props.user}
+        {props.group?.name || props.user}
       </h2>
-      <div className='flex flex-col gap-2 mt-6 mb-4'>
-        <p className='text-dark-1 text-sm font-bold px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
-          Skolenavn: {props.group?.school}
-        </p>
-          <p className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
-              Sted: {props.group?.place}
-          </p>
-          <p className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
-              Språk: {props.group?.language}
-          </p>
-        <p className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
-          Fag: <ul>
-            {props.group?.subject.map((sub) => (
-                <li key={sub}>{sub}</li>
-            ))}
-        </ul>
-        </p>
-        <p className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
-          Gruppestørrelse: {props.group?.size}
-        </p>
-        <p className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
-          Karaktermål: {props.group?.gradeGoal}
-        </p>
-        <p className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
-          Metode: {props.group?.workType}
-        </p>
-        <p className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'>
-          Arbeidsfrekvens: {props.group?.workFrequency}
-        </p>
-      </div>
+      <ul className='flex flex-col gap-3 mt-6 mb-4'>
+        {Object.entries(criterias).map((criteria) => (
+          <li
+            key={criteria[0]}
+            className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'
+          >
+            <span className='font-bold'>{criteria[0]}: </span>
+            {criteria[1]}
+          </li>
+        ))}
+      </ul>
 
       <p className='mb-4 text-sm font-bold'>
         {props.group

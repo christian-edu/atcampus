@@ -66,7 +66,7 @@ const GroupCard = (props) => {
           <PlusIcon className='h-6 text-purple-1 ml-auto' />
         )}
 
-        {!(props.search || props.search) && privateIcon}
+        {!(props.search || props.match) && privateIcon}
       </div>
     </>
   );
