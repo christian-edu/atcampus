@@ -3,6 +3,8 @@ import e, { IRouter, Response } from "express";
 import { IGroupService } from "../service/IGroupService";
 import HttpException from "../httpException";
 import { GroupDto } from "../dto/groupDto";
+import {groups} from "../__mocks__/mockData";
+
 function sendError(res: Response, e: HttpException) {
   res.status(e.status);
   res.send({ message: e.message });
@@ -110,10 +112,14 @@ export default class GroupRouter {
     }
 
     router.post("/search", async (req, res) => {
+
       const searchDto = extractSearchDtoFromRequest(req);
 
       try {
-        res.json(await service.searchGroup(searchDto));
+        /*res.json(await service.searchGroup(searchDto));*/
+
+        res.json(groups)
+
       } catch (e: any) {
         sendError(res, e);
       }

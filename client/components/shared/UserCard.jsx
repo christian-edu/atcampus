@@ -1,5 +1,6 @@
 import { DotsHorizontalIcon, PlusIcon } from '@heroicons/react/solid';
 import { useState } from 'react';
+import Image from './Image';
 import MatchRequest from './MatchRequest';
 import Modal from './Modal';
 import SearchRequest from './SearchRequest';
@@ -46,10 +47,11 @@ const UserCard = (props) => {
         </Modal>
       )}
       <li
-        className='bg-white flex items-center p-6 rounded-standard border border-purple-4 cursor-pointer'
+        className='bg-white flex items-center p-6 gap-4 rounded-standard border border-purple-4 cursor-pointer  hover:drop-shadow-xl duration-300'
         onClick={toggleModal}
       >
-        <h2 className='font-bold'>{user.username}</h2>
+        <Image className='h-14' />
+        <h2 className='font-bold text-lg text-dark-1'>{user.username}</h2>
         <button className='ml-auto'>
           {/* Render dots icon if props edit is set to true, else render plus icons */}
           {props.edit ? (
