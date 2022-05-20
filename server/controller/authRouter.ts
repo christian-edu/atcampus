@@ -1,9 +1,12 @@
 import { IGroupService } from "../service/IGroupService";
 import { IRouter } from "express";
 import jwt from "jsonwebtoken";
+import { ServerRouter } from "./serverRouter";
 
-export default class AuthRouter {
-  constructor(private groupService: IGroupService, private router: IRouter) {}
+export default class AuthRouter extends ServerRouter {
+  constructor(private groupService: IGroupService, private router: IRouter) {
+    super();
+  }
 
   public fetchRoutes() {
     this.router.post("/api/v1/login", async (req, res) => {
