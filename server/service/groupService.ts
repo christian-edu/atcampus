@@ -20,18 +20,26 @@ export default class GroupService /*implements IGroupService*/ {
   constructor(public groupRepo: Repository<GroupEntity>) {}
 
   async fetchAllGroups(): Promise<GroupDto[]> {
-    return await this.groupRepo.find().then((entities) => {
-      return entities.map((entity) => {
-        return groupEntityToDto(entity);
+    return await this.groupRepo
+      .find()
+      .then((entities) => {
+        return entities.map((entity) => {
+          return groupEntityToDto(entity);
+        });
+      })
+      .catch(() => {
+        throw new HttpException("Database connection lost", 500);
       });
-    });
   }
 
   async addGroup(group: GroupDto): Promise<GroupDto> {
     const groupEntity = await this.checkSubjectsAndSchool(group);
     return await this.groupRepo
       .save(groupEntity)
-      .then((entity) => groupEntityToDto(entity));
+      .then((entity) => groupEntityToDto(entity))
+      .catch(() => {
+        throw new HttpException("Database connection lost", 500);
+      });
   }
 
   async fetchGroupById(groupId: string): Promise<GroupDto> {
@@ -40,41 +48,67 @@ export default class GroupService /*implements IGroupService*/ {
         "group_id request parameter must be specified",
         400
       );
-    return await this.groupRepo.findOneBy({ uuid: groupId }).then((entity) => {
-      if (!entity) throw new Error("Group not found");
-      return groupEntityToDto(entity);
-    });
+    return await this.groupRepo
+      .findOneBy({ uuid: groupId })
+      .then((entity) => {
+        if (!entity) throw new HttpException("Group not found", 404);
+        return groupEntityToDto(entity);
+      })
+      .catch(() => {
+        throw new HttpException("Database connection lost", 500);
+      });
   }
 
   async deleteMember(groupId: string, userId: string): Promise<GroupDto> {
-    const { user, group } = await this.fetchUserAndGroup(userId, groupId);
+    const { user, group } = await this.fetchUserAndGroup(userId, groupId).catch(
+      (ex: HttpException) => {
+        throw ex;
+      }
+    );
 
     const rowsAffected = await GroupMemberRepo.delete({
       user: user,
       group: group,
-    }).then((response) => {
-      return response.affected;
-    });
+    })
+      .then((response) => {
+        return response.affected;
+      })
+      .catch(() => {
+        throw new HttpException("Deletion failed", 500);
+      });
 
     if (!rowsAffected) {
-      throw new Error("Deletion failed");
+      throw new HttpException("Deletion failed. No such user or group", 404);
     }
-    return this.groupRepo.findOneBy({ uuid: groupId }).then((group) => {
-      if (!group) {
-        throw new Error("This error really shouldn't happen. Idk, aliens?");
-      }
-      return groupEntityToDto(group);
-    });
+    return this.groupRepo
+      .findOneBy({ uuid: groupId })
+      .then((group) => {
+        if (!group) {
+          throw new HttpException("Database connection lost", 500);
+        }
+        return groupEntityToDto(group);
+      })
+      .catch(() => {
+        throw new HttpException("Database connection lost", 500);
+      });
   }
 
   async addMember(groupId: string, userId: string): Promise<GroupDto> {
-    const { user, group } = await this.fetchUserAndGroup(userId, groupId);
+    const { user, group } = await this.fetchUserAndGroup(userId, groupId).catch(
+      (ex: HttpException) => {
+        throw ex;
+      }
+    );
 
     const newMember = new GroupMemberEntity(user, group, false);
 
-    return await GroupMemberRepo.save(newMember).then((gme) => {
-      return groupEntityToDto(gme.group);
-    });
+    return await GroupMemberRepo.save(newMember)
+      .then((gme) => {
+        return groupEntityToDto(gme.group);
+      })
+      .catch(() => {
+        throw new HttpException("Database connection lost", 500);
+      });
   }
 
   async fetchGroupMembers(groupId: string): Promise<UserDto[]> {
@@ -85,22 +119,26 @@ export default class GroupService /*implements IGroupService*/ {
       );
     const members = new Array<UserDto>();
     await this.groupRepo.findOneBy({ uuid: groupId }).then(async (group) => {
-      if (!group) throw new Error("Group not found");
+      if (!group) throw new HttpException("Group not found", 404);
 
       await GroupMemberRepo.find({
         where: { group },
         relations: ["user"],
-      }).then((it) => {
-        if (!it) throw new Error("Users not found");
-        it.forEach((memberRow) => {
-          members.push(userEntityToDto(memberRow.user));
+      })
+        .then((it) => {
+          if (!it) throw new HttpException("Users not found", 404);
+          it.forEach((memberRow) => {
+            members.push(userEntityToDto(memberRow.user));
+          });
+        })
+        .catch(() => {
+          throw new HttpException("Database connection lost", 500);
         });
-      });
     });
     if (members.length > 0) {
       return members;
     } else {
-      throw new Error("Idk, aliens?");
+      throw new HttpException("Users not found", 404);
     }
   }
 
@@ -114,7 +152,10 @@ export default class GroupService /*implements IGroupService*/ {
     const groupEntity = await this.checkSubjectsAndSchool(group);
     return await this.groupRepo
       .save(groupEntity)
-      .then((entity) => groupEntityToDto(entity));
+      .then((entity) => groupEntityToDto(entity))
+      .catch(() => {
+        throw new HttpException("Database connection lost", 500);
+      });
   }
 
   async deleteGroup(groupId: string): Promise<boolean> {
@@ -123,9 +164,14 @@ export default class GroupService /*implements IGroupService*/ {
         "No groupId found. Expected {\ngroupId: id\n}",
         400
       );
-    await this.groupRepo.delete({ uuid: groupId }).then((result) => {
-      return result.affected;
-    });
+    await this.groupRepo
+      .delete({ uuid: groupId })
+      .then((result) => {
+        return result.affected;
+      })
+      .catch(() => {
+        throw new HttpException("Database connection lost", 500);
+      });
     return false;
   }
 
@@ -192,7 +238,9 @@ export default class GroupService /*implements IGroupService*/ {
     const checkedSubjects = new Array<SubjectEntity>();
 
     for (let i = 0; i < subjects.length; i++) {
-      const checked = await SubjectRepo.findOrCreate(subjects[i]);
+      const checked = await SubjectRepo.findOrCreate(subjects[i]).catch(() => {
+        throw new HttpException("Database connection lost", 500);
+      });
       checkedSubjects.push(checked);
     }
     return checkedSubjects;
@@ -202,14 +250,24 @@ export default class GroupService /*implements IGroupService*/ {
     let user: UserEntity | null = null;
     let group: GroupEntity | null = null;
 
-    await UserRepo.findOneBy({ uuid: userId }).then((it) => {
-      if (it) user = it;
-    });
-    await this.groupRepo.findOneBy({ uuid: groupId }).then((it) => {
-      if (it) group = it;
-    });
+    await UserRepo.findOneBy({ uuid: userId })
+      .then((it) => {
+        if (it) user = it;
+      })
+      .catch(() => {
+        throw new HttpException("Database connection lost", 500);
+      });
+    await this.groupRepo
+      .findOneBy({ uuid: groupId })
+      .then((it) => {
+        if (it) group = it;
+      })
+      .catch(() => {
+        throw new HttpException("Database connection lost", 500);
+      });
 
-    if (!user || !group) throw Error("Idk, aliens?");
+    if (!user || !group)
+      throw new HttpException("User or group not found", 404);
 
     return { user, group };
   }
@@ -220,10 +278,14 @@ export default class GroupService /*implements IGroupService*/ {
     const groupEntity = groupDtoToEntity(groupDto);
     groupEntity.criteria.subjects = await this.checkSubjects(
       groupEntity.criteria.subjects
-    );
+    ).catch((ex: HttpException) => {
+      throw ex;
+    });
     groupEntity.criteria.school = await SchoolRepo.findOrCreate(
       groupEntity.criteria.school
-    );
+    ).catch(() => {
+      throw new HttpException("Database connection lost", 500);
+    });
     return groupEntity;
   }
 }
