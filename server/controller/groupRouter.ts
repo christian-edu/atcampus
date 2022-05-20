@@ -1,17 +1,14 @@
 import { SearchDTO } from "../dto/searchDTO";
 import e, { IRouter, Response } from "express";
 import { IGroupService } from "../service/IGroupService";
-import HttpException from "../httpException";
+import HttpException from "../util/httpException";
 import { GroupDto } from "../dto/groupDto";
-import { groups } from "../__mocks__/mockData";
+import { ServerRouter } from "./serverRouter";
 
-function sendError(res: Response, e: HttpException) {
-  res.status(e.status);
-  res.send({ message: e.message });
-}
-
-export default class GroupRouter {
-  constructor(private groupService: IGroupService, private router: IRouter) {}
+export default class GroupRouter extends ServerRouter {
+  constructor(private groupService: IGroupService, private router: IRouter) {
+    super();
+  }
 
   public fetchRoutes() {
     const router = this.router;
@@ -29,8 +26,8 @@ export default class GroupRouter {
       const newGroup = this.extractGroupDtoFromRequest(req);
       try {
         res.json(await service.addGroup(newGroup));
-      } catch (e: any) {
-        sendError(res, e);
+      } catch (e: unknown) {
+        this.sendError(res, e);
       }
     });
 
@@ -38,8 +35,8 @@ export default class GroupRouter {
       const group = this.extractGroupDtoFromRequest(req);
       try {
         res.json(await service.updateGroup(group));
-      } catch (e: any) {
-        sendError(res, e);
+      } catch (e: unknown) {
+        this.sendError(res, e);
       }
     });
 
@@ -50,9 +47,9 @@ export default class GroupRouter {
 
       try {
         res.json(await service.deleteGroup(groupId));
-      } catch (e: any) {
+      } catch (e: unknown) {
         console.log(e);
-        sendError(res, e as HttpException);
+        this.sendError(res, e as HttpException);
       }
     });
 
@@ -61,8 +58,8 @@ export default class GroupRouter {
       const { group_id } = req?.query;
       try {
         res.json(await service.fetchGroupMembers(group_id as string));
-      } catch (e: any) {
-        sendError(res, e);
+      } catch (e: unknown) {
+        this.sendError(res, e);
       }
     });
     router.delete("/member", async (req, res) => {
@@ -71,8 +68,8 @@ export default class GroupRouter {
       try {
         const result = await service.deleteMember(userId, groupId);
         if (result) res.sendStatus(200);
-      } catch (e: any) {
-        sendError(res, e);
+      } catch (e: unknown) {
+        this.sendError(res, e);
       }
     });
 
@@ -81,8 +78,8 @@ export default class GroupRouter {
       console.log(req?.body);
       try {
         res.json(await service.addMember(group, user));
-      } catch (e: any) {
-        sendError(res, e);
+      } catch (e: unknown) {
+        this.sendError(res, e);
       }
     });
 
@@ -116,8 +113,8 @@ export default class GroupRouter {
 
       try {
         res.json(await service.searchGroup(searchDto));
-      } catch (e: any) {
-        sendError(res, e);
+      } catch (e: unknown) {
+        this.sendError(res, e);
       }
     });
     return router;
@@ -135,17 +132,17 @@ export default class GroupRouter {
   ) {
     try {
       res.json(await service.fetchGroupById(group_id));
-    } catch (e: any) {
-      sendError(res, e);
+    } catch (e: unknown) {
+      this.sendError(res, e);
     }
   }
 
   private async fetchAllGroups(res: Response, service: IGroupService) {
     try {
       res.json(await service.fetchAllGroups());
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.log(e);
-      sendError(res, e);
+      this.sendError(res, e);
     }
   }
 }

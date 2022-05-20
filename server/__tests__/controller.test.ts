@@ -1,8 +1,8 @@
 import GroupRouter from "../controller/groupRouter";
 import supertest, { SuperAgentTest } from "supertest";
-import express, { Router } from "express";
+import express, { Express, Router } from "express";
 import { groupMembers, groups, users } from "../__mocks__/mockData";
-import HttpException from "../httpException";
+import HttpException from "../util/httpException";
 import { IGroupService } from "../service/IGroupService";
 import { createMock } from "ts-auto-mock";
 import { method, On } from "ts-auto-mock/extension";
@@ -10,6 +10,7 @@ import { GroupDto } from "../dto/groupDto";
 import mock = jest.mock;
 import { GroupMemberDto } from "../dto/groupMemberDto";
 import { SearchDTO } from "../dto/searchDTO";
+import { Server } from "http";
 
 describe("Tests for group root paths in controller", () => {
   let mockGroupService: IGroupService;
@@ -81,8 +82,8 @@ describe("Tests for group root paths in controller", () => {
 
     const result = await agent
       .post("/api/v1/groups")
-      .send(groups[0])
       .set("content-type", "application/json")
+      .send(groups[0])
       .expect("Content-Type", /json/)
       .expect(200);
     expect(mockAddGroup).toHaveBeenCalledTimes(1);
@@ -106,8 +107,8 @@ describe("Tests for group root paths in controller", () => {
     mockUpdateGroup.mockImplementation(async () => groups[0]);
     await agent
       .patch("/api/v1/groups")
-      .send(groups[0])
       .set("content-type", "application/json")
+      .send(groups[0])
       .expect("Content-Type", /json/)
       .expect(200);
 
@@ -157,16 +158,24 @@ describe("Tests for group root paths in controller", () => {
 describe("Tests for group/member paths in controller", () => {
   let mockGroupService: IGroupService;
   let groupRouter: GroupRouter;
-  let agent: SuperAgentTest;
-  let app;
-
-  beforeAll(() => {
+  let agent: SuperAgentTest | null;
+  let app: Express | null;
+  let server: Server | null;
+  beforeEach((done) => {
     mockGroupService = createMock<IGroupService>();
     groupRouter = new GroupRouter(mockGroupService, Router());
     app = express();
+    server = app.listen(done);
     agent = supertest.agent(app);
     app.use(express.json());
     app.use("/api/v1/groups", groupRouter.fetchRoutes());
+  });
+
+  afterEach((done) => {
+    server?.close(done);
+    server = null;
+    app = null;
+    agent = null;
   });
 
   it("Should add a new user to a group", async () => {
@@ -176,14 +185,14 @@ describe("Tests for group/member paths in controller", () => {
     mockAddMember.mockImplementation(async () => groups[0]);
 
     const result = await agent
-      .post("/api/v1/groups/member")
+      ?.post("/api/v1/groups/member")
       .send(users[0])
       .set("content-type", "application/json")
       .expect("Content-Type", /json/)
       .expect(200);
     expect(mockGroupService.addMember).toHaveBeenCalledTimes(1);
     expect(
-      (result.body.groupMember as GroupMemberDto[])[0]?.user.firstName
+      (result?.body.groupMember as GroupMemberDto[])[0]?.user.firstName
     ).toContain("Christian");
   });
 
@@ -196,7 +205,7 @@ describe("Tests for group/member paths in controller", () => {
     });
 
     await agent
-      .post("/api/v1/groups/member")
+      ?.post("/api/v1/groups/member")
       .send({
         group: groups[0],
         user: {
@@ -213,11 +222,11 @@ describe("Tests for group/member paths in controller", () => {
     mockFetchGroupMembers.mockImplementation(async () => groupMembers);
 
     const result = await agent
-      .get("/api/v1/groups/member?group_id=1")
+      ?.get("/api/v1/groups/member?group_id=1")
       .expect(200);
 
     expect(mockGroupService.fetchGroupMembers).toHaveBeenCalledTimes(1);
-    expect((result.body as GroupMemberDto[])[0]?.user.firstName).toContain(
+    expect((result?.body as GroupMemberDto[])[0]?.user.firstName).toContain(
       "Christian"
     );
   });
@@ -229,7 +238,7 @@ describe("Tests for group/member paths in controller", () => {
     mockFetchGroupMembers.mockImplementation(async () => {
       throw new HttpException("Error!", 500);
     });
-    await agent.get("/api/v1/groups/member?group_id=1").expect(500);
+    await agent?.get("/api/v1/groups/member?group_id=1").expect(500);
   });
 
   it("Should delete a group member", async () => {
@@ -239,7 +248,7 @@ describe("Tests for group/member paths in controller", () => {
     mockDeleteMemeber.mockImplementation(async () => true);
 
     await agent
-      .delete("/api/v1/groups/member")
+      ?.delete("/api/v1/groups/member")
       .send({ groupId: "1", userId: "1" })
       .expect(200);
     expect(mockDeleteMemeber).toHaveBeenCalledWith("1", "1");
@@ -253,25 +262,32 @@ describe("Tests for group/member paths in controller", () => {
       throw new HttpException("Error!", 500);
     });
 
-    await agent.delete("/api/v1/groups/member?group_id=1").expect(500);
+    await agent?.delete("/api/v1/groups/member?group_id=1").expect(500);
   });
 });
 
 describe("Search route", () => {
   let mockGroupService: IGroupService;
   let groupRouter: GroupRouter;
-  let agent: SuperAgentTest;
-  let app;
-
-  beforeAll(() => {
+  let agent: SuperAgentTest | null;
+  let app: Express | null;
+  let server: Server | null;
+  beforeEach((done) => {
     mockGroupService = createMock<IGroupService>();
     groupRouter = new GroupRouter(mockGroupService, Router());
     app = express();
+    server = app.listen(done);
     agent = supertest.agent(app);
     app.use(express.json());
     app.use("/api/v1/groups", groupRouter.fetchRoutes());
   });
 
+  afterEach((done) => {
+    server?.close(done);
+    server = null;
+    app = null;
+    agent = null;
+  });
   it("Should return a search result", async () => {
     const searchDto = new SearchDTO(
       "Norsk",
@@ -290,11 +306,11 @@ describe("Search route", () => {
     mockSearch.mockImplementation(async () => groups);
 
     const res = await agent
-      .post(`/api/v1/groups/search`)
+      ?.post(`/api/v1/groups/search`)
       .send(searchDto)
       .expect(200);
 
-    expect(Object.keys(res).length > 0).toBe(true);
+    if (res) expect(Object.keys(res!).length > 0).toBe(true);
   });
 
   it("Should recieve error on a search result", async () => {
@@ -316,7 +332,7 @@ describe("Search route", () => {
       "HK"
     );
     await agent
-      .post(`/api/v1/groups/search`)
+      ?.post(`/api/v1/groups/search`)
       .send(JSON.stringify(searchDto))
       .expect(500);
   });

@@ -1,6 +1,6 @@
 import { IGroupRepo } from "../repo/IGroupRepo";
 import { GroupDto } from "../dto/groupDto";
-import HttpException from "../httpException";
+import HttpException from "../util/httpException";
 import { UserDto } from "../dto/userDto";
 import { SearchDTO } from "../dto/searchDTO";
 import { IGroupService, searchResult } from "../service/IGroupService";
