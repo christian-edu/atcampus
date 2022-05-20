@@ -28,5 +28,5 @@ export interface IGroupService {
 
   deleteGroup(group: string): Promise<boolean>;
 
-  searchGroup(searchDto: SearchDTO): Promise<searchResult>;
+  searchGroup(searchDto: SearchDTO): Promise<GroupDto[] | searchResult>;
 }

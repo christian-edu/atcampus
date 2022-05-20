@@ -132,12 +132,14 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
             <div className="flex flex-col gap-3">
                 <div>
                     {patchGroup||createGroup?<div className="flex gap-3 items-center my-4">
-                        <div>
-                            <input type="radio" name={"private"} id={"public"} value={"Public"} onChange={(e) => setIsPrivate(false)}/>
+                        <div className="form-check">
+                            <input type="radio" name={"private"} id={"public"} value={"Public"} onChange={(e) => setIsPrivate(false)}
+                            className="form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"/>
                             <label htmlFor="public" className="ml-1">Offentlig</label>
                         </div>
                         <div>
-                            <input type="radio" name={"private"} id={"private"} value={"Private"} onChange={(e) => setIsPrivate(true)}/>
+                            <input type="radio" name={"private"} id={"private"} value={"Private"} onChange={(e) => setIsPrivate(true)}
+                            className="form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"/>
                             <label htmlFor="private" className="ml-1">Privat</label>
                         </div>
                     </div>:<></>}
@@ -154,85 +156,94 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                 </div>
                 <div>
                     <h4 className="text-dark-1">Emner:</h4>
-                    <button onClick={addSubjectField} className="px-2 py-1 outline outline-1 rounded outline-dark-3">+ Legg til</button>
                     {subject.map((subInput, index) => (
                         <div key={index}>
                             <input name={"subject"} placeholder={"eks. Avansert Java"} onChange={(event => handleInputChange(event, index))}
                             className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'/>
                         </div>
                     ))}
+                    <button onClick={addSubjectField} className="p-2 mt-2 border border-purple-3 rounded-standard outline-dark-3 hover:bg-dark-6">+ Legg til fler</button>
                 </div>
-                <div>
-                    <select
-                    defaultValue={"velg"} name="språk" onChange={(e) => setLanguage(e.target.value)}
-                    className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
-                        <option value="velg" disabled>Språk</option>
-                        <option value="Norsk">Norsk</option>
-                        <option value="English">English</option>
-                        <option value="Null">Ikke viktig</option>
-                    </select>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <select
+                        defaultValue={"velg"} name="språk" onChange={(e) => setLanguage(e.target.value)}
+                        className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
+                            <option value="velg" disabled>Språk</option>
+                            <option value="Norsk">Norsk</option>
+                            <option value="English">English</option>
+                            <option value="Null">Ikke viktig</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select
+                        defaultValue={"velg"} name="størrelse" onChange={(e) => setSize(e.target.value)}
+                        className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
+                            <option value="velg" disabled>Gruppestørrelse</option>
+                            <option value="liten">Liten (1-4stk)</option>
+                            <option value="Medium">Liten (5-7stk)</option>
+                            <option value="Stor">Stor (8+)</option>
+                            <option value="Null">Ikke viktig</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <select
-                    defaultValue={"velg"} name="størrelse" onChange={(e) => setSize(e.target.value)}
-                    className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
-                        <option value="velg" disabled>Gruppestørrelse</option>
-                        <option value="liten">Liten (1-4stk)</option>
-                        <option value="Medium">Liten (5-7stk)</option>
-                        <option value="Stor">Stor (8+)</option>
-                        <option value="Null">Ikke viktig</option>
-                    </select>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <select
+                        defaultValue={"velg"} name="karaktermål" onChange={(e) => setGradeGoal(e.target.value)}
+                        className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
+                            <option value="velg" disabled>Karaktermål</option>
+                            <option value="PASS">Bestått</option>
+                            <option value="D">D</option>
+                            <option value="C">C</option>
+                            <option value="B">B</option>
+                            <option value="A">A</option>
+                            <option value="Null">Ikke viktig</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select
+                        defaultValue={"velg"} name="arbeidsfrekvens" onChange={(e) => setWorkFrequency(e.target.value)}
+                        className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
+                            <option value="velg" disabled>Arbeidsfrekvens</option>
+                            <option value="W1">En gang i uka</option>
+                            <option value="W2">To ganger i uka</option>
+                            <option value="W3">Tre ganger i uka</option>
+                            <option value="W4">Fire ganger i uka</option>
+                            <option value="W5">Fem ganger i uka</option>
+                            <option value="W6">Seks ganger i uka</option>
+                            <option value="W7">Syv ganger i uka</option>
+                            <option value="M1">En gang i månden</option>
+                            <option value="M2">To ganger i månden</option>
+                            <option value="Null">Ikke viktig</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                <select
-                defaultValue={"velg"} name="karaktermål" onChange={(e) => setGradeGoal(e.target.value)}
-                className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
-                    <option value="velg" disabled>Karaktermål</option>
-                    <option value="PASS">Bestått</option>
-                    <option value="D">D</option>
-                    <option value="C">C</option>
-                    <option value="B">B</option>
-                    <option value="A">A</option>
-                    <option value="Null">Ikke viktig</option>
-                </select>
-            </div>
-            <div>
-                <select
-                defaultValue={"velg"} name="arbeidsfrekvens" onChange={(e) => setWorkFrequency(e.target.value)}
-                className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
-                    <option value="velg" disabled>Arbeidsfrekvens</option>
-                    <option value="W1">En gang i uka</option>
-                    <option value="W2">To ganger i uka</option>
-                    <option value="W3">Tre ganger i uka</option>
-                    <option value="W4">Fire ganger i uka</option>
-                    <option value="W5">Fem ganger i uka</option>
-                    <option value="W6">Seks ganger i uka</option>
-                    <option value="W7">Syv ganger i uka</option>
-                    <option value="M1">En gang i månden</option>
-                    <option value="M2">To ganger i månden</option>
-                    <option value="Null">Ikke viktig</option>
-                </select>
-            </div>
+                
             <div className="flex gap-3 items-center whitespace-nowrap mt-4 mb-8">
                 <div>
-                    <input type="radio" name={"metode"} id={"fysisk"} value={"LOCAL"} onChange={(e) => setWorkType(e.target.value)}/>
-                    <label htmlFor="fysisk" className="ml-1">Fysisk</label>
+                    <input type="radio" name={"metode"} id={"fysisk"} value={"LOCAL"} onChange={(e) => setWorkType(e.target.value)}
+                    className="form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"/>
+                    <label htmlFor="fysisk">Fysisk</label>
                 </div>
                 <div>
-                    <input type="radio" name={"metode"} id={"digitalt"} value={"REMOTE"} onChange={(e) => setWorkType(e.target.value)}/>
-                    <label htmlFor="digitalt" className="ml-1">Digitalt</label>
+                    <input type="radio" name={"metode"} id={"digitalt"} value={"REMOTE"} onChange={(e) => setWorkType(e.target.value)}
+                    className="form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"/>
+                    <label htmlFor="digitalt">Digitalt</label>
                 </div>
                 <div>
-                    <input type="radio" name={"metode"} id={"begge"} value={"HYBRID"} onChange={(e) => setWorkType(e.target.value)}/>
-                    <label htmlFor="begge" className="ml-1">Begge</label>
+                    <input type="radio" name={"metode"} id={"begge"} value={"HYBRID"} onChange={(e) => setWorkType(e.target.value)}
+                    className="form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"/>
+                    <label htmlFor="begge">Begge</label>
                 </div>
                 <div>
-                    <input type="radio" name={"metode"} id={"ikkeViktig"} value={"Null"} onChange={(e) => setWorkType(e.target.value)}/>
-                    <label htmlFor="ikkeViktig" className="ml-1">Ikke viktig</label>
+                    <input type="radio" name={"metode"} id={"ikkeViktig"} value={"Null"} onChange={(e) => setWorkType(e.target.value)}
+                    className="form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"/>
+                    <label htmlFor="ikkeViktig">Ikke viktig</label>
                 </div>
             </div>
-            <div>
-                <Button type="button" onClick={searchForGroup}>{buttonText}</Button>
+            <div className="grid grid-cols-1 md:grid-cols-3">
+                <Button type="button" onClick={searchForGroup} className="md:col-start-2">{buttonText}</Button>
             </div>
         </div>
             

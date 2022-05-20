@@ -1,6 +1,6 @@
 import { IGroupRepo } from "../repo/IGroupRepo";
 import { GroupDto } from "../dto/groupDto";
-import HttpException from "../httpException";
+import HttpException from "../util/httpException";
 import { UserDto } from "../dto/userDto";
 import { SearchDTO } from "../dto/searchDTO";
 import { IGroupService, searchResult } from "../service/IGroupService";
@@ -56,60 +56,9 @@ export default class MockGroupService implements IGroupService {
     return true;
   }
 
-  async searchGroup(searchDto: SearchDTO): Promise<searchResult> {
-    if (!searchDto) throw new HttpException("No searchDto provided", 400);
+  async searchGroup(searchDto: SearchDTO): Promise<GroupDto[]> {
+    //if (!searchDto) throw new HttpException("No searchDto provided", 400);
 
-    let results: searchResult = {};
-
-    for (const group of groups) {
-      let score = 0;
-      if (!group.uuid) continue; // TODO: Fjerne denne når vi har entities på plass.
-      const intersection = group.criteria?.subject?.filter((element) =>
-        searchDto.subject?.includes(element)
-      );
-      if (!intersection || intersection.length === 0) continue;
-      if (
-        group.criteria?.gradeGoal?.toLowerCase() ===
-        searchDto?.gradeGoal?.toLowerCase()
-      )
-        score++;
-      if (
-        searchDto?.maxSize &&
-        group.criteria?.maxSize === parseInt(searchDto.maxSize!)
-      )
-        score++;
-      if (
-        group.criteria?.location?.toLowerCase() ===
-        searchDto.location?.toLowerCase()
-      )
-        score++;
-      if (
-        group.criteria?.workFrequency?.toLowerCase() ===
-        searchDto.workFrequency?.toLowerCase()
-      )
-        score++;
-      if (
-        group.criteria?.language?.toLowerCase() ===
-        searchDto.language?.toLowerCase()
-      )
-        score++;
-      if (
-        group.criteria?.school?.toLowerCase() ===
-        searchDto.school?.toLowerCase()
-      )
-        score++;
-      if (
-        group.criteria?.workType?.toLowerCase() ===
-        searchDto.workType?.toLowerCase()
-      )
-        score++;
-      results[group.uuid] = {
-        group,
-        score,
-      };
-    }
-    if (Object.keys(results).length === 0)
-      throw new HttpException("No matching groups", 204);
-    return results;
+    return groups;
   }
 }

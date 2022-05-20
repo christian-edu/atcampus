@@ -12,8 +12,6 @@ const UserCard = (props) => {
 
   const { user } = props.user;
 
-  console.log(user);
-
   // state for modal window
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
@@ -47,12 +45,12 @@ const UserCard = (props) => {
         </Modal>
       )}
       <li
-        className='bg-white flex items-center p-6 gap-4 rounded-standard border border-purple-4 cursor-pointer  hover:drop-shadow-xl duration-300'
-        onClick={toggleModal}
+        className='bg-white flex items-center p-4 gap-4 rounded-standard border border-purple-4'
+        
       >
-        <Image className='h-14' />
+        <Image className='h-10' />
         <h2 className='font-bold text-lg text-dark-1'>{user.username}</h2>
-        <button className='ml-auto'>
+        <button className='ml-auto' onClick={toggleModal}>
           {/* Render dots icon if props edit is set to true, else render plus icons */}
           {props.edit ? (
             <DotsHorizontalIcon className={classes} />

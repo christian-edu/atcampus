@@ -16,6 +16,7 @@ import LeftNavBar from './components/shared/LeftNavBar';
 import { EditGroupProfile } from './components/EditGroupProfile';
 import { EditRoles } from './components/EditRoles';
 import BackButton from './components/shared/BackButton';
+import Breadcrumbs from './components/shared/Breadcrumbs';
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
               <div className='hidden lg:block mb-8'>
                 <BackButton />
               </div>
+              <Breadcrumbs />
               <Routes>
                 <Route path={'/'} element={<GroupLinks />} />
                 <Route path={'/searchGroup'} element={<SearchGroup />} />
