@@ -2,6 +2,8 @@ import { ArrowLeftIcon } from '@heroicons/react/solid';
 import { useNavigate } from 'react-router-dom';
 
 const BackButton = () => {
+  // Component for Back button
+  
   const navigate = useNavigate();
 
   const backButtonHandler = () => {

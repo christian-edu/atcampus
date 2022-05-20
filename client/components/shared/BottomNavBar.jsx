@@ -2,27 +2,22 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ProfileMenu from './ProfileMenu';
 import Modal from './Modal';
-import {
-  UserGroupIcon,
-  UserIcon,
-  QuestionMarkCircleIcon,
-  CalendarIcon,
-} from '@heroicons/react/solid';
 import { bottomNavBarMenu } from '../../services/menus';
 
 const BottomNavBar = () => {
   // Component for bottom menu on mobile
 
   // State for showing profile menu
-  const [showProfile, setShowProfile] = useState(false);
+  const [modalIsVisible, setModalIsVisible] = useState(false);
 
   // Toggle showing profile menu
-  const toggleProfileMenu = () => setShowProfile((showProfile) => !showProfile);
+  const toggleProfileMenu = () =>
+    setModalIsVisible((modalIsVisible) => !modalIsVisible);
 
   return (
     <div>
-      {/* Render modal if showProfile is true*/}
-      {showProfile && (
+      {/* Render modal */}
+      {modalIsVisible && (
         <Modal onClick={toggleProfileMenu}>
           <ProfileMenu onClick={toggleProfileMenu} />
         </Modal>

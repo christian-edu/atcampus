@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
 
 const Breadcrumbs = () => {
-  const breadcrumbs = useBreadcrumbs();
+  // Component for breadcrumbs
+  // WIP
 
-  console.log(breadcrumbs);
+  const breadcrumbs = useBreadcrumbs();
 
   return (
     <ul className='flex'>
