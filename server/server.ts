@@ -8,12 +8,12 @@ import MockGroupService from "./__mocks__/mockGroupService";
 import cookieParser from "cookie-parser";
 import websockets from "./websockets/webSocketServer";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { verifyToken } from "./util/authUtils";
 
 const app = express();
 const dummyRepo = new MockGroupRepo();
 const groupService = new MockGroupService(dummyRepo);
 const groupRoutes = new GroupRouter(groupService, express.Router());
-// TODO: Fjerne allow js når migrert
 
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET || "SuperSecret"));
@@ -29,22 +29,7 @@ app.get("/api/v1/login", async (req, res) => {
   res.json(token);
 });
 
-app.use((req, res, next) => {
-  const { auth_token } = req.cookies;
-
-  if (!auth_token) {
-    next();
-    return;
-  }
-  try {
-    const verifiedToken = jwt.verify(auth_token, process.env.JWT_KEY || "aaaa");
-    req.userId = (verifiedToken as JwtPayload)?.userId;
-  } catch (e) {
-    console.error("Token not valid!");
-    res.status(401);
-    res.send();
-  }
-});
+app.use(verifyToken);
 
 app.use(express.static("../client/dist"));
 
