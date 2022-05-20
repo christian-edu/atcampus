@@ -322,7 +322,7 @@ export default class GroupService /*implements IGroupService*/ {
     // Dette er en hacky løsning, og MÅ refaktoreres
     const resultArray = Object.entries(tempResult)
       .sort(([, a], [, b]) => a.score - b.score)
-      .slice(0, 20);
+      .slice(0, 20); // tar bare de 20 beste resultatene
 
     const actualResult: searchResult = {};
 
