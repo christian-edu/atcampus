@@ -166,57 +166,62 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                     ))}
                     <button onClick={addSubjectField} className="p-2 mt-2 border border-purple-3 rounded-standard outline-dark-3 hover:bg-dark-6">+ Legg til fler</button>
                 </div>
-                <div>
-                    <select
-                    defaultValue={"velg"} name="språk" onChange={(e) => setLanguage(e.target.value)}
-                    className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
-                        <option value="velg" disabled>Språk</option>
-                        <option value="Norsk">Norsk</option>
-                        <option value="English">English</option>
-                        <option value="Null">Ikke viktig</option>
-                    </select>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <select
+                        defaultValue={"velg"} name="språk" onChange={(e) => setLanguage(e.target.value)}
+                        className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
+                            <option value="velg" disabled>Språk</option>
+                            <option value="Norsk">Norsk</option>
+                            <option value="English">English</option>
+                            <option value="Null">Ikke viktig</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select
+                        defaultValue={"velg"} name="størrelse" onChange={(e) => setSize(e.target.value)}
+                        className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
+                            <option value="velg" disabled>Gruppestørrelse</option>
+                            <option value="liten">Liten (1-4stk)</option>
+                            <option value="Medium">Liten (5-7stk)</option>
+                            <option value="Stor">Stor (8+)</option>
+                            <option value="Null">Ikke viktig</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <select
-                    defaultValue={"velg"} name="størrelse" onChange={(e) => setSize(e.target.value)}
-                    className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
-                        <option value="velg" disabled>Gruppestørrelse</option>
-                        <option value="liten">Liten (1-4stk)</option>
-                        <option value="Medium">Liten (5-7stk)</option>
-                        <option value="Stor">Stor (8+)</option>
-                        <option value="Null">Ikke viktig</option>
-                    </select>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <select
+                        defaultValue={"velg"} name="karaktermål" onChange={(e) => setGradeGoal(e.target.value)}
+                        className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
+                            <option value="velg" disabled>Karaktermål</option>
+                            <option value="PASS">Bestått</option>
+                            <option value="D">D</option>
+                            <option value="C">C</option>
+                            <option value="B">B</option>
+                            <option value="A">A</option>
+                            <option value="Null">Ikke viktig</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select
+                        defaultValue={"velg"} name="arbeidsfrekvens" onChange={(e) => setWorkFrequency(e.target.value)}
+                        className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
+                            <option value="velg" disabled>Arbeidsfrekvens</option>
+                            <option value="W1">En gang i uka</option>
+                            <option value="W2">To ganger i uka</option>
+                            <option value="W3">Tre ganger i uka</option>
+                            <option value="W4">Fire ganger i uka</option>
+                            <option value="W5">Fem ganger i uka</option>
+                            <option value="W6">Seks ganger i uka</option>
+                            <option value="W7">Syv ganger i uka</option>
+                            <option value="M1">En gang i månden</option>
+                            <option value="M2">To ganger i månden</option>
+                            <option value="Null">Ikke viktig</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                <select
-                defaultValue={"velg"} name="karaktermål" onChange={(e) => setGradeGoal(e.target.value)}
-                className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
-                    <option value="velg" disabled>Karaktermål</option>
-                    <option value="PASS">Bestått</option>
-                    <option value="D">D</option>
-                    <option value="C">C</option>
-                    <option value="B">B</option>
-                    <option value="A">A</option>
-                    <option value="Null">Ikke viktig</option>
-                </select>
-            </div>
-            <div>
-                <select
-                defaultValue={"velg"} name="arbeidsfrekvens" onChange={(e) => setWorkFrequency(e.target.value)}
-                className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
-                    <option value="velg" disabled>Arbeidsfrekvens</option>
-                    <option value="W1">En gang i uka</option>
-                    <option value="W2">To ganger i uka</option>
-                    <option value="W3">Tre ganger i uka</option>
-                    <option value="W4">Fire ganger i uka</option>
-                    <option value="W5">Fem ganger i uka</option>
-                    <option value="W6">Seks ganger i uka</option>
-                    <option value="W7">Syv ganger i uka</option>
-                    <option value="M1">En gang i månden</option>
-                    <option value="M2">To ganger i månden</option>
-                    <option value="Null">Ikke viktig</option>
-                </select>
-            </div>
+                
             <div className="flex gap-3 items-center whitespace-nowrap mt-4 mb-8">
                 <div>
                     <input type="radio" name={"metode"} id={"fysisk"} value={"LOCAL"} onChange={(e) => setWorkType(e.target.value)}
@@ -239,8 +244,8 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                     <label htmlFor="ikkeViktig">Ikke viktig</label>
                 </div>
             </div>
-            <div>
-                <Button type="button" onClick={searchForGroup}>{buttonText}</Button>
+            <div className="grid grid-cols-1 md:grid-cols-3">
+                <Button type="button" onClick={searchForGroup} className="md:col-start-2">{buttonText}</Button>
             </div>
         </div>
             
