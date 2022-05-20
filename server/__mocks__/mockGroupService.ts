@@ -5,9 +5,11 @@ import { UserDto } from "../dto/userDto";
 import { SearchDTO } from "../dto/searchDTO";
 import { IGroupService, searchResult } from "../service/IGroupService";
 import { groups, users } from "./mockData";
+import { Repository } from "typeorm";
+import { GroupEntity } from "../entity/GroupEntity";
 
-export default class MockGroupService implements IGroupService {
-  constructor(public groupRepo: IGroupRepo) {}
+export default class MockGroupService {
+  constructor(public groupRepo: Repository<GroupEntity>) {}
 
   async fetchAllGroups(): Promise<GroupDto[]> {
     return groups;

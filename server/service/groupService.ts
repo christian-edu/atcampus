@@ -1,7 +1,7 @@
 import HttpException from "../util/httpException";
 import { groups } from "../__mocks__/mockData";
 import { SearchDTO } from "../dto/searchDTO";
-import { searchResult } from "./IGroupService";
+import { IGroupService, searchResult } from "./IGroupService";
 import { GroupDto } from "../dto/groupDto";
 import { UserDto } from "../dto/userDto";
 import { Repository } from "typeorm";
@@ -16,7 +16,7 @@ import { GroupMemberEntity } from "../entity/GroupMemberEntity";
 import { groupDtoToEntity, groupEntityToDto } from "../dto/utils/groupMappers";
 import { userEntityToDto } from "../dto/utils/userMappers";
 
-export default class GroupService /*implements IGroupService*/ {
+export default class GroupService implements IGroupService {
   constructor(public groupRepo: Repository<GroupEntity>) {}
 
   async fetchAllGroups(): Promise<GroupDto[]> {

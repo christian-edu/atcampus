@@ -1,8 +1,10 @@
 import { GroupDto } from "../dto/groupDto";
 import { UserDto } from "../dto/userDto";
 import { SearchDTO } from "../dto/searchDTO";
+import { GroupEntity } from "../entity/GroupEntity";
+import { Repository } from "typeorm";
 
-export interface IGroupRepo {
+export interface IGroupRepo extends Repository<GroupEntity> {
   fetchAllGroups(): Promise<GroupDto[]>; // innebygd - find()
 
   addGroup(group: GroupDto): Promise<GroupDto>; // innebygd - save(GroupEntity)

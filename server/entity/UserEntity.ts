@@ -18,10 +18,10 @@ export class UserEntity {
     userName: string,
     email: string,
     password: string,
-    uuid = uuidv4(),
     school = new SchoolEntity(),
     firstName = "",
-    lastName = ""
+    lastName = "",
+    uuid = uuidv4()
   ) {
     this.uuid = uuid;
     this.userName = userName;
@@ -30,8 +30,6 @@ export class UserEntity {
     this.firstName = firstName;
     this.lastName = lastName;
     this.school = school;
-    this.groups = new Array<GroupMemberEntity>();
-    this.requests = new Array<GroupRequestEntity>();
   }
 
   @PrimaryColumn()
@@ -64,8 +62,8 @@ export class UserEntity {
   school: SchoolEntity;
 
   @OneToMany(() => GroupMemberEntity, (gm) => gm.user)
-  groups: GroupMemberEntity[];
+  groups: GroupMemberEntity[] | undefined;
 
   @OneToMany(() => GroupRequestEntity, (gr) => gr.user)
-  requests: GroupRequestEntity[];
+  requests: GroupRequestEntity[] | undefined;
 }

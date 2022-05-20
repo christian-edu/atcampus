@@ -4,11 +4,14 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { Socket } from "net";
 import { UUIDV4 } from "sequelize";
+import ChatMessageRepo from "../repo/chatMessageRepo";
+import ChatService from "../service/chatService";
+import { ChatMessageEntity } from "../entity/ChatMessageEntity";
 
 const sockets = new Map<string, Map<string, WebSocket>>();
 dotenv.config();
 
-export default (expressServer: Server) => {
+export default (expressServer: Server, chatService: ChatService) => {
   const wss = new WebSocketServer.Server({ noServer: true, path: "/chat" });
   //https://cheatcode.co/tutorials/how-to-set-up-a-websocket-server-with-node-js-and-express
   //https://github.com/websockets/ws/blob/master/doc/ws.md#class-websocket
@@ -70,6 +73,11 @@ export default (expressServer: Server) => {
             for (const user of groupSockets.values()) {
               user.send(message.toString());
             }
+          }
+          try {
+            // chatRepo.addMessage(new ChatMessageEntity(message));
+          } catch (e) {
+            console.error(e);
           }
         } catch (e) {
           console.error(e);

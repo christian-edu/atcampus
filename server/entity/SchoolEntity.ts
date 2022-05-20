@@ -8,8 +8,6 @@ export class SchoolEntity {
   constructor(name = "Ikke satt") {
     this.uuid = uuidv4();
     this.name = name;
-    this.criteriaCollection = new Array<CriteriaEntity>();
-    this.users = new Array<UserEntity>();
   }
 
   @PrimaryColumn()
@@ -24,8 +22,8 @@ export class SchoolEntity {
   @OneToMany(() => CriteriaEntity, (criteria) => criteria.school, {
     lazy: true,
   })
-  criteriaCollection: CriteriaEntity[];
+  criteriaCollection: CriteriaEntity[] | undefined;
 
   @OneToMany(() => UserEntity, (user) => user.school, { lazy: true })
-  users: UserEntity[];
+  users: UserEntity[] | undefined;
 }
