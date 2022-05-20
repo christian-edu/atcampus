@@ -36,8 +36,6 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
 
     useEffect(() => {
 
-        console.log("group results")
-        console.log(groupResult)
 
         if(groupResult !== undefined && createGroup){
             const group = groupResult

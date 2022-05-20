@@ -6,7 +6,6 @@ const SearchGroupResults = () => {
 
   const groupResult = location.state.groupResult;
 
-  console.log(groupResult);
 
   return (
     <div className='bg-white p-6 rounded border border-purple-4'>

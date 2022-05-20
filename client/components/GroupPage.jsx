@@ -21,7 +21,6 @@ const GroupPage = () => {
 
   const toggleSettings = () => setShowSettings((showSettings) => !showSettings);
 
-  console.log(group);
 
   let visible = '';
   if (group.isPrivate) {
@@ -40,7 +39,7 @@ const GroupPage = () => {
         </div>
         {showSettings && (
           <Modal onClick={toggleSettings}>
-            <GroupSettings />
+            <GroupSettings group={group}/>
           </Modal>
         )}
         <CogIcon
