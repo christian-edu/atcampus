@@ -1,5 +1,4 @@
 import HttpException from "../httpException";
-import { groups } from "../__mocks__/mockData";
 import { SearchDTO } from "../dto/searchDTO";
 import { searchResult } from "./IGroupService";
 import { GroupDto } from "../dto/groupDto";
@@ -15,6 +14,9 @@ import { UserEntity } from "../entity/UserEntity";
 import { GroupMemberEntity } from "../entity/GroupMemberEntity";
 import { groupDtoToEntity, groupEntityToDto } from "../dto/utils/groupMappers";
 import { userEntityToDto } from "../dto/utils/userMappers";
+import { SearchWeightValues } from "./enums/SearchWeightValues";
+import { WorkFrequency } from "../entity/enums/WorkFrequency";
+import { WorkType } from "../entity/enums/WorkType";
 
 export default class GroupService /*implements IGroupService*/ {
   constructor(public groupRepo: Repository<GroupEntity>) {}
@@ -178,58 +180,157 @@ export default class GroupService /*implements IGroupService*/ {
   async searchGroup(searchDto: SearchDTO): Promise<searchResult> {
     if (!searchDto) throw new HttpException("No searchDto provided", 400);
 
-    let results: searchResult = {};
+    const allGroups = await this.fetchAllGroups().catch((ex) => {
+      throw ex;
+    });
 
-    for (const group of groups) {
+    const tempResult: searchResult = {};
+
+    // kanskje bedre med vanlig for-loop pga effektivitet?
+    allGroups.forEach((group) => {
       let score = 0;
-      if (!group.uuid) continue; // TODO: Fjerne denne når vi har entities på plass.
-      // const intersection = group.criteria?.subject?.filter((element) =>
-      //   searchDto.subject?.includes(element)
-      // );
-      // if (!intersection || intersection.length === 0) continue;
-      if (
-        group.criteria?.gradeGoal?.toLowerCase() ===
-        searchDto?.gradeGoal?.toLowerCase()
-      )
-        score++;
-      if (
-        searchDto?.maxSize &&
-        group.criteria?.maxSize === parseInt(searchDto.maxSize!)
-      )
-        score++;
-      if (
-        group.criteria?.location?.toLowerCase() ===
-        searchDto.location?.toLowerCase()
-      )
-        score++;
-      if (
-        group.criteria?.workFrequency?.toLowerCase() ===
-        searchDto.workFrequency?.toLowerCase()
-      )
-        score++;
-      if (
-        group.criteria?.language?.toLowerCase() ===
-        searchDto.language?.toLowerCase()
-      )
-        score++;
-      // if (
-      //   group.criteria?.school?.toLowerCase() ===
-      //   searchDto.school?.toLowerCase()
-      // )
-      //   score++;
-      if (
-        group.criteria?.workType?.toLowerCase() ===
-        searchDto.workType?.toLowerCase()
-      )
-        score++;
-      results[group.uuid] = {
-        group,
-        score,
-      };
-    }
-    if (Object.keys(results).length === 0)
-      throw new HttpException("No matching groups", 204);
-    return results;
+
+      //Karaktermål
+      // Burde være mulig å sette opp lavere poengsum om man er 1 karakter unna
+      if (group.criteria.gradeGoal === searchDto.gradeGoal) {
+        score =
+          score +
+          Math.round(
+            SearchWeightValues.GRADE_GOAL / SearchWeightValues.MAX / 100
+          );
+      }
+
+      // Arbeidsfrekvens
+      if (group.criteria.workFrequency === searchDto.workFrequency) {
+        score =
+          score +
+          Math.round(
+            SearchWeightValues.WORK_FREQUENCY / SearchWeightValues.MAX / 100
+          );
+      } else if (
+        searchDto.workFrequency === WorkFrequency.ANY ||
+        !group.criteria.workFrequency
+      ) {
+        score =
+          score +
+          Math.round(
+            SearchWeightValues.WORK_FREQUENCY / SearchWeightValues.MAX / 100
+          ) /
+            2;
+      }
+
+      // Arbeidsmetode
+      if (group.criteria.workType === searchDto.workType) {
+        score =
+          score +
+          Math.round(
+            SearchWeightValues.WORK_TYPE / SearchWeightValues.MAX / 100
+          );
+      } else if (
+        searchDto.workType === WorkType.ANY ||
+        !group.criteria.workType
+      ) {
+        score =
+          score +
+          Math.round(
+            SearchWeightValues.WORK_TYPE / SearchWeightValues.MAX / 100
+          ) /
+            2;
+      }
+
+      // Maks gruppestørrelse
+      // Foreløpig versjon, må være mer forseggjort
+      if (group.criteria.maxSize === searchDto.maxSize) {
+        score =
+          score +
+          Math.round(
+            SearchWeightValues.MAX_SIZE / SearchWeightValues.MAX / 100
+          );
+      }
+
+      // Språk
+      if (group.criteria.language === searchDto.language) {
+        score =
+          score +
+          Math.round(
+            SearchWeightValues.LANGUAGE / SearchWeightValues.MAX / 100
+          );
+      } else if (!searchDto.language || group.criteria.language === "") {
+        score =
+          score +
+          Math.round(
+            SearchWeightValues.LANGUAGE / SearchWeightValues.MAX / 100
+          ) /
+            2;
+      }
+
+      // Sted
+      if (group.criteria.location === searchDto.location) {
+        score =
+          score +
+          Math.round(
+            SearchWeightValues.LOCATION / SearchWeightValues.MAX / 100
+          );
+      } else if (!searchDto.location || group.criteria.location === "") {
+        score =
+          score +
+          Math.round(
+            SearchWeightValues.LOCATION / SearchWeightValues.MAX / 100
+          ) /
+            2;
+      }
+
+      // Skole
+      if (group.criteria.school === searchDto.school) {
+        score =
+          score +
+          Math.round(SearchWeightValues.SCHOOL / SearchWeightValues.MAX / 100);
+      } else if (!searchDto.school || group.criteria.school === "Ikke satt") {
+        score =
+          score +
+          Math.round(SearchWeightValues.SCHOOL / SearchWeightValues.MAX / 100) /
+            2;
+      }
+
+      // Emner
+      if (searchDto.subject) {
+        const scorePerSubject =
+          Math.round(
+            SearchWeightValues.SUBJECTS / SearchWeightValues.MAX / 100
+          ) / searchDto.subject?.length;
+        searchDto.subject.forEach((sub) => {
+          if (group.criteria.subject) {
+            if (group.criteria.subject.includes(sub)) {
+              score = score + scorePerSubject;
+            }
+          }
+        });
+      }
+
+      // Tar høyde for avrundingsfeil
+      if (score > 100) score = 100;
+
+      if (!group.uuid) {
+        // Dette kan aldri skje, men TypeScript
+        // blir sint på meg om jeg ikke har det med
+        tempResult[group.name] = { group, score };
+      } else {
+        tempResult[group.uuid] = { group, score };
+      }
+    });
+
+    // Dette er en hacky løsning, og MÅ refaktoreres
+    const resultArray = Object.entries(tempResult)
+      .sort(([, a], [, b]) => a.score - b.score)
+      .slice(0, 20);
+
+    const actualResult: searchResult = {};
+
+    resultArray.forEach((element) => {
+      actualResult[element[0]] = element[1];
+    });
+
+    return actualResult;
   }
 
   private async checkSubjects(
