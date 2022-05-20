@@ -3,6 +3,10 @@ import { NextFunction, Request, Response } from "express";
 const protectedRoutes = new Array<HttpPath>();
 
 export function verifyToken(req: Request, res: Response, next: NextFunction) {
+  if (req.path.endsWith("/login")) {
+    next();
+    return;
+  }
   const { auth_token } = req.cookies;
 
   if (!auth_token) {

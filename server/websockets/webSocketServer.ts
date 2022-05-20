@@ -3,8 +3,9 @@ import { Server } from "http";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { Socket } from "net";
+import { UUIDV4 } from "sequelize";
 
-const sockets = new Map<string, Map<string, Socket>>();
+const sockets = new Map<string, Map<string, WebSocket>>();
 dotenv.config();
 
 export default (expressServer: Server) => {
@@ -48,10 +49,28 @@ export default (expressServer: Server) => {
 
       const groupId = queryParams.get("groupId");
       console.info(`Requested group: ${groupId}`);
+      let id = 0;
+      if (!groupId) throw Error("No groupId!");
+      if (!sockets.has(groupId)) {
+        sockets.set(groupId, new Map().set(++id, websocketConnection));
+      } else {
+        // Something really fd up going on with the type checking here... So any it is
+        sockets
+          .get(groupId)!
+          .set((++id).toString(), websocketConnection as any);
+        console.info("Added user");
+        websocketConnection.send("Added user");
+      }
+
       websocketConnection.on("message", (message) => {
         try {
-          const parsedMessage = JSON.parse(message.toString());
-          console.log(parsedMessage);
+          const groupSockets = sockets.get(groupId);
+
+          if (groupSockets) {
+            for (const user of groupSockets.values()) {
+              user.send(message.toString());
+            }
+          }
         } catch (e) {
           console.error(e);
         }
