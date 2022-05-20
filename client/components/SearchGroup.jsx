@@ -1,16 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import GroupCard from './shared/GroupCard';
-import GroupCriteriaPage from "./GroupCriteriaPage";
-
-
+import GroupCriteriaPage from './GroupCriteriaPage';
 
 const SearchGroup = () => {
-
   const [groups, setGroups] = useState([]);
   const [input, setInput] = useState('');
 
   const getGroups = useCallback(async () => {
-    const res = await fetch('api/v1/groups');
+    const res = await fetch('/api/v1/groups');
     const data = await res.json();
     setGroups(data);
   });
@@ -25,17 +22,21 @@ const SearchGroup = () => {
     group.name.toLowerCase().includes(input.toLowerCase())
   );
 
-
-
   return (
     <>
       <div className='grid grid-cols-1 gap-4 bg-white p-6 rounded-standard mb-6  max-w-xl mx-auto'>
         <div>
-          <h2 className='text-xl font-bold text-dark-1 mb-4'>Søk etter gruppenavn</h2>
-          <h4 className='text-dark-3'>Trykk på en gruppe for å sende forespørsel</h4>
+          <h2 className='text-xl font-bold text-dark-1 mb-4'>
+            Søk etter gruppenavn
+          </h2>
+          <h4 className='text-dark-3'>
+            Trykk på en gruppe for å sende forespørsel
+          </h4>
         </div>
         <div>
-          <label htmlFor='groupName' className='text-dark-1'>Gruppenavn</label>
+          <label htmlFor='groupName' className='text-dark-1'>
+            Gruppenavn
+          </label>
           <input
             type='text'
             id='groupName'
@@ -55,7 +56,7 @@ const SearchGroup = () => {
 
       <div className='bg-white p-6 rounded-standard border border-purple-4'>
         <div className='flex flex-col gap-8'>
-          <GroupCriteriaPage lookingForGroup={true}/>
+          <GroupCriteriaPage lookingForGroup={true} />
         </div>
       </div>
     </>

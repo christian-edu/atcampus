@@ -1,9 +1,12 @@
 import { ChevronRightIcon } from '@heroicons/react/solid';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
+import { routes } from '../../services/breadcrumbs';
 
 const Breadcrumbs = () => {
-  const breadcrumbs = useBreadcrumbs();
+  const params = useParams();
+
+  const breadcrumbs = useBreadcrumbs(routes(params));
 
   console.log(breadcrumbs);
 
