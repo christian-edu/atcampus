@@ -2,7 +2,7 @@ import GroupRouter from "../controller/groupRouter";
 import supertest, { SuperAgentTest } from "supertest";
 import express, { Router } from "express";
 import { groupMembers, groups, users } from "../__mocks__/mockData";
-import HttpException from "../httpException";
+import HttpException from "../util/httpException";
 import { IGroupService } from "../service/IGroupService";
 import { createMock } from "ts-auto-mock";
 import { method, On } from "ts-auto-mock/extension";

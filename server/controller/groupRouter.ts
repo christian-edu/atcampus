@@ -1,7 +1,7 @@
 import { SearchDTO } from "../dto/searchDTO";
 import e, { IRouter, Response } from "express";
 import { IGroupService } from "../service/IGroupService";
-import HttpException from "../httpException";
+import HttpException from "../util/httpException";
 import { GroupDto } from "../dto/groupDto";
 import { groups } from "../__mocks__/mockData";
 

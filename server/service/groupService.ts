@@ -1,4 +1,4 @@
-import HttpException from "../httpException";
+import HttpException from "../util/httpException";
 import { groups } from "../__mocks__/mockData";
 import { SearchDTO } from "../dto/searchDTO";
 import { IGroupRepo } from "../repo/IGroupRepo";
