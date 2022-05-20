@@ -12,8 +12,6 @@ const UserCard = (props) => {
 
   const { user } = props.user;
 
-  console.log(user);
-
   // state for modal window
   const [modalIsVisible, setModalIsVisible] = useState(false);
 

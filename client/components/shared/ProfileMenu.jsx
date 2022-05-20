@@ -2,14 +2,14 @@ import { Link } from 'react-router-dom';
 import { ChevronRightIcon } from '@heroicons/react/solid';
 import { profileMenu } from '../../services/menus';
 
-const ProfileMenu = (props) => {
+const ProfileMenu = ({ onClick }) => {
   // Profile menu popup
 
   return (
     <div>
       <div className='flex justify-end'>
         <button
-          onClick={props.onClick}
+          onClick={onClick}
           className='text-white px-4 py-2 mb-3 mr-3 outline outline-white text-center bg-purple-1 rounded-full hover:bg-purple-2'
         >
           X

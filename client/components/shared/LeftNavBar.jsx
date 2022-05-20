@@ -6,8 +6,6 @@ import { Link } from 'react-router-dom';
 const LeftNavBar = () => {
   const [open, setOpen] = useState(true);
 
-  const Menus = [];
-
   return (
     <div>
       <div
