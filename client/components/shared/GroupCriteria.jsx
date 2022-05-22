@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import Button from "./Button"
 
-export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupName, createGroup, searchGroup}) {
+export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupName, createGroup, searchGroup, group}) {
     // Send a request to the backend to search for the required group with the criterias
 
     const [language, setLanguage] = useState("velg")
@@ -18,6 +18,8 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
     const [isPrivate, setIsPrivate] = useState();
 
     const navigate = useNavigate();
+
+
 
 
     function addSubjectField () {
@@ -47,15 +49,13 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
             // since response is 203 no content, it will be undefined
 
             // We know we searched for group
-            console.log("U searched for group redirect")
             navigate("/searchGroup/searchGroupResults", { state: { groupResult} })
 
         }
 
         if(patchGroup && groupResult === "No Content"){
 
-            console.log("Patch redirect")
-            navigate("/")
+            navigate('/group/specific', { state: { group } })
         }
 
 
@@ -64,10 +64,6 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
 
 
     async function searchForGroup(){
-
-
-
-
 
 
 

@@ -17,9 +17,12 @@ const GroupPage = () => {
   const navigate = useNavigate();
   const group = location.state.group;
 
+
   const [showSettings, setShowSettings] = useState(false);
 
   const toggleSettings = () => setShowSettings((showSettings) => !showSettings);
+
+
 
 
   let visible = '';
