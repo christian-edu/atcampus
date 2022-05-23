@@ -43,7 +43,7 @@ const GroupCriteriaPage = ({createdGroup, lookingForGroup, editGroup}) => {
        const {group} = location.state
 
 
-       return <div className='bg-white p-6 text-dark-1'>
+       return <div className='bg-white p-6 text-dark-1 max-w-xl mx-auto rounded-standard'>
            <GroupCriteria title={"Endre kriterier på gruppen din"} buttonText={"Endre kriterier"} patchGroup={true} fetchLink={"/api/v1/groups"} groupName={groupname} group={group} />
 
            <h4>Dine kriterier</h4>

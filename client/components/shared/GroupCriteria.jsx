@@ -265,7 +265,7 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                     </div>
                 </div>
                 
-            <div className="flex gap-3 items-center whitespace-nowrap mt-4 mb-8">
+            <div className="flex gap-3 items-center mt-4 mb-8">
                 <div>
                     <input type="radio" name={"metode"} id={"fysisk"} value={"LOCAL"} onChange={(e) => setWorkType(e.target.value)}
                     className="form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"/>

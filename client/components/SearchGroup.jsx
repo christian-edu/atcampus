@@ -29,7 +29,7 @@ const SearchGroup = () => {
 
   return (
     <>
-      <div className='grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard mb-6 max-w-xl mx-auto'>
+      <div className='grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard mb-6 max-w-2xl mx-auto'>
         <div>
           <h2 className='text-xl font-bold mb-4'>Søk etter gruppenavn</h2>
           <h4 className='text-dark-3'>Trykk på en gruppe for å sende forespørsel</h4>
@@ -53,7 +53,7 @@ const SearchGroup = () => {
         </ul>
       </div>
 
-      <div className='grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard mb-6 max-w-xl mx-auto'>
+      <div className='grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard mb-6 max-w-2xl mx-auto'>
         <div className='flex flex-col gap-8'>
           <GroupCriteriaPage lookingForGroup={true}/>
         </div>

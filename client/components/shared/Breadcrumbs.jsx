@@ -14,7 +14,7 @@ const Breadcrumbs = () => {
         if (i === breadcrumbs.length - 1)
           return <li key={key}>{breadcrumb}</li>;
         return (
-          <li key={key} className='text-purple-1'>
+          <li key={key} className='text-purple-1 mb-6'>
             <Link to={key} className='flex items-center'>
               {breadcrumb} <ChevronRightIcon className='h-4' />
             </Link>

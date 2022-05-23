@@ -12,7 +12,7 @@ const GroupCard = ({ group, onClick, match, search }) => {
   // Group Card component
 
   // classes for private icon
-  const privateIconClasses = 'h-4 absolute top-4 right-4';
+  const privateIconClasses = 'h-4 absolute top-4 right-4 text-dark-3';
 
   // State for modals
   const [modalIsVisible, setModalIsVisible] = useState(false);
