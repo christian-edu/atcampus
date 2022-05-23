@@ -11,7 +11,7 @@ export class SchoolEntity {
   }
 
   @PrimaryColumn()
-  uuid: string;
+  public uuid: string;
 
   @Column({
     nullable: false,

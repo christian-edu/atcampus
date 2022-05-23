@@ -13,6 +13,7 @@ import { GroupMemberEntity } from "./entity/GroupMemberEntity";
 import { GroupRequestEntity } from "./entity/GroupRequestEntity";
 import { SchoolEntity } from "./entity/SchoolEntity";
 import { UserEntity } from "./entity/UserEntity";
+import { userDtoToEntity } from "./dto/utils/userMappers";
 
 dotenv.config();
 const app = express();
@@ -39,16 +40,19 @@ AppDataSource.initialize()
   .then(() => {
     const server = app.listen(process.env.PORT || 8345, async () => {
       const schoolEntity = new SchoolEntity("HK");
-      const schoolRepo = AppDataSource.getRepository(SchoolEntity);
-      await schoolRepo.save(schoolEntity);
-      const user = new UserDto("christian", "chgr007@egms.no", "pirate");
-      // const userService = new UserService(await UserRepo);
-      // const res = await userService.addUser(user);
-      const userRepo = AppDataSource.getRepository(UserEntity);
-      const res = await userRepo.save(
-        new UserEntity(user.username, user.email, user.password, schoolEntity)
+      // const schoolRepo = AppDataSource.getRepository(SchoolEntity);
+      // await schoolRepo.save(schoolEntity);
+      const user = new UserDto(
+        "christian",
+        "chgr007@egms.no",
+        "pirate",
+        "a88493c3-263d-4aa6-808f-ace53f8e1eb7"
       );
-      console.info(res);
+      const userService = new UserService(
+        AppDataSource.getRepository(UserEntity)
+      );
+      //const res = await userService.addUser(user);
+      //console.info(res);
       console.info("Connected to db ");
       // const groupService = new GroupService(GroupRepo);
       // const groupRoutes = new GroupRouter(groupService, express.Router());
