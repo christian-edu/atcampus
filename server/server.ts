@@ -35,7 +35,13 @@ repo
       const userService = new UserService(repos.userRepo, schoolRepo);
       const res = await userService.addUser(user);
       console.info(res);
-      const groupService = new GroupService(repos.groupRepo);
+      const groupService = new GroupService(
+        repos.groupRepo,
+        repos.groupMemberRepo,
+        repos.schoolRepo,
+        repos.subjectRepo,
+        repos.userRepo
+      );
       const groupRoutes = new GroupRouter(groupService, express.Router());
       const authRouter = new AuthRouter(groupService, express.Router());
 

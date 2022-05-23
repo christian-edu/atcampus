@@ -6,6 +6,7 @@ export class GroupDto {
     public isPrivate: boolean,
     public name: string,
     public criteria: CriteriaDto,
+    public groupMembers: GroupMemberDto[],
     public rules?: string,
     public uuid?: string
   ) {}

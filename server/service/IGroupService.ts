@@ -1,9 +1,5 @@
-import { IGroupRepo } from "../repo/IGroupRepo";
-import { SearchDTO } from "../dto/searchDTO";
 import { GroupDto } from "../dto/groupDto";
-import { UserDto } from "../dto/userDto";
-import { GroupEntity } from "../entity/GroupEntity";
-import { Repository } from "typeorm";
+
 export type searchResult = {
   [key: string]: {
     group: GroupDto;

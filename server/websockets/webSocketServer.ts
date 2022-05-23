@@ -1,12 +1,7 @@
 import WebSocketServer from "ws";
 import { Server } from "http";
-import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import { Socket } from "net";
-import { UUIDV4 } from "sequelize";
-import ChatMessageRepo from "../repo/chatMessageRepo";
 import ChatService from "../service/chatService";
-import { ChatMessageEntity } from "../entity/ChatMessageEntity";
 
 const sockets = new Map<string, Map<string, WebSocket>>();
 dotenv.config();

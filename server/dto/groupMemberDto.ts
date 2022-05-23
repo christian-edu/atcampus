@@ -3,9 +3,8 @@ import { GroupDto } from "./groupDto";
 
 export class GroupMemberDto {
   constructor(
-    public user: UserDto,
-    public group: GroupDto,
-    public isAdmin: boolean,
-    public uuid?: string
+    public user: string,
+    public group: string,
+    public isAdmin: boolean
   ) {}
 }
