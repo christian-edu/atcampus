@@ -8,3 +8,14 @@ export class UserInDto {
     public lastName?: string
   ) {}
 }
+
+export class UserOutDto {
+  constructor(
+    public uuid: string,
+    public username: string,
+    public email: string,
+    public school?: string,
+    public firstName?: string,
+    public lastName?: string
+  ) {}
+}

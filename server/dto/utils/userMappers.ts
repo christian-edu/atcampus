@@ -1,25 +1,23 @@
 import { UserEntity } from "../../entity/UserEntity";
-import { UserDto } from "../userDto";
+import { UserInDto, UserOutDto } from "../UserInDto";
 import { SchoolEntity } from "../../entity/SchoolEntity";
 
-export function userEntityToDto(entity: UserEntity): UserDto {
-  return new UserDto(
+export function userEntityToDto(entity: UserEntity): UserOutDto {
+  return new UserOutDto(
+    entity.uuid,
     entity.userName,
     entity.email,
-    entity.password,
     entity.school.name,
     entity.firstName,
-    entity.lastName,
-    entity.uuid
+    entity.lastName
   );
 }
 
-export function userDtoToEntity(dto: UserDto): UserEntity {
+export function userDtoToEntity(dto: UserInDto): UserEntity {
   return new UserEntity(
     dto.username,
     dto.email,
     dto.password,
-    dto.uuid,
     new SchoolEntity(dto.school),
     dto.firstName,
     dto.lastName

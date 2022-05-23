@@ -1,12 +1,28 @@
 import { GroupMemberEntity } from "../../entity/GroupMemberEntity";
-import { GroupMemberDto } from "../groupMemberDto";
-import { userEntityToDto } from "./userMappers";
-import { groupEntityToDto } from "./groupMappers";
+import {
+  GroupMemberDto_both,
+  GroupMemberDto_group,
+  GroupMemberDto_user,
+} from "../groupMemberDto";
 
-export function memberEntityToDto(entity: GroupMemberEntity): GroupMemberDto {
-  return new GroupMemberDto(
-    userEntityToDto(entity.user),
-    groupEntityToDto(entity.group),
+export function memberEntityToDto_both(
+  entity: GroupMemberEntity
+): GroupMemberDto_both {
+  return new GroupMemberDto_both(
+    entity.user.uuid,
+    entity.group.uuid,
     entity.is_admin
   );
+}
+
+export function memberEntityToDto_user(
+  entity: GroupMemberEntity
+): GroupMemberDto_user {
+  return new GroupMemberDto_user(entity.user.uuid, entity.is_admin);
+}
+
+export function memberEntityToDto_group(
+  entity: GroupMemberEntity
+): GroupMemberDto_group {
+  return new GroupMemberDto_group(entity.group.uuid, entity.is_admin);
 }

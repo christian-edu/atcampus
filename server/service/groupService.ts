@@ -10,7 +10,6 @@ import { SubjectEntity } from "../entity/SubjectEntity";
 import { UserEntity } from "../entity/UserEntity";
 import { GroupMemberEntity } from "../entity/GroupMemberEntity";
 import {
-  groupDtoToEntity,
   groupEntityToDto,
   newGroupEntityFromDto,
 } from "../dto/utils/groupMappers";
@@ -20,6 +19,7 @@ import { WorkFrequency } from "../entity/enums/WorkFrequency";
 import { WorkType } from "../entity/enums/WorkType";
 import { SchoolEntity } from "../entity/SchoolEntity";
 import { GroupInDto } from "../dto/GroupInDto";
+import { UserOutDto } from "../dto/UserInDto";
 
 export default class GroupService implements IGroupService {
   constructor(
@@ -52,9 +52,9 @@ export default class GroupService implements IGroupService {
 
     let groupEntity: GroupEntity;
     if (admin != null) {
-      groupEntity = await this.createSubjectsAndSchool(group, admin);
+      groupEntity = await this.createSubjectsAndSchool(group, admin); // litt hacky, trenger refactor
     } else {
-      throw new HttpException("Database connection lost", 500);
+      throw new HttpException("User not found", 404);
     }
 
     return await this.groupRepo
@@ -139,13 +139,13 @@ export default class GroupService implements IGroupService {
       });
   }
 
-  async fetchGroupMembers(groupId: string): Promise<UserDto[]> {
+  async fetchGroupMembers(groupId: string): Promise<UserOutDto[]> {
     if (!groupId)
       throw new HttpException(
         "group_id request parameter must be specified",
         400
       );
-    const members = new Array<UserDto>();
+    const members = new Array<UserOutDto>();
     await this.groupRepo.findOneBy({ uuid: groupId }).then(async (group) => {
       if (!group) throw new HttpException("Group not found", 404);
 
