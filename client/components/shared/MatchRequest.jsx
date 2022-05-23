@@ -22,16 +22,16 @@ const MatchRequest = ({ group, user, onClick }) => {
   console.log(criterias);
 
   return (
-    <div className='flex flex-col items-center bg-white p-8 rounded text-center shadow-xl'>
+    <div className='flex flex-col items-center bg-white text-dark-1 p-8 rounded text-center shadow-xl'>
       <Image group className='h-20 mb-4' />
-      <h2 className='text-dark-1 font-bold text-xl w-full border-b-2 pb-4 border-purple-1'>
+      <h2 className='font-bold text-xl w-full border-b-2 pb-4 border-purple-1'>
         {group?.name || user}
       </h2>
       <ul className='flex flex-col gap-3 mt-6 mb-4'>
         {Object.entries(criterias).map((criteria) => (
           <li
             key={criteria[0]}
-            className='text-dark-1 text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'
+            className='text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'
           >
             <span className='font-bold'>{criteria[0]}: </span>
             {criteria[1]}
@@ -45,7 +45,7 @@ const MatchRequest = ({ group, user, onClick }) => {
           : 'Ønsker du å invitere til gruppen?'}
       </p>
       <div className='flex flex-row gap-6'>
-        <button className='bg-dark-1 text-white p-2 rounded' onClick={onClick}>
+        <button className='bg-dark-2 text-white p-2 rounded' onClick={onClick}>
           <XIcon className='h-6 w-6' />
         </button>
         <button className='bg-gradient-left text-white p-2 rounded'>
