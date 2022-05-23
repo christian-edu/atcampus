@@ -96,9 +96,6 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                     setError("Velg public eller private")
                 }else{
 
-                    console.log("Old criterias: ")
-                    console.log(group.criteria)
-
                     if(gradeGoal === "velg"){
 
                         setGradeGoal(group.criteria.gradeGoal)
