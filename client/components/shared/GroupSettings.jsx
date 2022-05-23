@@ -42,8 +42,7 @@ const navigate = useNavigate();
             to='/group/editProfile'
             className='flex flex-row justify-between my-1 py-3 hover:bg-purple-2 px-4'
             onClick={props.onClick}
-            state={{group: group}}
-          >
+            state={{group: group}}>
             <li className='flex flex-row'>
               <PencilAltIcon className='h-6 w-6 text-white mr-4' />
               Endre gruppeprofil

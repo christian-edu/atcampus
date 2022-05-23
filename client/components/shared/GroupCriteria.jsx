@@ -36,6 +36,29 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
 
     }
 
+    useEffect( async () => {
+
+        // Use effect, to wait for all the fields to get their right value, either from chosen in input or if not chosen, gets the old criteria
+
+        if(language === "velg" || gradeGoal === "velg" || place === "velg" || size === "velg" || school === "velg" || workFrequency === "velg" || workType === "velg"){
+            console.log("Preparing to send data")
+        }else {
+
+
+            const res = await fetch(fetchLink, {
+                method: "PATCH",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({gradeGoal, language, place, size, school, subject, workFrequency, workType, isPrivate})
+            })
+
+            setGroupResult( "No Content")
+
+        }
+
+    }, [gradeGoal, language, place, size, school, subject, workFrequency, workType, isPrivate])
+
     useEffect(() => {
 
 
@@ -72,16 +95,41 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                 if(isPrivate === undefined ) {
                     setError("Velg public eller private")
                 }else{
-                    const res = await fetch(fetchLink, {
-                        method: "PATCH",
-                        headers: {
-                            "content-type": "application/json"
-                        },
-                        body: JSON.stringify({language, size, gradeGoal, workFrequency, workType, place, school, subject, groupName, isPrivate})
-                    })
 
-                    setGroupResult( "No Content")
+                    console.log("Old criterias: ")
+                    console.log(group.criteria)
 
+                    if(gradeGoal === "velg"){
+
+                        setGradeGoal(group.criteria.gradeGoal)
+
+                    }
+                if(language === "velg"){
+                    setLanguage(group.criteria.language)
+                }
+
+                if(place === "velg"){
+                    setPlace(group.criteria.language)
+                }
+
+                if(size === "velg"){
+                    setSize(group.criteria.size)
+                }
+                if(school === "velg"){
+                    setSchool(group.criteria.school)
+                }
+
+                if(workFrequency === "velg"){
+                    setWorkFrequency(group.criteria.workFrequency)
+                }
+
+                if(workType === "velg"){
+                    setWorkType(group.criteria.workType)
+                }
+
+                if(subject[0].subject.length === 0){
+                    setSubject( group.criteria.subject)
+                }
                 }
 
 
@@ -103,6 +151,7 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                 }
             }else if(searchGroup) {
                 // Here we search for the group
+
                 const res = await fetch(fetchLink, {
                     method: "POST",
                     headers: {
