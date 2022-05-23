@@ -6,18 +6,21 @@ import { GroupDto } from "../dto/groupDto";
 import { UserDto } from "../dto/userDto";
 import { Repository } from "typeorm";
 import { GroupEntity } from "../entity/GroupEntity";
-import { SubjectRepo } from "../repo/SubjectRepo";
 import { SubjectEntity } from "../entity/SubjectEntity";
-import { SchoolRepo } from "../repo/SchoolRepo";
-import { UserRepo } from "../repo/UserRepo";
-import { GroupMemberRepo } from "../repo/GroupMemberRepo";
 import { UserEntity } from "../entity/UserEntity";
 import { GroupMemberEntity } from "../entity/GroupMemberEntity";
 import { groupDtoToEntity, groupEntityToDto } from "../dto/utils/groupMappers";
 import { userEntityToDto } from "../dto/utils/userMappers";
+import { SchoolEntity } from "../entity/SchoolEntity";
 
 export default class GroupService implements IGroupService {
-  constructor(public groupRepo: Repository<GroupEntity>) {}
+  constructor(
+    private groupRepo: Repository<GroupEntity>,
+    private groupMemberRepo: Repository<GroupMemberEntity>,
+    private schoolRepo: Repository<SchoolEntity>,
+    private subjectRepo: Repository<SubjectEntity>,
+    private userRepo: Repository<UserEntity>
+  ) {}
 
   async fetchAllGroups(): Promise<GroupDto[]> {
     return await this.groupRepo
@@ -66,10 +69,11 @@ export default class GroupService implements IGroupService {
       }
     );
 
-    const rowsAffected = await GroupMemberRepo.delete({
-      user: user,
-      group: group,
-    })
+    const rowsAffected = await this.groupMemberRepo
+      .delete({
+        user: user,
+        group: group,
+      })
       .then((response) => {
         return response.affected;
       })
@@ -102,7 +106,8 @@ export default class GroupService implements IGroupService {
 
     const newMember = new GroupMemberEntity(user, group, false);
 
-    return await GroupMemberRepo.save(newMember)
+    return await this.groupMemberRepo
+      .save(newMember)
       .then((gme) => {
         return groupEntityToDto(gme.group);
       })
@@ -121,10 +126,11 @@ export default class GroupService implements IGroupService {
     await this.groupRepo.findOneBy({ uuid: groupId }).then(async (group) => {
       if (!group) throw new HttpException("Group not found", 404);
 
-      await GroupMemberRepo.find({
-        where: { group },
-        relations: ["user"],
-      })
+      await this.groupMemberRepo
+        .find({
+          where: { group },
+          relations: ["user"],
+        })
         .then((it) => {
           if (!it) throw new HttpException("Users not found", 404);
           it.forEach((memberRow) => {
@@ -238,9 +244,11 @@ export default class GroupService implements IGroupService {
     const checkedSubjects = new Array<SubjectEntity>();
 
     for (let i = 0; i < subjects.length; i++) {
-      const checked = await SubjectRepo.findOrCreate(subjects[i]).catch(() => {
-        throw new HttpException("Database connection lost", 500);
-      });
+      const checked = await this.subjectRepo
+        .findOrCreate(subjects[i])
+        .catch(() => {
+          throw new HttpException("Database connection lost", 500);
+        });
       checkedSubjects.push(checked);
     }
     return checkedSubjects;
@@ -250,7 +258,8 @@ export default class GroupService implements IGroupService {
     let user: UserEntity | null = null;
     let group: GroupEntity | null = null;
 
-    await UserRepo.findOneBy({ uuid: userId })
+    await this.userRepo
+      .findOneBy({ uuid: userId })
       .then((it) => {
         if (it) user = it;
       })
@@ -281,11 +290,11 @@ export default class GroupService implements IGroupService {
     ).catch((ex: HttpException) => {
       throw ex;
     });
-    groupEntity.criteria.school = await SchoolRepo.findOrCreate(
-      groupEntity.criteria.school
-    ).catch(() => {
-      throw new HttpException("Database connection lost", 500);
-    });
+    groupEntity.criteria.school = await this.schoolRepo
+      .findOrCreate(groupEntity.criteria.school)
+      .catch(() => {
+        throw new HttpException("Database connection lost", 500);
+      });
     return groupEntity;
   }
 }

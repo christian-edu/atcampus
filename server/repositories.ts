@@ -7,8 +7,7 @@ import {GroupEntity} from "./entity/GroupEntity";
 import {GroupRequestEntity} from "./entity/GroupRequestEntity";
 import {SchoolEntity} from "./entity/SchoolEntity";
 import {SubjectEntity} from "./entity/SubjectEntity";
-import {DeleteResult, Repository} from "typeorm";
-
+import {Repository} from "typeorm";
 
 type repoTypes = {
     userRepo: Repository<UserEntity>;
