@@ -4,9 +4,13 @@ import { SubjectEntity } from "../../entity/SubjectEntity";
 import { SchoolEntity } from "../../entity/SchoolEntity";
 
 export function criteriaEntityToDto(entity: CriteriaEntity): CriteriaDto {
-  const subjects = entity.subjects.map((subject) => {
-    return subject.name;
-  });
+  const subjects: string[] = [];
+
+  if (entity.subjects) {
+    entity.subjects.forEach((subject) => {
+      subjects.push(subject.name);
+    });
+  }
 
   return new CriteriaDto(
     entity.grade_goal,

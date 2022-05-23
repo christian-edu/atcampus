@@ -4,7 +4,7 @@ import { SearchDTO } from "../dto/searchDTO";
 import { IGroupService, searchResult } from "./IGroupService";
 import { GroupDto } from "../dto/groupDto";
 import { UserDto } from "../dto/userDto";
-import { Repository } from "typeorm";
+import { DeleteResult, Repository } from "typeorm";
 import { GroupEntity } from "../entity/GroupEntity";
 import { SubjectRepo } from "../repo/SubjectRepo";
 import { SubjectEntity } from "../entity/SubjectEntity";
@@ -73,7 +73,7 @@ export default class GroupService implements IGroupService {
       user: user,
       group: group,
     })
-      .then((response) => {
+      .then((response: DeleteResult) => {
         return response.affected;
       })
       .catch(() => {
@@ -106,7 +106,7 @@ export default class GroupService implements IGroupService {
     const newMember = new GroupMemberEntity(user, group, false);
 
     return await GroupMemberRepo.save(newMember)
-      .then((gme) => {
+      .then((gme: GroupMemberEntity) => {
         return groupEntityToDto(gme.group);
       })
       .catch(() => {
@@ -128,9 +128,9 @@ export default class GroupService implements IGroupService {
         where: { group },
         relations: ["user"],
       })
-        .then((it) => {
+        .then((it: GroupMemberEntity[]) => {
           if (!it) throw new HttpException("Users not found", 404);
-          it.forEach((memberRow) => {
+          it.forEach((memberRow: GroupMemberEntity) => {
             members.push(userEntityToDto(memberRow.user));
           });
         })
@@ -353,7 +353,7 @@ export default class GroupService implements IGroupService {
     let group: GroupEntity | null = null;
 
     await UserRepo.findOneBy({ uuid: userId })
-      .then((it) => {
+      .then((it: UserEntity) => {
         if (it) user = it;
       })
       .catch(() => {
@@ -378,11 +378,13 @@ export default class GroupService implements IGroupService {
     groupDto: GroupDto
   ): Promise<GroupEntity> {
     const groupEntity = groupDtoToEntity(groupDto);
-    groupEntity.criteria.subjects = await this.checkSubjects(
-      groupEntity.criteria.subjects
-    ).catch((ex: HttpException) => {
-      throw ex;
-    });
+    if (groupEntity.criteria.subjects) {
+      groupEntity.criteria.subjects = await this.checkSubjects(
+        groupEntity.criteria.subjects
+      ).catch((ex: HttpException) => {
+        throw ex;
+      });
+    }
     groupEntity.criteria.school = await SchoolRepo.findOrCreate(
       groupEntity.criteria.school
     ).catch(() => {
