@@ -362,7 +362,7 @@ export default class GroupService implements IGroupService {
 
     await this.userRepo
       .findOneBy({ uuid: userId })
-      .then((it: UserEntity) => {
+      .then((it: UserEntity | null) => {
         if (it) user = it;
       })
       .catch(() => {
@@ -389,7 +389,7 @@ export default class GroupService implements IGroupService {
     const groupEntity = groupDtoToEntity(groupDto);
     if (groupEntity.criteria.subjects) {
       groupEntity.criteria.subjects = await this.checkSubjects(
-          groupEntity.criteria.subjects
+        groupEntity.criteria.subjects
       ).catch((ex: HttpException) => {
         throw ex;
       });

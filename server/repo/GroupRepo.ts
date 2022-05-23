@@ -1,5 +1,6 @@
 import { AppDataSource } from "../server";
 import { GroupEntity } from "../entity/GroupEntity";
+import { Repository } from "typeorm";
 
 export const GroupRepo = AppDataSource.getRepository(GroupEntity).extend({
   // custom metoder settes her
