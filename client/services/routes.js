@@ -16,6 +16,10 @@ export const routes = (location) => [
     breadcrumb: 'Medlemmer',
   },
   {
+    path: '/groups/specific/members/searchUser',
+    breadcrumb: 'Legg til medlem',
+  },
+  {
     path: '/groups/specific/groupCriteria',
     breadcrumb: 'Gruppekriterier',
   },

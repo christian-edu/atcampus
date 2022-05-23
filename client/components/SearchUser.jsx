@@ -4,31 +4,32 @@ import { GroupCriteria } from './shared/GroupCriteria';
 import UserCard from './shared/UserCard';
 
 const SearchUser = () => {
-
   // Needs work
-  
+
   const [users, setUsers] = useState([]);
   const [input, setInput] = useState('');
 
-  const getGroups = useCallback(async () => {
-    const res = await fetch('/api/v1/groups');
-    const data = await res.json();
-    setUsers(data.flatMap((group) => group.groupMember));
-  });
+  // const fetchGroups = async () => {
+  //   const res = await fetch('/api/v1/groups');
+  //   const data = await res.json();
+
+  // };
 
   const inputHandler = (e) => setInput(e.target.value);
 
   useEffect(() => {
-    getGroups();
+    // fetchGroups();
   }, []);
 
-  useEffect(()=> {
+  useEffect(() => {
     console.log(users);
-  },[users])
+  }, [users]);
 
   const filteredUsers = users.filter((user) =>
-    user.toLowerCase().includes(input.toLowerCase())
+    user.username.toLowerCase().includes(input.toLowerCase())
   );
+
+  console.log(users);
 
   return (
     <>
@@ -48,10 +49,7 @@ const SearchUser = () => {
         </div>
         <ul className='grid gap-4'>
           {input && filteredUsers.length === 0 && 'Fant ingen brukere'}
-          {input &&
-            filteredUsers.map((user) => (
-              <UserCard key={user} user={user} search={true} />
-            ))}
+          {input && filteredUsers.map((user, i) => <li>Li</li>)}
         </ul>
       </div>
 
