@@ -347,7 +347,17 @@ export default class GroupService implements IGroupService {
 
     for (let i = 0; i < subjects.length; i++) {
       const checked = await this.subjectRepo
-        .findOrCreate(subjects[i])
+        .findOneByOrFail({ name: subjects[i].name })
+        .then(async (foundSubject) => {
+          if (!foundSubject) {
+            return await this.subjectRepo
+              .save(subjects[i])
+              .then((savedSubject) => {
+                return savedSubject;
+              });
+          }
+          return foundSubject;
+        })
         .catch(() => {
           throw new HttpException("Database connection lost", 500);
         });
@@ -395,7 +405,17 @@ export default class GroupService implements IGroupService {
       });
     }
     groupEntity.criteria.school = await this.schoolRepo
-      .findOrCreate(groupEntity.criteria.school)
+      .findOneByOrFail({ name: groupEntity.criteria.school.name })
+      .then(async (foundSchool) => {
+        if (!foundSchool) {
+          return this.groupRepo
+            .save(groupEntity.criteria.school)
+            .then((savedSchool) => {
+              return savedSchool;
+            });
+        }
+        return foundSchool;
+      })
       .catch(() => {
         throw new HttpException("Database connection lost", 500);
       });
