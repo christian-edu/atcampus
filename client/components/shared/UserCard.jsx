@@ -1,14 +1,17 @@
-import { DotsHorizontalIcon, PlusIcon } from '@heroicons/react/solid';
+import {
+  DotsHorizontalIcon,
+  PlusIcon,
+  KeyIcon,
+  TrashIcon
+} from '@heroicons/react/solid';
 import { useState } from 'react';
 import Image from './Image';
 import MatchRequest from './MatchRequest';
 import Modal from './Modal';
 import SearchRequest from './SearchRequest';
+import GroupUserSettings from './GroupUserSettings';
 import Button from './Button';
-import {
-  KeyIcon,
-  TrashIcon
-} from '@heroicons/react/solid';
+
 SearchRequest;
 
 const UserCard = (props) => {
@@ -20,6 +23,7 @@ const UserCard = (props) => {
   // state for modal window
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
+  
   function removeMember(){
       console.log(user.username + " removed")
       // Send a request to delete the user
@@ -30,12 +34,13 @@ const UserCard = (props) => {
       console.log("Admin roles given to " + user.username)
       //Send a request to make the user admin
   }
+  
 
   // function to toggle modal window
   const toggleModal = () =>
     setModalIsVisible((modalIsVisible) => !modalIsVisible);
 
-  // Dummy content for edit modal window
+  // dummy content for profile settings
   const content = (
     <div className='flex flex-col items-center bg-white text-dark-1 p-8 rounded text-center shadow-xl'>
       <Image group className='h-20 mb-4 -mt-16' />
@@ -54,7 +59,9 @@ const UserCard = (props) => {
       {/* Render edit modal if props edit is set to true
       Here we want to only show this if the user is admin of the group*/}
       {modalIsVisible && props.edit && (
-        <Modal onClick={toggleModal}>{content}</Modal>
+        <Modal onClick={toggleModal}>
+          {content}
+        </Modal>
 
       )}
       {/* Render search modal if props search is set to true */}
