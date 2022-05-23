@@ -64,7 +64,7 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
 
         if(groupResult !== undefined && createGroup){
             const group = groupResult
-            navigate('/group/specific', { state: { group } })
+            navigate('/groups/specific', { state: { group } })
         }
 
         // DONT WORK
@@ -72,13 +72,13 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
             // since response is 203 no content, it will be undefined
 
             // We know we searched for group
-            navigate("/searchGroup/searchGroupResults", { state: { groupResult} })
+            navigate("/groups/searchGroup/searchGroupResults", { state: { groupResult} })
 
         }
 
         if(patchGroup && groupResult === "No Content"){
 
-            navigate('/group/specific', { state: { group } })
+            navigate('/groups/specific', { state: { group } })
         }
 
 

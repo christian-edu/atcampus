@@ -1,19 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import GroupCard from './shared/GroupCard';
-import GroupCriteriaPage from "./GroupCriteriaPage";
-
-
+import GroupCriteriaPage from './GroupCriteriaPage';
 
 const SearchGroup = () => {
-
   const [groups, setGroups] = useState([]);
   const [input, setInput] = useState('');
 
-  const getGroups = useCallback(async () => {
-    const res = await fetch('api/v1/groups');
+  const getGroups = async () => {
+    const res = await fetch('/api/v1/groups');
     const data = await res.json();
     setGroups(data);
-  });
+  };
 
   const inputHandler = (e) => setInput(e.target.value);
 
@@ -25,14 +22,14 @@ const SearchGroup = () => {
     group.name.toLowerCase().includes(input.toLowerCase())
   );
 
-
-
   return (
     <>
       <div className='grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard mb-6 max-w-2xl mx-auto'>
         <div>
           <h2 className='text-xl font-bold mb-4'>Søk etter gruppenavn</h2>
-          <h4 className='text-dark-3'>Trykk på en gruppe for å sende forespørsel</h4>
+          <h4 className='text-dark-3'>
+            Trykk på en gruppe for å sende forespørsel
+          </h4>
         </div>
         <div>
           <label htmlFor='groupName'>Gruppenavn</label>
@@ -55,7 +52,7 @@ const SearchGroup = () => {
 
       <div className='grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard mb-6 max-w-2xl mx-auto'>
         <div className='flex flex-col gap-8'>
-          <GroupCriteriaPage lookingForGroup={true}/>
+          <GroupCriteriaPage lookingForGroup={true} />
         </div>
       </div>
     </>
