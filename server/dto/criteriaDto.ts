@@ -11,6 +11,7 @@ export class CriteriaDto {
     public location?: string,
     public subject?: string[],
     public workType?: WorkType,
-    public school?: string
+    public school?: string,
+    public uuid?: string
   ) {}
 }

@@ -9,12 +9,17 @@ import { GroupEntity } from "../entity/GroupEntity";
 import { SubjectEntity } from "../entity/SubjectEntity";
 import { UserEntity } from "../entity/UserEntity";
 import { GroupMemberEntity } from "../entity/GroupMemberEntity";
-import { groupDtoToEntity, groupEntityToDto } from "../dto/utils/groupMappers";
+import {
+  groupDtoToEntity,
+  groupEntityToDto,
+  newGroupEntityFromDto,
+} from "../dto/utils/groupMappers";
 import { userEntityToDto } from "../dto/utils/userMappers";
 import { SearchWeightValues } from "./enums/SearchWeightValues";
 import { WorkFrequency } from "../entity/enums/WorkFrequency";
 import { WorkType } from "../entity/enums/WorkType";
 import { SchoolEntity } from "../entity/SchoolEntity";
+import { GroupInDto } from "../dto/GroupInDto";
 
 export default class GroupService implements IGroupService {
   constructor(
@@ -38,8 +43,20 @@ export default class GroupService implements IGroupService {
       });
   }
 
-  async addGroup(group: GroupDto): Promise<GroupDto> {
-    const groupEntity = await this.checkSubjectsAndSchool(group);
+  async addGroup(group: GroupInDto): Promise<GroupDto> {
+    const admin = await this.userRepo
+      .findOneBy({ uuid: group.admin_uuid })
+      .catch(() => {
+        throw new HttpException("Database connection lost", 500);
+      });
+
+    let groupEntity: GroupEntity;
+    if (admin != null) {
+      groupEntity = await this.createSubjectsAndSchool(group, admin);
+    } else {
+      throw new HttpException("Database connection lost", 500);
+    }
+
     return await this.groupRepo
       .save(groupEntity)
       .then((entity) => groupEntityToDto(entity))
@@ -107,7 +124,10 @@ export default class GroupService implements IGroupService {
       }
     );
 
-    const newMember = new GroupMemberEntity(user, group, false);
+    const newMember = new GroupMemberEntity();
+    newMember.user = user;
+    newMember.group = group;
+    newMember.is_admin = false;
 
     return await this.groupMemberRepo
       .save(newMember)
@@ -393,10 +413,11 @@ export default class GroupService implements IGroupService {
     return { user, group };
   }
 
-  private async checkSubjectsAndSchool(
-    groupDto: GroupDto
+  private async createSubjectsAndSchool(
+    groupInDto: GroupInDto,
+    admin: UserEntity
   ): Promise<GroupEntity> {
-    const groupEntity = groupDtoToEntity(groupDto);
+    const groupEntity = newGroupEntityFromDto(groupInDto, admin);
     if (groupEntity.criteria.subjects) {
       groupEntity.criteria.subjects = await this.checkSubjects(
         groupEntity.criteria.subjects
