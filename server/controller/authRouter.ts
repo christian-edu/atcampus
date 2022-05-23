@@ -26,6 +26,7 @@ export default class AuthRouter extends ServerRouter {
         process.env.JWT_KEY as string,
         { expiresIn: "1h" }
       );
+
       res.cookie("auth_token", token, { sameSite: true });
       res.json(token);
     });

@@ -32,6 +32,7 @@ export default class GroupRouter extends ServerRouter {
     });
 
     router.patch("/", async (req, res) => {
+
       const group = this.extractGroupDtoFromRequest(req);
       try {
         res.json(await service.updateGroup(group));

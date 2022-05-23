@@ -10,6 +10,9 @@ const GroupLinks = () => {
 
   const navigate = useNavigate();
 
+
+  // Should fetch data related to the user, and save it in the context
+
   const { data, error, loading } = useLoader(() => fetchJSON('/api/v1/groups'));
 
 

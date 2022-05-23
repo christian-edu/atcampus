@@ -14,7 +14,6 @@ import SearchUserResults from './components/SearchUserResults';
 import GroupCriteriaPage from './components/GroupCriteriaPage';
 import LeftNavBar from './components/shared/LeftNavBar';
 import { EditGroupProfile } from './components/EditGroupProfile';
-import { EditRoles } from './components/EditRoles';
 import BackButton from './components/shared/BackButton';
 import Breadcrumbs from './components/shared/Breadcrumbs';
 
@@ -52,7 +51,6 @@ const App = () => {
                   path={'/group/editProfile'}
                   element={<EditGroupProfile />}
                 />
-                <Route path={'/group/editRoles'} element={<EditRoles />} />
                 <Route
                   path={'/group/members/searchUser'}
                   element={<SearchUser />}
