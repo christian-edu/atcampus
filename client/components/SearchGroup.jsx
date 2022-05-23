@@ -25,12 +25,14 @@ const SearchGroup = () => {
     group.name.toLowerCase().includes(input.toLowerCase())
   );
 
+
+
   return (
     <>
-      <div className='grid grid-cols-1 gap-4 bg-white p-6 rounded-standard border border-purple-4 mb-6'>
+      <div className='grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard mb-6 max-w-xl mx-auto'>
         <div>
-          <h2 className='text-xl font-bold'>Søk etter gruppenavn</h2>
-          <h4>Trykk på en gruppe for å sende forespørsel</h4>
+          <h2 className='text-xl font-bold mb-4'>Søk etter gruppenavn</h2>
+          <h4 className='text-dark-3'>Trykk på en gruppe for å sende forespørsel</h4>
         </div>
         <div>
           <label htmlFor='groupName'>Gruppenavn</label>
@@ -51,7 +53,7 @@ const SearchGroup = () => {
         </ul>
       </div>
 
-      <div className='bg-white p-6 rounded-standard border border-purple-4'>
+      <div className='grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard mb-6 max-w-xl mx-auto'>
         <div className='flex flex-col gap-8'>
           <GroupCriteriaPage lookingForGroup={true}/>
         </div>

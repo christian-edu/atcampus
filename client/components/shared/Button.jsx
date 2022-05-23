@@ -1,23 +1,25 @@
 import { Link } from 'react-router-dom';
 
-const Button = (props) => {
+const Button = ({ to, className, onClick, type, children }) => {
+  // Reusable button component
+
   // classes for button and link
-  const classes = `bg-gradient-left text-white text-center font-bold py-2 px-4 rounded w-full ${
-    props.className || ''
+  const classes = `bg-gradient-left text-white text-center font-bold py-2 px-4 rounded w-full whitespace-nowrap hover:bg-purple-2 ${
+    className || ''
   }`;
 
-  // return link element if props to is being used
-  if (props.to)
+  // return link element if the to prop is being used
+  if (to)
     return (
-      <Link to={props.to} className={classes}>
-        {props.children}
+      <Link to={to} className={classes}>
+        {children}
       </Link>
     );
 
-  // return regular button element if props to is not being used.
+  // return regular button element if the to prop is not being used.
   return (
-    <button className={classes} type={props.type} onClick={props.onClick}>
-      {props.children}
+    <button className={classes} type={type} onClick={onClick}>
+      {children}
     </button>
   );
 };

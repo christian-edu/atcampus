@@ -1,6 +1,7 @@
-import HttpException from "../httpException";
+import HttpException from "../util/httpException";
+import { groups } from "../__mocks__/mockData";
 import { SearchDTO } from "../dto/searchDTO";
-import { searchResult } from "./IGroupService";
+import { IGroupService, searchResult } from "./IGroupService";
 import { GroupDto } from "../dto/groupDto";
 import { UserDto } from "../dto/userDto";
 import { Repository } from "typeorm";
@@ -18,7 +19,7 @@ import { SearchWeightValues } from "./enums/SearchWeightValues";
 import { WorkFrequency } from "../entity/enums/WorkFrequency";
 import { WorkType } from "../entity/enums/WorkType";
 
-export default class GroupService /*implements IGroupService*/ {
+export default class GroupService implements IGroupService {
   constructor(public groupRepo: Repository<GroupEntity>) {}
 
   async fetchAllGroups(): Promise<GroupDto[]> {

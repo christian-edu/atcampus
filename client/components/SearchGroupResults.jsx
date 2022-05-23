@@ -1,14 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
 import GroupCard from './shared/GroupCard';
-import {useLocation} from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
 const SearchGroupResults = () => {
+  const location = useLocation();
 
-
-    const location = useLocation();
-
-    const groupResult = location.state.groupResult;
-
+  const groupResult = location.state.groupResult;
 
 
   return (
@@ -16,10 +12,9 @@ const SearchGroupResults = () => {
       <h2 className='font-bold text-xl mb-8'>Søkeresultater</h2>
       <ul className='grid grid-cols-1 gap-4'>
         {groupResult.map((group) => (
-          <GroupCard key={group.groupname} match={true} group={group} />
-            // Legge til ett group criteria card
+          <GroupCard key={group.name} match={true} group={group} />
+          // Legge til ett group criteria card
         ))}
-
       </ul>
     </div>
   );

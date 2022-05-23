@@ -28,7 +28,6 @@ export class GroupEntity {
     this.isPrivate = isPrivate;
     this.users = members!;
     this.rules = rules;
-    this.requests = new Array<GroupRequestEntity>();
   }
   @PrimaryColumn()
   uuid: string;
@@ -57,5 +56,5 @@ export class GroupEntity {
   users: GroupMemberEntity[];
 
   @OneToMany(() => GroupRequestEntity, (gr) => gr.group)
-  requests: GroupRequestEntity[];
+  requests: GroupRequestEntity[] | undefined;
 }

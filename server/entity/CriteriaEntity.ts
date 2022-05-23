@@ -35,8 +35,6 @@ export class CriteriaEntity {
     this.location = location;
     if (subjects) {
       this.subjects = subjects;
-    } else {
-      this.subjects = new Array<SubjectEntity>();
     }
     this.school = school;
   }
@@ -74,7 +72,7 @@ export class CriteriaEntity {
   @ManyToMany(() => SubjectEntity)
   @JoinTable({ name: "criteria_subjects" })
   @JoinColumn({ name: "subject_uuid" })
-  subjects: SubjectEntity[];
+  subjects: SubjectEntity[] | undefined;
 
   @ManyToOne(() => SchoolEntity, (school) => school.criteriaCollection)
   @JoinColumn({ name: "school_uuid" })
