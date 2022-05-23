@@ -52,10 +52,11 @@ export default class GroupService implements IGroupService {
     if (admin != null) {
       groupEntity = newGroupEntityFromDto(group, admin);
       const { subjects, school } = await this.createOrFetchSubjectsAndSchool(
-          groupEntity.criteria.school,
-          groupEntity.criteria.subjects?
-
+        groupEntity.criteria.school,
+        groupEntity.criteria.subjects
       );
+      groupEntity.criteria.school = school;
+      groupEntity.criteria.subjects = subjects;
     } else {
       throw new HttpException("User not found", 404);
     }
@@ -191,6 +192,7 @@ export default class GroupService implements IGroupService {
         throw new HttpException("Database connection lost", 500);
       });
 
+    // TODO: finish this travesty
     // const groupEntity = await this.checkSubjectsAndSchool(group);
 
     return await this.groupRepo
@@ -468,8 +470,8 @@ export default class GroupService implements IGroupService {
   }
 
   private async createOrFetchSubjectsAndSchool(
-      school: SchoolEntity,
-      subjects: SubjectEntity[]
+    school: SchoolEntity,
+    subjects?: SubjectEntity[]
   ) {
     if (subjects) {
       subjects = await this.createOrFetchSubjects(subjects).catch(
