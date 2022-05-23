@@ -1,5 +1,6 @@
 import {useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
+import Button from "./shared/Button";
 
 export function EditGroupProfile() {
 
@@ -27,12 +28,12 @@ export function EditGroupProfile() {
     }
 
 
-    return <div>
-        <h2>Navn: {group.name}</h2>
+    return <div className='bg-white p-6 grid gap-4 rounded-standard max-w-2xl mx-auto text-dark-1'>
+        <h2>Navn: <span className="font-bold text-lg">{group.name}</span></h2>
         <h2>Bilde: </h2>
 
         <form onSubmit={handleSubmit}>
-            <label>Nytt gruppenavn:</label>
+            <label className="text-dark-3">Nytt gruppenavn:</label>
             <div className='mb-6'>
                 <input
                     type='text'
@@ -42,13 +43,17 @@ export function EditGroupProfile() {
 
                 />
             </div>
-            <div>
-                <label>Endre gruppebilde</label>
+            <div className="flex flex-col">
+                <label className="text-dark-3">Endre gruppebilde</label>
+                <br />
                 <input type="file"
                 value={file}
                 onChange={e => setFile(e.target.value)}/>
             </div>
-            <button>Endre</button>
+            <div className="lg:grid grid-cols-3 mt-6">
+                <Button className="lg:col-start-2">Endre</Button>
+            </div>
+            
         </form>
         <pre>{JSON.stringify({groupname, file})}</pre>
     </div>;
