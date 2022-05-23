@@ -18,13 +18,17 @@ export default class UserService {
           userDto.email,
           hash
         );
-        this.userRepo.save(userEntity);
+        try {
+          this.userRepo.save(userEntity);
+        } catch (e: any) {
+          if (e.code === "ER_DUP_ENTRY") {
+            throw new HttpException("User already exists", 409);
+          }
+          throw new HttpException("Something went wrong", 500);
+        }
       })
       .catch((e) => {
-        if (e.code === "ER_DUP_ENTRY") {
-          throw new HttpException("User already exists", 409);
-        }
-        throw new HttpException("Something went wrong", 500);
+        console.log(e);
       });
   }
 
