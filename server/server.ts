@@ -14,34 +14,18 @@ import { GroupRequestEntity } from "./entity/GroupRequestEntity";
 import { SchoolEntity } from "./entity/SchoolEntity";
 import { UserEntity } from "./entity/UserEntity";
 import { userDtoToEntity } from "./dto/utils/userMappers";
+import {repositories} from "./repositories";
 
 dotenv.config();
 const app = express();
-export const AppDataSource = new DataSource({
-  type: "mariadb",
-  host: process.env.DB_HOST, // hentes fra process.env
-  username: process.env.DB_USERNAME, // hentes fra process.env
-  password: process.env.DB_PASSWORD, // hentes fra process.env
-  database: process.env.DB_DATABASE, // hentes fra process.env,
-  synchronize: true,
-  entities: [
-    GroupEntity,
-    SubjectEntity,
-    ChatMessageEntity,
-    CriteriaEntity,
-    GroupMemberEntity,
-    GroupRequestEntity,
-    SchoolEntity,
-    UserEntity,
-  ],
-});
 
-AppDataSource.initialize()
-  .then(() => {
+const repo  = repositories;
+
+repo.then((repos) => {
     const server = app.listen(process.env.PORT || 8345, async () => {
       const schoolEntity = new SchoolEntity("HK");
-      // const schoolRepo = AppDataSource.getRepository(SchoolEntity);
-      // await schoolRepo.save(schoolEntity);
+      const schoolRepo = repos.schoolRepo;
+      await schoolRepo.save(schoolEntity);
       const user = new UserDto(
         "christian",
         "chgr007@egms.no",
@@ -49,7 +33,7 @@ AppDataSource.initialize()
         "a88493c3-263d-4aa6-808f-ace53f8e1eb7"
       );
       const userService = new UserService(
-        AppDataSource.getRepository(UserEntity)
+        repos.userRepo
       );
       //const res = await userService.addUser(user);
       //console.info(res);
