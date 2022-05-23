@@ -15,3 +15,16 @@ export class CriteriaDto {
     public uuid?: string
   ) {}
 }
+
+export class CriteriaUpdateDto {
+  constructor(
+    public gradeGoal?: GradeGoal,
+    public workFrequency?: WorkFrequency,
+    public language?: string,
+    public maxSize?: number,
+    public location?: string,
+    public subject?: string[],
+    public workType?: WorkType,
+    public school?: string
+  ) {}
+}

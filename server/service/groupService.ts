@@ -1,9 +1,7 @@
 import HttpException from "../util/httpException";
-import { groups } from "../__mocks__/mockData";
 import { SearchDTO } from "../dto/searchDTO";
 import { IGroupService, searchResult } from "./IGroupService";
 import { GroupDto } from "../dto/groupDto";
-import { UserDto } from "../dto/userDto";
 import { DeleteResult, Repository } from "typeorm";
 import { GroupEntity } from "../entity/GroupEntity";
 import { SubjectEntity } from "../entity/SubjectEntity";
@@ -18,7 +16,7 @@ import { SearchWeightValues } from "./enums/SearchWeightValues";
 import { WorkFrequency } from "../entity/enums/WorkFrequency";
 import { WorkType } from "../entity/enums/WorkType";
 import { SchoolEntity } from "../entity/SchoolEntity";
-import { GroupInDto } from "../dto/GroupInDto";
+import { GroupInDto, GroupOutDto, GroupUpdateDto } from "../dto/GroupInDto";
 import { UserOutDto } from "../dto/UserInDto";
 
 export default class GroupService implements IGroupService {
@@ -30,7 +28,7 @@ export default class GroupService implements IGroupService {
     private userRepo: Repository<UserEntity>
   ) {}
 
-  async fetchAllGroups(): Promise<GroupDto[]> {
+  async fetchAllGroups(): Promise<GroupOutDto[]> {
     return await this.groupRepo
       .find()
       .then((entities) => {
@@ -52,7 +50,12 @@ export default class GroupService implements IGroupService {
 
     let groupEntity: GroupEntity;
     if (admin != null) {
-      groupEntity = await this.createSubjectsAndSchool(group, admin); // litt hacky, trenger refactor
+      groupEntity = newGroupEntityFromDto(group, admin);
+      const { subjects, school } = await this.createOrFetchSubjectsAndSchool(
+          groupEntity.criteria.school,
+          groupEntity.criteria.subjects?
+
+      );
     } else {
       throw new HttpException("User not found", 404);
     }
@@ -65,7 +68,7 @@ export default class GroupService implements IGroupService {
       });
   }
 
-  async fetchGroupById(groupId: string): Promise<GroupDto> {
+  async fetchGroupById(groupId: string): Promise<GroupOutDto> {
     if (!groupId)
       throw new HttpException(
         "group_id request parameter must be specified",
@@ -82,7 +85,7 @@ export default class GroupService implements IGroupService {
       });
   }
 
-  async deleteMember(groupId: string, userId: string): Promise<GroupDto> {
+  async deleteMember(groupId: string, userId: string): Promise<GroupOutDto> {
     const { user, group } = await this.fetchUserAndGroup(userId, groupId).catch(
       (ex: HttpException) => {
         throw ex;
@@ -117,7 +120,7 @@ export default class GroupService implements IGroupService {
       });
   }
 
-  async addMember(groupId: string, userId: string): Promise<GroupDto> {
+  async addMember(groupId: string, userId: string): Promise<GroupOutDto> {
     const { user, group } = await this.fetchUserAndGroup(userId, groupId).catch(
       (ex: HttpException) => {
         throw ex;
@@ -171,14 +174,25 @@ export default class GroupService implements IGroupService {
     }
   }
 
-  async updateGroup(group: GroupDto): Promise<GroupDto> {
+  async updateGroup(group: GroupUpdateDto): Promise<GroupOutDto> {
     if (!group.uuid)
       throw new HttpException(
         "No group uuid found in body. Expected {\ngroup: groupName\n}",
         400
       );
 
-    const groupEntity = await this.checkSubjectsAndSchool(group);
+    const groupEntity = await this.groupRepo
+      .findOneBy({ uuid: group.uuid })
+      .then((it) => {
+        if (!it) throw new HttpException("Group not found", 404);
+        return it;
+      })
+      .catch(() => {
+        throw new HttpException("Database connection lost", 500);
+      });
+
+    // const groupEntity = await this.checkSubjectsAndSchool(group);
+
     return await this.groupRepo
       .save(groupEntity)
       .then((entity) => groupEntityToDto(entity))
@@ -213,12 +227,7 @@ export default class GroupService implements IGroupService {
 
     const tempResult: searchResult = {};
 
-    // kanskje bedre med vanlig for-loop pga effektivitet?
-    allGroups.forEach((group) => {
-      let score = 0;
-
-      //Karaktermål
-      // Burde være mulig å sette opp lavere poengsum om man er 1 karakter unna
+    function checkGradeGoal(group: GroupDto, score: number) {
       if (group.criteria.gradeGoal === searchDto.gradeGoal) {
         score =
           score +
@@ -226,8 +235,10 @@ export default class GroupService implements IGroupService {
             SearchWeightValues.GRADE_GOAL / SearchWeightValues.MAX / 100
           );
       }
+      return score;
+    }
 
-      // Arbeidsfrekvens
+    function checkWorkFrequency(group: GroupDto, score: number) {
       if (group.criteria.workFrequency === searchDto.workFrequency) {
         score =
           score +
@@ -245,8 +256,10 @@ export default class GroupService implements IGroupService {
           ) /
             2;
       }
+      return score;
+    }
 
-      // Arbeidsmetode
+    function checkWorkMethod(group: GroupDto, score: number) {
       if (group.criteria.workType === searchDto.workType) {
         score =
           score +
@@ -264,9 +277,10 @@ export default class GroupService implements IGroupService {
           ) /
             2;
       }
+      return score;
+    }
 
-      // Maks gruppestørrelse
-      // Foreløpig versjon, må være mer forseggjort
+    function checkSize(group: GroupDto, score: number) {
       if (group.criteria.maxSize === searchDto.maxSize) {
         score =
           score +
@@ -274,8 +288,10 @@ export default class GroupService implements IGroupService {
             SearchWeightValues.MAX_SIZE / SearchWeightValues.MAX / 100
           );
       }
+      return score;
+    }
 
-      // Språk
+    function checkLanguage(group: GroupDto, score: number) {
       if (group.criteria.language === searchDto.language) {
         score =
           score +
@@ -290,8 +306,10 @@ export default class GroupService implements IGroupService {
           ) /
             2;
       }
+      return score;
+    }
 
-      // Sted
+    function checkLocation(group: GroupDto, score: number) {
       if (group.criteria.location === searchDto.location) {
         score =
           score +
@@ -306,8 +324,10 @@ export default class GroupService implements IGroupService {
           ) /
             2;
       }
+      return score;
+    }
 
-      // Skole
+    function checkSchool(group: GroupDto, score: number) {
       if (group.criteria.school === searchDto.school) {
         score =
           score +
@@ -318,8 +338,10 @@ export default class GroupService implements IGroupService {
           Math.round(SearchWeightValues.SCHOOL / SearchWeightValues.MAX / 100) /
             2;
       }
+      return score;
+    }
 
-      // Emner
+    function checkSubjects(group: GroupDto, score: number) {
       if (searchDto.subject) {
         const scorePerSubject =
           Math.round(
@@ -333,6 +355,38 @@ export default class GroupService implements IGroupService {
           }
         });
       }
+      return score;
+    }
+
+    // kanskje bedre med vanlig for-loop pga effektivitet?
+    allGroups.forEach((group) => {
+      let score = 0;
+
+      //Karaktermål
+      // Burde være mulig å sette opp lavere poengsum om man er 1 karakter unna
+      score = checkGradeGoal(group, score);
+
+      // Arbeidsfrekvens
+      score = checkWorkFrequency(group, score);
+
+      // Arbeidsmetode
+      score = checkWorkMethod(group, score);
+
+      // Maks gruppestørrelse
+      // Foreløpig versjon, må være mer forseggjort
+      score = checkSize(group, score);
+
+      // Språk
+      score = checkLanguage(group, score);
+
+      // Sted
+      score = checkLocation(group, score);
+
+      // Skole
+      score = checkSchool(group, score);
+
+      // Emner
+      score = checkSubjects(group, score);
 
       // Tar høyde for avrundingsfeil
       if (score > 100) score = 100;
@@ -360,7 +414,7 @@ export default class GroupService implements IGroupService {
     return actualResult;
   }
 
-  private async checkSubjects(
+  private async createOrFetchSubjects(
     subjects: SubjectEntity[]
   ): Promise<SubjectEntity[]> {
     const checkedSubjects = new Array<SubjectEntity>();
@@ -413,33 +467,30 @@ export default class GroupService implements IGroupService {
     return { user, group };
   }
 
-  private async createSubjectsAndSchool(
-    groupInDto: GroupInDto,
-    admin: UserEntity
-  ): Promise<GroupEntity> {
-    const groupEntity = newGroupEntityFromDto(groupInDto, admin);
-    if (groupEntity.criteria.subjects) {
-      groupEntity.criteria.subjects = await this.checkSubjects(
-        groupEntity.criteria.subjects
-      ).catch((ex: HttpException) => {
-        throw ex;
-      });
+  private async createOrFetchSubjectsAndSchool(
+      school: SchoolEntity,
+      subjects: SubjectEntity[]
+  ) {
+    if (subjects) {
+      subjects = await this.createOrFetchSubjects(subjects).catch(
+        (ex: HttpException) => {
+          throw ex;
+        }
+      );
     }
-    groupEntity.criteria.school = await this.schoolRepo
-      .findOneByOrFail({ name: groupEntity.criteria.school.name })
+    school = await this.schoolRepo
+      .findOneByOrFail({ name: school.name })
       .then(async (foundSchool) => {
         if (!foundSchool) {
-          return this.groupRepo
-            .save(groupEntity.criteria.school)
-            .then((savedSchool) => {
-              return savedSchool;
-            });
+          return this.groupRepo.save(school).then((savedSchool) => {
+            return savedSchool;
+          });
         }
         return foundSchool;
       })
       .catch(() => {
         throw new HttpException("Database connection lost", 500);
       });
-    return groupEntity;
+    return { subjects, school };
   }
 }

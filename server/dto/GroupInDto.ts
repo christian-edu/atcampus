@@ -21,3 +21,13 @@ export class GroupOutDto {
     public rules?: string
   ) {}
 }
+
+export class GroupUpdateDto {
+  constructor(
+    public uuid: string,
+    public isPrivate?: boolean,
+    public name?: string,
+    public criteria?: CriteriaDto,
+    public rules?: string
+  ) {}
+}
