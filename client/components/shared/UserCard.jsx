@@ -10,7 +10,7 @@ import MatchRequest from './MatchRequest';
 import Modal from './Modal';
 import SearchRequest from './SearchRequest';
 import GroupUserSettings from './GroupUserSettings';
-import Button from './Button';
+//import Button from './Button';
 
 SearchRequest;
 
@@ -23,7 +23,7 @@ const UserCard = (props) => {
   // state for modal window
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
-  
+  /*
   function removeMember(){
       console.log(user.username + " removed")
       // Send a request to delete the user
@@ -34,14 +34,14 @@ const UserCard = (props) => {
       console.log("Admin roles given to " + user.username)
       //Send a request to make the user admin
   }
-  
+  */
 
   // function to toggle modal window
   const toggleModal = () =>
     setModalIsVisible((modalIsVisible) => !modalIsVisible);
 
   // dummy content for profile settings
-  const content = (
+  /*const content = (
     <div className='flex flex-col items-center bg-white text-dark-1 p-8 rounded text-center shadow-xl'>
       <Image group className='h-20 mb-4 -mt-16' />
       <h2 className='font-bold text-lg w-full border-b-2 pb-4 border-purple-1 mb-5'>
@@ -52,7 +52,7 @@ const UserCard = (props) => {
           <Button onClick={removeMember} className={'flex items-center gap-3 bg-red-500 hover:bg-red-400'}><TrashIcon className='h-5 w-5'/>Slett medlem</Button>
       </div>  
     </div>
-  );
+  );*/
 
   return (
     <>
@@ -60,7 +60,7 @@ const UserCard = (props) => {
       Here we want to only show this if the user is admin of the group*/}
       {modalIsVisible && props.edit && (
         <Modal onClick={toggleModal}>
-          {content}
+          <GroupUserSettings user={props.user}/>
         </Modal>
 
       )}

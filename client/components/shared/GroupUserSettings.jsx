@@ -3,8 +3,11 @@ import {
     TrashIcon
 } from '@heroicons/react/solid';
 import Image from './Image';
+import Button from './Button';
 
-const GroupUserSettings = () => {
+const GroupUserSettings = (props) => {
+
+  const { user } = props.user;
 
   function removeMember(){
     console.log(user.username + " removed")
