@@ -38,11 +38,13 @@ export function setProtectedRoutes(
   next: NextFunction
 ) {
   let isProtected = false;
-
+  protectedRoutes.push(new HttpPath("groups", "GET"));
+  protectedRoutes.push(new HttpPath("groups", "POST"));
+  protectedRoutes.push(new HttpPath("user", "GET"));
   for (const item of protectedRoutes) {
     console.log(item.path, item.method);
     if (
-      req.path.toLowerCase().startsWith(item.path.toLowerCase()) &&
+      req.path.toLowerCase().includes(item.path.toLowerCase()) &&
       req.method.toLowerCase() === item.method.toLowerCase()
     ) {
       isProtected = true;

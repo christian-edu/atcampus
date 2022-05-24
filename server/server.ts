@@ -9,7 +9,7 @@ import GroupService from "./service/groupService";
 import GroupRouter from "./controller/groupRouter";
 import AuthRouter from "./controller/authRouter";
 import cookieParser from "cookie-parser";
-import { verifyToken } from "./util/authUtils";
+import { setProtectedRoutes, verifyToken } from "./util/authUtils";
 import path from "path";
 import ChatService from "./service/chatService";
 import WebSocketServer from "./websockets/webSocketServer";
@@ -27,7 +27,7 @@ repo
       console.info("Connected to db ");
       const schoolEntity = new SchoolEntity("HK");
       const schoolRepo = repos.schoolRepo;
-      await schoolRepo.save(schoolEntity);
+      //await schoolRepo.save(schoolEntity);
       const user = new UserDto(
         "christian",
         "chgr007@egms.no",
@@ -58,6 +58,7 @@ repo
       app.use(express.json());
       app.use(cookieParser(process.env.COOKIE_SECRET));
       app.use(verifyToken);
+      app.use(setProtectedRoutes);
       app.use("/api/v1/groups", groupRoutes.fetchRoutes());
       app.use("/api/v1/user", userRouter.fetchRoutes());
       app.use(authRouter.fetchRoutes());

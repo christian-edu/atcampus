@@ -72,7 +72,6 @@ export default class UserService {
 
   public async getGroupsByUserId(userId: string): Promise<GroupOutDto[]> {
     let groups;
-    console.log("UserId from getGroupsByUserId", userId);
     try {
       groups = await this.groupRepo.find({
         where: {
