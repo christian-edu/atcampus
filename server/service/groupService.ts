@@ -35,8 +35,8 @@ export default class GroupService implements IGroupService {
           return groupEntityToDto(entity);
         });
       })
-      .catch(() => {
-        // TODO: skriv bedre feilmelding(er)
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -44,8 +44,8 @@ export default class GroupService implements IGroupService {
   async addGroup(group: GroupInDto, adminUuid: string): Promise<GroupOutDto> {
     const admin = await this.userRepo
       .findOneBy({ uuid: adminUuid })
-      .catch(() => {
-        // TODO: skriv bedre feilmelding(er)
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
 
@@ -55,7 +55,10 @@ export default class GroupService implements IGroupService {
       const { subjects, school } = await this.createOrFetchSubjectsAndSchool(
         groupEntity.criteria.school,
         groupEntity.criteria.subjects
-      );
+      ).catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
+        throw new HttpException("Database connection lost", 500);
+      });
       groupEntity.criteria.school = school;
       groupEntity.criteria.subjects = subjects;
     } else {
@@ -65,8 +68,8 @@ export default class GroupService implements IGroupService {
     return await this.groupRepo
       .save(groupEntity)
       .then((entity) => groupEntityToDto(entity))
-      .catch(() => {
-        // TODO: skriv bedre feilmelding(er)
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -83,16 +86,17 @@ export default class GroupService implements IGroupService {
         if (!entity) throw new HttpException("Group not found", 404);
         return groupEntityToDto(entity);
       })
-      .catch(() => {
-        // TODO: skriv bedre feilmelding(er)
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
   }
 
   async deleteMember(groupId: string, userId: string): Promise<GroupOutDto> {
     const { user, group } = await this.fetchUserAndGroup(userId, groupId).catch(
-      (ex: HttpException) => {
-        throw ex;
+      (ex) => {
+        if (ex instanceof HttpException) throw ex;
+        throw new HttpException("Database connection lost", 500);
       }
     );
 
@@ -104,7 +108,8 @@ export default class GroupService implements IGroupService {
       .then((response: DeleteResult) => {
         return response.affected;
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Deletion failed", 500);
       });
 
@@ -119,15 +124,17 @@ export default class GroupService implements IGroupService {
         }
         return groupEntityToDto(group);
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
   }
 
   async addMember(groupId: string, userId: string): Promise<GroupOutDto> {
     const { user, group } = await this.fetchUserAndGroup(userId, groupId).catch(
-      (ex: HttpException) => {
-        throw ex;
+      (ex) => {
+        if (ex instanceof HttpException) throw ex;
+        throw new HttpException("Database connection lost", 500);
       }
     );
 
@@ -141,7 +148,8 @@ export default class GroupService implements IGroupService {
       .then((gme: GroupMemberEntity) => {
         return groupEntityToDto(gme.group);
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -153,24 +161,31 @@ export default class GroupService implements IGroupService {
         400
       );
     const members = new Array<UserOutDto>();
-    await this.groupRepo.findOneBy({ uuid: groupId }).then(async (group) => {
-      if (!group) throw new HttpException("Group not found", 404);
+    await this.groupRepo
+      .findOneBy({ uuid: groupId })
+      .then(async (group) => {
+        if (!group) throw new HttpException("Group not found", 404);
 
-      await this.groupMemberRepo
-        .find({
-          where: { group },
-          relations: ["user"],
-        })
-        .then((it: GroupMemberEntity[]) => {
-          if (!it) throw new HttpException("Users not found", 404);
-          it.forEach((memberRow: GroupMemberEntity) => {
-            members.push(userEntityToDto(memberRow.user));
+        await this.groupMemberRepo
+          .find({
+            where: { group },
+            relations: ["user"],
+          })
+          .then((it: GroupMemberEntity[]) => {
+            if (!it) throw new HttpException("Users not found", 404);
+            it.forEach((memberRow: GroupMemberEntity) => {
+              members.push(userEntityToDto(memberRow.user));
+            });
+          })
+          .catch((ex) => {
+            if (ex instanceof HttpException) throw ex;
+            throw new HttpException("Database connection lost", 500);
           });
-        })
-        .catch(() => {
-          throw new HttpException("Database connection lost", 500);
-        });
-    });
+      })
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
+        throw new HttpException("Database connection lost", 500);
+      });
     if (members.length > 0) {
       return members;
     } else {
@@ -191,7 +206,8 @@ export default class GroupService implements IGroupService {
         if (!it) throw new HttpException("Group not found", 404);
         return it;
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
 
@@ -268,7 +284,10 @@ export default class GroupService implements IGroupService {
       if (!groupEntity.criteria.subjects) {
         groupEntity.criteria.subjects = await this.createOrFetchSubjects(
           subjectsToCheck
-        );
+        ).catch((ex) => {
+          if (ex instanceof HttpException) throw ex;
+          throw new HttpException("Database connection lost", 500);
+        });
       } else {
         const oldSubjects = groupEntity.criteria.subjects.map((subject) => {
           subject.name;
@@ -279,7 +298,10 @@ export default class GroupService implements IGroupService {
         ) {
           groupEntity.criteria.subjects = await this.createOrFetchSubjects(
             subjectsToCheck
-          );
+          ).catch((ex) => {
+            if (ex instanceof HttpException) throw ex;
+            throw new HttpException("Database connection lost", 500);
+          });
         }
       }
     }
@@ -287,7 +309,8 @@ export default class GroupService implements IGroupService {
     return await this.groupRepo
       .save(groupEntity)
       .then((entity) => groupEntityToDto(entity))
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -303,7 +326,8 @@ export default class GroupService implements IGroupService {
       .then((result) => {
         return result.affected;
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
     return false;
@@ -553,7 +577,8 @@ export default class GroupService implements IGroupService {
           }
           return foundSubject;
         })
-        .catch(() => {
+        .catch((ex) => {
+          if (ex instanceof HttpException) throw ex;
           throw new HttpException("Database connection lost", 500);
         });
       checkedSubjects.push(checked);
@@ -568,7 +593,8 @@ export default class GroupService implements IGroupService {
         if (it) return it;
         return null;
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
 
@@ -578,7 +604,8 @@ export default class GroupService implements IGroupService {
         if (it) return it;
         return null;
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
 
@@ -594,11 +621,10 @@ export default class GroupService implements IGroupService {
     subjects?: SubjectEntity[]
   ) {
     if (subjects) {
-      subjects = await this.createOrFetchSubjects(subjects).catch(
-        (ex: HttpException) => {
-          throw ex;
-        }
-      );
+      subjects = await this.createOrFetchSubjects(subjects).catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
+        throw new HttpException("Database connection lost", 500);
+      });
     }
     school = await this.createOrFetchSchool(school);
     return { subjects, school };
@@ -615,7 +641,8 @@ export default class GroupService implements IGroupService {
         }
         return foundSchool;
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
   }
