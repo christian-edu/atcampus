@@ -4,7 +4,7 @@ import { WorkType } from "../entity/enums/WorkType";
 
 export class CriteriaDto {
   constructor(
-    public gradeGoal: GradeGoal,
+    public gradeGoal?: GradeGoal,
     public workFrequency?: WorkFrequency,
     public language?: string,
     public maxSize?: number,
@@ -13,18 +13,5 @@ export class CriteriaDto {
     public workType?: WorkType,
     public school?: string,
     public uuid?: string
-  ) {}
-}
-
-export class CriteriaUpdateDto {
-  constructor(
-    public gradeGoal?: GradeGoal,
-    public workFrequency?: WorkFrequency,
-    public language?: string,
-    public maxSize?: number,
-    public location?: string,
-    public subject?: string[],
-    public workType?: WorkType,
-    public school?: string
   ) {}
 }
