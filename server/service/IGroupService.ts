@@ -1,4 +1,6 @@
-import { GroupOutDto } from "../dto/GroupInOutDto";
+import { GroupInDto, GroupOutDto } from "../dto/GroupInOutDto";
+import { UserOutDto } from "../dto/UserInDto";
+import { SearchDTO } from "../dto/searchDTO";
 
 export type searchResult = {
   [key: string]: {
@@ -7,23 +9,21 @@ export type searchResult = {
   };
 };
 export interface IGroupService {
-  // groupRepo: IGroupRepo;
-  //
-  // fetchAllGroups(): Promise<GroupDto[]>;
-  //
-  // addGroup(group: GroupDto): Promise<GroupDto>;
-  //
-  // fetchGroupById(groupId: string): Promise<GroupDto>;
-  //
-  // deleteMember(groupId: string, userId: string): Promise<GroupDto>;
-  //
-  // addMember(group: string, user: string): Promise<GroupDto>;
-  //
-  // fetchGroupMembers(groupId: string): Promise<UserDto[]>;
-  //
-  // updateGroup(group: GroupDto): Promise<GroupDto>;
-  //
-  // deleteGroup(group: string): Promise<boolean>;
-  //
-  // searchGroup(searchDto: SearchDTO): Promise<GroupDto[] | searchResult>;
+  fetchAllGroups(): Promise<GroupOutDto[]>;
+
+  addGroup(group: GroupInDto): Promise<GroupOutDto>;
+
+  fetchGroupById(groupId: string): Promise<GroupOutDto>;
+
+  deleteMember(groupId: string, userId: string): Promise<GroupOutDto>;
+
+  addMember(group: string, user: string): Promise<GroupOutDto>;
+
+  fetchGroupMembers(groupId: string): Promise<UserOutDto[]>;
+
+  updateGroup(group: GroupInDto): Promise<GroupOutDto>;
+
+  deleteGroup(group: string): Promise<boolean>;
+
+  searchGroup(searchDto: SearchDTO): Promise<GroupOutDto[] | searchResult>;
 }
