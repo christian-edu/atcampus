@@ -4,6 +4,7 @@ import { UserDto } from "../dto/userDto";
 import bcrypt from "bcrypt";
 import HttpException from "../util/httpException";
 import { SchoolEntity } from "../entity/SchoolEntity";
+import { userEntityToDto } from "../dto/utils/userMappers";
 
 export default class UserService {
   constructor(
@@ -52,7 +53,16 @@ export default class UserService {
   }
 
   public async findUserById(userId: string) {
-    return await this.userRepo.findOneBy({ uuid: userId });
+    // legge til DTO.
+    try {
+      const user = await this.userRepo.findOneBy({
+        uuid: userId,
+      });
+      if (!user) throw new HttpException("Could not get user", 400);
+      return userEntityToDto(user);
+    } catch (e) {
+      throw new HttpException("Something went wrong!", 500);
+    }
   }
 
   // getGroupsByUserId

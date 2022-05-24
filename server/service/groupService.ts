@@ -504,7 +504,7 @@ export default class GroupService implements IGroupService {
     await this.userRepo
       .findOneBy({ uuid: userId })
       .then((it: UserEntity | null) => {
-        if (it) user = it;
+        if (it) user = it as UserEntity;
       })
       .catch(() => {
         throw new HttpException("Database connection lost", 500);
