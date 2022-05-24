@@ -7,8 +7,8 @@ import { SchoolEntity } from "../entity/SchoolEntity";
 import { userEntityToDto } from "../dto/utils/userMappers";
 import { GroupEntity } from "../entity/GroupEntity";
 import { groupEntityToDto } from "../dto/utils/groupMappers";
-import { GroupOutDto } from "../dto/GroupInDto";
-import { UserOutDto } from "../dto/UserInDto";
+import { UserOutDto } from "../dto/UserInOutDto";
+import { GroupOutDto } from "../dto/GroupInOutDto";
 
 export default class UserService {
   constructor(

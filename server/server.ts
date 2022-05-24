@@ -62,8 +62,6 @@ repo
       app.use("/api/v1/user", userRouter.fetchRoutes());
       app.use(authRouter.fetchRoutes());
 
-      app.use(verifyToken);
-
       app.use(express.static("../client/dist"));
 
       app.use((req, res, next) => {
