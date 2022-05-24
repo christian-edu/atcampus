@@ -13,7 +13,7 @@ import { verifyToken } from "./util/authUtils";
 import path from "path";
 import ChatService from "./service/chatService";
 import WebSocketServer from "./websockets/webSocketServer";
-import AuthService from "./controller/authService";
+import AuthService from "./service/authService";
 
 dotenv.config();
 const app = express();

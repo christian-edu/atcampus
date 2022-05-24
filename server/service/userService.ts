@@ -5,11 +5,13 @@ import bcrypt from "bcrypt";
 import HttpException from "../util/httpException";
 import { SchoolEntity } from "../entity/SchoolEntity";
 import { userEntityToDto } from "../dto/utils/userMappers";
+import { GroupEntity } from "../entity/GroupEntity";
 
 export default class UserService {
   constructor(
     private userRepo: Repository<UserEntity>,
-    private schoolRepo: Repository<SchoolEntity>
+    private schoolRepo: Repository<SchoolEntity>,
+    private groupRepo: Repository<GroupEntity>
   ) {}
 
   public async addUser(userDto: UserDto) {
@@ -65,5 +67,16 @@ export default class UserService {
     }
   }
 
+  public async getGroupsByUserId(userId: string) {
+    try {
+      const groups = await this.groupRepo.find({
+        where: {
+          users: {
+            uuid: userId,
+          },
+        },
+      });
+    } catch (e) {}
+  }
   // getGroupsByUserId
 }

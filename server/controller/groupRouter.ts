@@ -43,8 +43,6 @@ export default class GroupRouter extends ServerRouter {
     router.delete("/", async (req, res) => {
       const { groupId } = req.body;
 
-      GroupRouter.extractGroupDtoFromRequest(req);
-
       try {
         res.json(await service.deleteGroup(groupId));
       } catch (e: unknown) {

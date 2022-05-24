@@ -1,7 +1,7 @@
 import { IRouter } from "express";
 import jwt from "jsonwebtoken";
 import { ServerRouter } from "./serverRouter";
-import IAuthService from "./IAuthService";
+import IAuthService from "../service/IAuthService";
 
 export default class AuthRouter extends ServerRouter {
   constructor(private authService: IAuthService, private router: IRouter) {
