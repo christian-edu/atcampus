@@ -18,7 +18,7 @@ export class GroupEntity {
     name: string,
     criteria: CriteriaEntity,
     isPrivate: boolean,
-    members: Array<GroupMemberEntity>,
+    members: GroupMemberEntity[],
     rules = "",
     uuid = uuidv4()
   ) {

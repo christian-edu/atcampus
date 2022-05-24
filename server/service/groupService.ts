@@ -143,13 +143,12 @@ export default class GroupService implements IGroupService {
 
     const newMember = new GroupMemberEntity();
     newMember.user = user;
-    newMember.group = group;
     newMember.is_admin = false;
 
     return await this.groupMemberRepo
       .save(newMember)
-      .then((gme: GroupMemberEntity) => {
-        return groupEntityToDto(gme.group);
+      .then(async (gme: GroupMemberEntity) => {
+        return groupEntityToDto(await gme.group);
       })
       .catch((ex) => {
         if (ex instanceof HttpException) throw ex;
