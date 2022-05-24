@@ -29,7 +29,7 @@ export class UserEntity {
     this.password = password;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.school = school;
+    //this.school = school;
   }
 
   @PrimaryColumn()
@@ -57,9 +57,9 @@ export class UserEntity {
   @Column({ name: "last_name" })
   lastName: string;
 
-  @ManyToOne(() => SchoolEntity, (school) => school.users, { eager: true })
-  @JoinColumn({ name: "school_uuid" })
-  school: SchoolEntity;
+  // @ManyToOne(() => SchoolEntity, (school) => school.users, { eager: true })
+  // @JoinColumn({ name: "school_uuid" })
+  // school: SchoolEntity;
 
   @OneToMany(() => GroupMemberEntity, (gm) => gm.user, { lazy: true })
   groups: Promise<GroupMemberEntity[]> | undefined;

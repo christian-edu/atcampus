@@ -24,6 +24,6 @@ export class SchoolEntity {
   })
   criteriaCollection: CriteriaEntity[] | undefined;
 
-  @OneToMany(() => UserEntity, (user) => user.school, { lazy: true })
-  users: UserEntity[] | undefined;
+  // @OneToMany(() => UserEntity, (user) => user.school, { lazy: true })
+  // users: UserEntity[] | undefined;
 }

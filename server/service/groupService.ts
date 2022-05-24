@@ -18,7 +18,6 @@ import { GroupInDto, GroupOutDto } from "../dto/GroupInOutDto";
 import { UserOutDto } from "../dto/UserInOutDto";
 import { CriteriaDto } from "../dto/criteriaDto";
 import { MaxSize } from "../entity/enums/MaxSize";
-import { where } from "sequelize";
 
 export default class GroupService implements IGroupService {
   constructor(
