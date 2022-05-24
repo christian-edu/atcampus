@@ -9,7 +9,7 @@ export class CriteriaDto {
     public language?: string,
     public maxSize?: number,
     public location?: string,
-    public subject?: string[],
+    public subjects?: string[],
     public workType?: WorkType,
     public school?: string,
     public uuid?: string

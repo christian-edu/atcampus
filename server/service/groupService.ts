@@ -16,7 +16,7 @@ import { SearchWeightValues } from "./enums/SearchWeightValues";
 import { WorkFrequency } from "../entity/enums/WorkFrequency";
 import { WorkType } from "../entity/enums/WorkType";
 import { SchoolEntity } from "../entity/SchoolEntity";
-import { GroupInDto, GroupOutDto, GroupUpdateDto } from "../dto/GroupInDto";
+import { GroupInDto, GroupOutDto } from "../dto/GroupInDto";
 import { UserOutDto } from "../dto/UserInDto";
 
 export default class GroupService implements IGroupService {
@@ -250,6 +250,38 @@ export default class GroupService implements IGroupService {
       groupEntity.criteria.work_type = group.criteria.workType;
     }
 
+    if (
+      group.criteria.school &&
+      group.criteria.school !== groupEntity.criteria.school.name
+    ) {
+      groupEntity.criteria.school = await this.createOrFetchSchool(
+        new SchoolEntity(group.criteria.school)
+      );
+    }
+
+    if (group.criteria.subjects) {
+      const subjectsToCheck = group.criteria.subjects.map((subject) => {
+        return new SubjectEntity(subject);
+      });
+      if (!groupEntity.criteria.subjects) {
+        groupEntity.criteria.subjects = await this.createOrFetchSubjects(
+          subjectsToCheck
+        );
+      } else {
+        const oldSubjects = groupEntity.criteria.subjects.map((subject) => {
+          subject.name;
+        });
+        if (
+          group.criteria.subjects.sort().join(",") !==
+          oldSubjects.sort().join(",")
+        ) {
+          groupEntity.criteria.subjects = await this.createOrFetchSubjects(
+            subjectsToCheck
+          );
+        }
+      }
+    }
+
     return await this.groupRepo
       .save(groupEntity)
       .then((entity) => groupEntityToDto(entity))
@@ -405,8 +437,8 @@ export default class GroupService implements IGroupService {
             SearchWeightValues.SUBJECTS / SearchWeightValues.MAX / 100
           ) / searchDto.subject?.length;
         searchDto.subject.forEach((sub) => {
-          if (group.criteria.subject) {
-            if (group.criteria.subject.includes(sub)) {
+          if (group.criteria.subjects) {
+            if (group.criteria.subjects.includes(sub)) {
               score = score + scorePerSubject;
             }
           }
@@ -478,7 +510,7 @@ export default class GroupService implements IGroupService {
 
     for (let i = 0; i < subjects.length; i++) {
       const checked = await this.subjectRepo
-        .findOneByOrFail({ name: subjects[i].name })
+        .findOneBy({ name: subjects[i].name })
         .then(async (foundSubject) => {
           if (!foundSubject) {
             return await this.subjectRepo
@@ -535,8 +567,13 @@ export default class GroupService implements IGroupService {
         }
       );
     }
-    school = await this.schoolRepo
-      .findOneByOrFail({ name: school.name })
+    school = await this.createOrFetchSchool(school);
+    return { subjects, school };
+  }
+
+  private async createOrFetchSchool(school: SchoolEntity) {
+    return await this.schoolRepo
+      .findOneBy({ name: school.name })
       .then(async (foundSchool) => {
         if (!foundSchool) {
           return this.groupRepo.save(school).then((savedSchool) => {
@@ -548,6 +585,5 @@ export default class GroupService implements IGroupService {
       .catch(() => {
         throw new HttpException("Database connection lost", 500);
       });
-    return { subjects, school };
   }
 }
