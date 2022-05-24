@@ -19,7 +19,9 @@ export default class UserRouter extends ServerRouter {
 
     this.router.get("/groups", async (req, res) => {
       try {
-        res.json(await this.userService.getGroupsByUserId(req.userId));
+        const groups = await this.userService.getGroupsByUserId(req.userId);
+        console.log(groups);
+        res.json(groups);
       } catch (e) {
         this.sendError(res, e);
       }

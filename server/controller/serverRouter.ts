@@ -5,6 +5,7 @@ export abstract class ServerRouter {
   sendError(res: Response, e: unknown) {
     if (!(e instanceof HttpException)) {
       res.status(500);
+      console.error(e);
       res.send("Something went wrong!");
       return;
     }
