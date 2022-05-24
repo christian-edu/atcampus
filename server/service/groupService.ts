@@ -1,7 +1,6 @@
 import HttpException from "../util/httpException";
 import { SearchDTO } from "../dto/searchDTO";
 import { IGroupService, searchResult } from "./IGroupService";
-import { GroupDto } from "../dto/groupDto";
 import { DeleteResult, Repository } from "typeorm";
 import { GroupEntity } from "../entity/GroupEntity";
 import { SubjectEntity } from "../entity/SubjectEntity";
@@ -16,7 +15,7 @@ import { SearchWeightValues } from "./enums/SearchWeightValues";
 import { WorkFrequency } from "../entity/enums/WorkFrequency";
 import { WorkType } from "../entity/enums/WorkType";
 import { SchoolEntity } from "../entity/SchoolEntity";
-import { GroupInDto, GroupOutDto } from "../dto/GroupInDto";
+import { GroupInDto, GroupOutDto } from "../dto/GroupInOutDto";
 import { UserOutDto } from "../dto/UserInDto";
 
 export default class GroupService implements IGroupService {
@@ -41,7 +40,7 @@ export default class GroupService implements IGroupService {
       });
   }
 
-  async addGroup(group: GroupInDto): Promise<GroupDto> {
+  async addGroup(group: GroupInDto): Promise<GroupOutDto> {
     const admin = await this.userRepo
       .findOneBy({ uuid: group.admin_uuid })
       .catch(() => {
@@ -316,7 +315,7 @@ export default class GroupService implements IGroupService {
 
     const tempResult: searchResult = {};
 
-    function checkGradeGoal(group: GroupDto, score: number) {
+    function checkGradeGoal(group: GroupOutDto, score: number) {
       if (group.criteria.gradeGoal === searchDto.gradeGoal) {
         score =
           score +
@@ -327,7 +326,7 @@ export default class GroupService implements IGroupService {
       return score;
     }
 
-    function checkWorkFrequency(group: GroupDto, score: number) {
+    function checkWorkFrequency(group: GroupOutDto, score: number) {
       if (group.criteria.workFrequency === searchDto.workFrequency) {
         score =
           score +
@@ -348,7 +347,7 @@ export default class GroupService implements IGroupService {
       return score;
     }
 
-    function checkWorkMethod(group: GroupDto, score: number) {
+    function checkWorkMethod(group: GroupOutDto, score: number) {
       if (group.criteria.workType === searchDto.workType) {
         score =
           score +
@@ -369,7 +368,7 @@ export default class GroupService implements IGroupService {
       return score;
     }
 
-    function checkSize(group: GroupDto, score: number) {
+    function checkSize(group: GroupOutDto, score: number) {
       if (group.criteria.maxSize === searchDto.maxSize) {
         score =
           score +
@@ -380,7 +379,7 @@ export default class GroupService implements IGroupService {
       return score;
     }
 
-    function checkLanguage(group: GroupDto, score: number) {
+    function checkLanguage(group: GroupOutDto, score: number) {
       if (group.criteria.language === searchDto.language) {
         score =
           score +
@@ -398,7 +397,7 @@ export default class GroupService implements IGroupService {
       return score;
     }
 
-    function checkLocation(group: GroupDto, score: number) {
+    function checkLocation(group: GroupOutDto, score: number) {
       if (group.criteria.location === searchDto.location) {
         score =
           score +
@@ -416,7 +415,7 @@ export default class GroupService implements IGroupService {
       return score;
     }
 
-    function checkSchool(group: GroupDto, score: number) {
+    function checkSchool(group: GroupOutDto, score: number) {
       if (group.criteria.school === searchDto.school) {
         score =
           score +
@@ -430,7 +429,7 @@ export default class GroupService implements IGroupService {
       return score;
     }
 
-    function checkSubjects(group: GroupDto, score: number) {
+    function checkSubjects(group: GroupOutDto, score: number) {
       if (searchDto.subject) {
         const scorePerSubject =
           Math.round(

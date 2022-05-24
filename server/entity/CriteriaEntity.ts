@@ -17,10 +17,10 @@ import { v4 as uuidv4 } from "uuid";
 @Entity()
 export class CriteriaEntity {
   constructor(
-    gradeGoal: GradeGoal,
+    gradeGoal = GradeGoal.PASS,
     workFrequency = WorkFrequency.ANY,
     workType = WorkType.ANY,
-    maxSize = 255,
+    maxSize = 8,
     language = "",
     location = "",
     school = new SchoolEntity(),

@@ -1,8 +1,8 @@
-import { GroupDto } from "../dto/groupDto";
+import { GroupOutDto } from "../dto/GroupInOutDto";
 
 export type searchResult = {
   [key: string]: {
-    group: GroupDto;
+    group: GroupOutDto;
     score: number;
   };
 };

@@ -2,7 +2,7 @@ import { GroupEntity } from "../../entity/GroupEntity";
 import { GroupDto } from "../groupDto";
 import { criteriaDtoToEntity, criteriaEntityToDto } from "./criteriaMappers";
 import { memberEntityToDto_user } from "./memberMappers";
-import { GroupInDto, GroupOutDto } from "../GroupInDto";
+import { GroupInDto, GroupOutDto } from "../GroupInOutDto";
 import { UserEntity } from "../../entity/UserEntity";
 import { GroupMemberEntity } from "../../entity/GroupMemberEntity";
 import { v4 as uuidv4 } from "uuid";
