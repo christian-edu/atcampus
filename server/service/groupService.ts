@@ -529,28 +529,29 @@ export default class GroupService implements IGroupService {
   }
 
   private async fetchUserAndGroup(userId: string, groupId: string) {
-    let user: UserEntity | null = null;
-    let group: GroupEntity | null = null;
-
-    await this.userRepo
+    const user = await this.userRepo
       .findOneBy({ uuid: userId })
-      .then((it: UserEntity | null) => {
-        if (it) user = it;
+      .then((it) => {
+        if (it) return it;
+        return null;
       })
       .catch(() => {
         throw new HttpException("Database connection lost", 500);
       });
-    await this.groupRepo
+
+    const group = await this.groupRepo
       .findOneBy({ uuid: groupId })
       .then((it) => {
-        if (it) group = it;
+        if (it) return it;
+        return null;
       })
       .catch(() => {
         throw new HttpException("Database connection lost", 500);
       });
 
-    if (!user || !group)
+    if (!user || !group) {
       throw new HttpException("User or group not found", 404);
+    }
 
     return { user, group };
   }
