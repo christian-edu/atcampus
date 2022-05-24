@@ -16,7 +16,7 @@ const GroupMembers = () => {
         ))}
       </ul>
       <div className='grid grid-cols-1 md:grid-cols-3'>
-        <Button to='/group/members/searchUser' className="md:col-start-2">+ Legg til medlem</Button>
+        <Button to='/groups/specific/members/searchUser' className="md:col-start-2">+ Legg til medlem</Button>
       </div>
     </div>
   );
