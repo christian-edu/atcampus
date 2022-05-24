@@ -12,20 +12,20 @@ export default class GroupRouter extends ServerRouter {
 
   public fetchRoutes() {
     const router = this.router;
-    const service = this.groupService;
+
     router.get("/", async (req, res, next) => {
       const { group_id } = req?.query;
       if (group_id) {
         await this.fetchGroupById(group_id as string, req.userId, res);
         return;
       }
-      await this.fetchAllGroups(res, service);
+      await this.fetchAllGroups(res);
     });
 
     router.post("/", async (req, res) => {
       const newGroup = GroupRouter.extractGroupDtoFromRequest(req);
       try {
-        res.json(await service.addGroup(newGroup));
+        res.json(await this.groupService.addGroup(newGroup));
       } catch (e: unknown) {
         this.sendError(res, e);
       }
@@ -34,7 +34,7 @@ export default class GroupRouter extends ServerRouter {
     router.patch("/", async (req, res) => {
       const group = GroupRouter.extractGroupDtoFromRequest(req);
       try {
-        res.json(await service.updateGroup(group));
+        res.json(await this.groupService.updateGroup(group));
       } catch (e: unknown) {
         this.sendError(res, e);
       }
@@ -44,7 +44,7 @@ export default class GroupRouter extends ServerRouter {
       const { groupId } = req.body;
 
       try {
-        res.json(await service.deleteGroup(groupId));
+        res.json(await this.groupService.deleteGroup(groupId));
       } catch (e: unknown) {
         console.log(e);
         this.sendError(res, e as HttpException);
@@ -55,7 +55,7 @@ export default class GroupRouter extends ServerRouter {
     router.get("/member", async (req, res) => {
       const { group_id } = req?.query;
       try {
-        res.json(await service.fetchGroupMembers(group_id as string));
+        res.json(await this.groupService.fetchGroupMembers(group_id as string));
       } catch (e: unknown) {
         this.sendError(res, e);
       }
@@ -64,7 +64,7 @@ export default class GroupRouter extends ServerRouter {
       const { groupId, userId } = req?.body;
 
       try {
-        const result = await service.deleteMember(userId, groupId);
+        const result = await this.groupService.deleteMember(userId, groupId);
         if (result) res.sendStatus(200);
       } catch (e: unknown) {
         this.sendError(res, e);
@@ -75,7 +75,7 @@ export default class GroupRouter extends ServerRouter {
       const { group, user } = req?.body;
       console.log(req?.body);
       try {
-        res.json(await service.addMember(group, user));
+        res.json(await this.groupService.addMember(group, user));
       } catch (e: unknown) {
         this.sendError(res, e);
       }
@@ -110,7 +110,7 @@ export default class GroupRouter extends ServerRouter {
       const searchDto = extractSearchDtoFromRequest(req);
 
       try {
-        res.json(await service.searchGroup(searchDto));
+        res.json(await this.groupService.searchGroup(searchDto));
       } catch (e: unknown) {
         this.sendError(res, e);
       }
@@ -132,9 +132,9 @@ export default class GroupRouter extends ServerRouter {
     }
   }
 
-  private async fetchAllGroups(res: Response, service: IGroupService) {
+  private async fetchAllGroups(res: Response) {
     try {
-      res.json(await service.fetchAllGroups());
+      res.json(await this.groupService.fetchAllGroups());
     } catch (e: unknown) {
       console.log(e);
       this.sendError(res, e);

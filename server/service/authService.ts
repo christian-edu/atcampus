@@ -4,7 +4,9 @@ import HttpException from "../util/httpException";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import IAuthService from "./IAuthService";
+import dotenv from "dotenv";
 
+dotenv.config();
 export default class AuthService implements IAuthService {
   constructor(private userRepo: Repository<UserEntity>) {}
 
@@ -22,17 +24,13 @@ export default class AuthService implements IAuthService {
       const userFromDb = await this.userRepo.findOne({
         where: [{ userName }, { email }],
       });
-
+      console.log(userFromDb);
       if (!userFromDb)
         throw new HttpException("Details provided did not match any user", 400);
 
       const user = userFromDb as UserEntity;
-      const hash = await bcrypt.hash(
-        password,
-        parseInt(process.env.SALT_ROUNDS!)
-      );
-
-      if (hash !== user.password)
+      const passwordsMatches = await bcrypt.compare(password, user.password);
+      if (!passwordsMatches)
         throw new HttpException("Details provided did not match any user", 400);
 
       return AuthService.generateToken(user);

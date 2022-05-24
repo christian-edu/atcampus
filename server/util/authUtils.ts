@@ -7,15 +7,18 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     next();
     return;
   }
-  const { auth_token } = req.cookies;
-
+  const { auth_token } = req.signedCookies;
+  console.log("Checking token");
   if (!auth_token) {
     next();
     return;
   }
+  console.log("Has auth token!");
   try {
     const verifiedToken = jwt.verify(auth_token, process.env.JWT_KEY as string);
     req.userId = (verifiedToken as JwtPayload)?.userId;
+    console.log(req.userId);
+    next();
   } catch (e) {
     res.status(401);
     res.send();

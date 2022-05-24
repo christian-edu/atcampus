@@ -6,6 +6,9 @@ import HttpException from "../util/httpException";
 import { SchoolEntity } from "../entity/SchoolEntity";
 import { userEntityToDto } from "../dto/utils/userMappers";
 import { GroupEntity } from "../entity/GroupEntity";
+import { groupEntityToDto } from "../dto/utils/groupMappers";
+import { GroupOutDto } from "../dto/GroupInDto";
+import { UserOutDto } from "../dto/UserInDto";
 
 export default class UserService {
   constructor(
@@ -28,7 +31,7 @@ export default class UserService {
           const user = this.mapUserEntity(userDto, hash, schoolEntity!);
 
           try {
-            return await this.userRepo.save(user);
+            return userEntityToDto(await this.userRepo.save(user));
           } catch (e: any) {
             if (e.code === "ER_DUP_ENTRY") {
               throw new HttpException("User already exists", 409);
@@ -54,29 +57,36 @@ export default class UserService {
     );
   }
 
-  public async findUserById(userId: string) {
-    // legge til DTO.
+  public async findUserById(userId: string): Promise<UserOutDto> {
+    let user;
     try {
-      const user = await this.userRepo.findOneBy({
+      user = await this.userRepo.findOneBy({
         uuid: userId,
       });
-      if (!user) throw new HttpException("Could not get user", 400);
-      return userEntityToDto(user);
     } catch (e) {
       throw new HttpException("Something went wrong!", 500);
     }
+    if (!user) throw new HttpException("Could not get user", 204);
+    return userEntityToDto(user);
   }
 
-  public async getGroupsByUserId(userId: string) {
+  public async getGroupsByUserId(userId: string): Promise<GroupOutDto[]> {
+    let groups;
+    console.log("UserId from getGroupsByUserId", userId);
     try {
-      const groups = await this.groupRepo.find({
+      groups = await this.groupRepo.find({
         where: {
           users: {
             uuid: userId,
           },
         },
       });
-    } catch (e) {}
+    } catch (e) {
+      throw new HttpException("Something went wrong!", 500);
+    }
+    console.log(groups);
+    if (!groups || groups.length === 0)
+      throw new HttpException("No groups found", 204);
+    return groups.map((group) => groupEntityToDto(group));
   }
-  // getGroupsByUserId
 }
