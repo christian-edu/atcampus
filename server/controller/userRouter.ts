@@ -1,16 +1,29 @@
 import UserService from "../service/userService";
 import { IRouter } from "express";
 import HttpException from "../util/httpException";
+import { ServerRouter } from "./serverRouter";
 
-export default class UserRouter {
-  constructor(private userService: UserService, private router: IRouter) {}
+export default class UserRouter extends ServerRouter {
+  constructor(private userService: UserService, private router: IRouter) {
+    super();
+  }
 
-  public getRoutes() {
+  public fetchRoutes() {
     this.router.get("/", async (req, res) => {
       try {
-        return this.userService.findUserById(req.userId);
+        res.json(await this.userService.findUserById(req.userId));
       } catch (e) {
-        throw new HttpException("Something went wrong!", 500);
+        this.sendError(res, e);
+      }
+    });
+
+    this.router.get("/groups", async (req, res) => {
+      try {
+        const groups = await this.userService.getGroupsByUserId(req.userId);
+        console.log(groups);
+        res.json(groups);
+      } catch (e) {
+        this.sendError(res, e);
       }
     });
 

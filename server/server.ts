@@ -9,11 +9,12 @@ import GroupService from "./service/groupService";
 import GroupRouter from "./controller/groupRouter";
 import AuthRouter from "./controller/authRouter";
 import cookieParser from "cookie-parser";
-import { verifyToken } from "./util/authUtils";
+import { setProtectedRoutes, verifyToken } from "./util/authUtils";
 import path from "path";
 import ChatService from "./service/chatService";
 import WebSocketServer from "./websockets/webSocketServer";
 import AuthService from "./service/authService";
+import UserRouter from "./controller/userRouter";
 
 dotenv.config();
 const app = express();
@@ -26,20 +27,20 @@ repo
       console.info("Connected to db ");
       const schoolEntity = new SchoolEntity("HK");
       const schoolRepo = repos.schoolRepo;
-      await schoolRepo.save(schoolEntity);
+      //await schoolRepo.save(schoolEntity);
       const user = new UserDto(
         "christian",
         "chgr007@egms.no",
         "pirate",
-        "a88493c3-263d-4aa6-808f-ace53f8e1eb7"
+        "fb67adb7-f1e8-48b2-874c-1b9464815ac2"
       );
       const userService = new UserService(
         repos.userRepo,
-        schoolRepo,
+        repos.schoolRepo,
         repos.groupRepo
       );
-      const res = await userService.addUser(user);
-      console.info(res);
+      //const res = await userService.addUser(user);
+      //console.info(res);
       const groupService = new GroupService(
         repos.groupRepo,
         repos.groupMemberRepo,
@@ -53,13 +54,14 @@ repo
         express.Router()
       );
 
+      const userRouter = new UserRouter(userService, express.Router());
       app.use(express.json());
-      app.use(cookieParser(process.env.COOKIE_SECRET || "SuperSecret"));
-      app.use("/api/v1/groups", groupRoutes.fetchRoutes());
-
-      app.use(authRouter.fetchRoutes());
-
+      app.use(cookieParser(process.env.COOKIE_SECRET));
       app.use(verifyToken);
+      app.use(setProtectedRoutes);
+      app.use("/api/v1/groups", groupRoutes.fetchRoutes());
+      app.use("/api/v1/user", userRouter.fetchRoutes());
+      app.use(authRouter.fetchRoutes());
 
       app.use(express.static("../client/dist"));
 

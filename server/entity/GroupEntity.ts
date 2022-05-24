@@ -48,11 +48,11 @@ export class GroupEntity {
   })
   isPrivate: boolean;
 
-  @OneToOne(() => CriteriaEntity)
+  @OneToOne(() => CriteriaEntity, { eager: true })
   @JoinColumn({ name: "criteria_uuid" })
   criteria: CriteriaEntity;
 
-  @OneToMany(() => GroupMemberEntity, (gm) => gm.group)
+  @OneToMany(() => GroupMemberEntity, (gm) => gm.group, { eager: true })
   users: GroupMemberEntity[];
 
   @OneToMany(() => GroupRequestEntity, (gr) => gr.group)
