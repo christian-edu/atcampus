@@ -35,7 +35,8 @@ export default class AuthService implements IAuthService {
 
       return AuthService.generateToken(user);
     } catch (e) {
-      throw new HttpException("Database connection lost", 500);
+      console.log(e);
+      throw e;
     }
   }
 

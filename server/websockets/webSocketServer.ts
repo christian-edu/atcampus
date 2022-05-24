@@ -3,6 +3,7 @@ import { Server } from "http";
 import dotenv from "dotenv";
 import ChatService from "../service/chatService";
 import { ChatMessageEntity } from "../entity/ChatMessageEntity";
+import cookieParser from "cookie-parser";
 
 const sockets = new Map<string, Map<string, WebSocket>>();
 dotenv.config();
@@ -12,8 +13,9 @@ export default (expressServer: Server, chatService: ChatService) => {
   //https://cheatcode.co/tutorials/how-to-set-up-a-websocket-server-with-node-js-and-express
   //https://github.com/websockets/ws/blob/master/doc/ws.md#class-websocket
   expressServer.on("upgrade", (request, socket, head) => {
+    //  request.
     // Authentication goes here!
-    console.info("On upgrade");
+    // console.info("On upgrade");
     // const cookie = request.headers.cookie;
     // if (!cookie) {
     //   socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
@@ -30,7 +32,7 @@ export default (expressServer: Server, chatService: ChatService) => {
     //   decodeURIComponent(sessionCookie!),
     //   process.env.COOKIE_SECRET as string
     // );
-
+    // console.log(signedCookie);
     // TODO: Get user from DB
     // Check group membership
     // If member from URL query params checks out, push socket to map Map<GroupID, Map<UserId, Socket>> should do the trick?
