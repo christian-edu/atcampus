@@ -22,7 +22,7 @@ export default (expressServer: Server, chatService: ChatService) => {
     //
     // const sessionCookie = cookie
     //   ?.split("; ")
-    //   ?.find((c: string) => c.startsWith("jwt"))
+    //   ?.find((c: string) => c.startsWith("auth_token"))
     //   ?.split("=")[1];
     //
     // const signedCookie = cookieParser.signedCookie(

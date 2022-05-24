@@ -14,10 +14,9 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     return;
   }
   try {
-    const verifiedToken = jwt.verify(auth_token, process.env.JWT_KEY || "aaaa");
+    const verifiedToken = jwt.verify(auth_token, process.env.JWT_KEY as string);
     req.userId = (verifiedToken as JwtPayload)?.userId;
   } catch (e) {
-    console.error("Token not valid!");
     res.status(401);
     res.send();
   }
