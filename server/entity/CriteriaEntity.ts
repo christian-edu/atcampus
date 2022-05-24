@@ -13,6 +13,7 @@ import { WorkType } from "./enums/WorkType";
 import { SubjectEntity } from "./SubjectEntity";
 import { SchoolEntity } from "./SchoolEntity";
 import { v4 as uuidv4 } from "uuid";
+import { MaxSize } from "./enums/MaxSize";
 
 @Entity()
 export class CriteriaEntity {
@@ -20,7 +21,7 @@ export class CriteriaEntity {
     gradeGoal = GradeGoal.PASS,
     workFrequency = WorkFrequency.ANY,
     workType = WorkType.ANY,
-    maxSize = 8,
+    maxSize = MaxSize.ANY,
     language = "",
     location = "",
     school = new SchoolEntity(),
@@ -60,8 +61,11 @@ export class CriteriaEntity {
   })
   work_type: WorkType;
 
-  @Column()
-  max_size: number;
+  @Column({
+    type: "enum",
+    enum: MaxSize,
+  })
+  max_size: MaxSize;
 
   @Column()
   language: string;

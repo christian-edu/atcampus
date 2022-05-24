@@ -1,11 +1,9 @@
 import { GroupEntity } from "../../entity/GroupEntity";
-import { GroupDto } from "../groupDto";
 import { criteriaDtoToEntity, criteriaEntityToDto } from "./criteriaMappers";
 import { memberEntityToDto_user } from "./memberMappers";
 import { GroupInDto, GroupOutDto } from "../GroupInOutDto";
 import { UserEntity } from "../../entity/UserEntity";
 import { GroupMemberEntity } from "../../entity/GroupMemberEntity";
-import { v4 as uuidv4 } from "uuid";
 
 export function groupEntityToDto(entity: GroupEntity): GroupOutDto {
   const members = entity.users.map((entity) => {
@@ -35,24 +33,7 @@ export function newGroupEntityFromDto(dto: GroupInDto, admin: UserEntity) {
     dto.rules
   );
 
-  // newGroup.uuid = uuidv4()
-
   initialMember.group = newGroup;
 
   return newGroup;
 }
-
-// export function groupDtoToEntity(dto: GroupDto): GroupEntity {
-//   const members = dto.groupMembers.map((member) => {
-//     return memberDtoToEntity(member);
-//   });
-//
-//   return new GroupEntity(
-//     dto.name,
-//     criteriaDtoToEntity(dto.criteria),
-//     dto.isPrivate,
-//     members,
-//     dto.rules,
-//     dto.uuid
-//   );
-// }

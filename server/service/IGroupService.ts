@@ -1,6 +1,6 @@
 import { GroupInDto, GroupOutDto } from "../dto/GroupInOutDto";
-import { UserOutDto } from "../dto/UserInDto";
-import { SearchDTO } from "../dto/searchDTO";
+import { UserOutDto } from "../dto/UserInOutDto";
+import { CriteriaDto } from "../dto/criteriaDto";
 
 export type searchResult = {
   [key: string]: {
@@ -25,5 +25,5 @@ export interface IGroupService {
 
   deleteGroup(group: string): Promise<boolean>;
 
-  searchGroup(searchDto: SearchDTO): Promise<GroupOutDto[] | searchResult>;
+  searchGroup(searchDto: CriteriaDto): Promise<GroupOutDto[] | searchResult>;
 }

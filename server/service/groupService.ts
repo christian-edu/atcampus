@@ -1,5 +1,4 @@
 import HttpException from "../util/httpException";
-import { SearchDTO } from "../dto/searchDTO";
 import { IGroupService, searchResult } from "./IGroupService";
 import { DeleteResult, Repository } from "typeorm";
 import { GroupEntity } from "../entity/GroupEntity";
@@ -16,7 +15,8 @@ import { WorkFrequency } from "../entity/enums/WorkFrequency";
 import { WorkType } from "../entity/enums/WorkType";
 import { SchoolEntity } from "../entity/SchoolEntity";
 import { GroupInDto, GroupOutDto } from "../dto/GroupInOutDto";
-import { UserOutDto } from "../dto/UserInDto";
+import { UserOutDto } from "../dto/UserInOutDto";
+import { CriteriaDto } from "../dto/criteriaDto";
 
 export default class GroupService implements IGroupService {
   constructor(
@@ -305,7 +305,7 @@ export default class GroupService implements IGroupService {
     return false;
   }
 
-  async searchGroup(searchDto: SearchDTO): Promise<searchResult> {
+  async searchGroup(searchDto: CriteriaDto): Promise<searchResult> {
     if (!searchDto) throw new HttpException("No searchDto provided", 400);
 
     const allGroups = await this.fetchAllGroups().catch((ex) => {
@@ -319,7 +319,9 @@ export default class GroupService implements IGroupService {
         score =
           score +
           Math.round(
-            SearchWeightValues.GRADE_GOAL / SearchWeightValues.MAX / 100
+            SearchWeightValues.GRADE_GOAL /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           );
       }
       return score;
@@ -330,7 +332,9 @@ export default class GroupService implements IGroupService {
         score =
           score +
           Math.round(
-            SearchWeightValues.WORK_FREQUENCY / SearchWeightValues.MAX / 100
+            SearchWeightValues.WORK_FREQUENCY /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           );
       } else if (
         searchDto.workFrequency === WorkFrequency.ANY ||
@@ -339,7 +343,9 @@ export default class GroupService implements IGroupService {
         score =
           score +
           Math.round(
-            SearchWeightValues.WORK_FREQUENCY / SearchWeightValues.MAX / 100
+            SearchWeightValues.WORK_FREQUENCY /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           ) /
             2;
       }
@@ -351,7 +357,9 @@ export default class GroupService implements IGroupService {
         score =
           score +
           Math.round(
-            SearchWeightValues.WORK_TYPE / SearchWeightValues.MAX / 100
+            SearchWeightValues.WORK_TYPE /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           );
       } else if (
         searchDto.workType === WorkType.ANY ||
@@ -360,7 +368,9 @@ export default class GroupService implements IGroupService {
         score =
           score +
           Math.round(
-            SearchWeightValues.WORK_TYPE / SearchWeightValues.MAX / 100
+            SearchWeightValues.WORK_TYPE /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           ) /
             2;
       }
@@ -372,7 +382,9 @@ export default class GroupService implements IGroupService {
         score =
           score +
           Math.round(
-            SearchWeightValues.MAX_SIZE / SearchWeightValues.MAX / 100
+            SearchWeightValues.MAX_SIZE /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           );
       }
       return score;
@@ -383,13 +395,17 @@ export default class GroupService implements IGroupService {
         score =
           score +
           Math.round(
-            SearchWeightValues.LANGUAGE / SearchWeightValues.MAX / 100
+            SearchWeightValues.LANGUAGE /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           );
       } else if (!searchDto.language || group.criteria.language === "") {
         score =
           score +
           Math.round(
-            SearchWeightValues.LANGUAGE / SearchWeightValues.MAX / 100
+            SearchWeightValues.LANGUAGE /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           ) /
             2;
       }
@@ -401,13 +417,17 @@ export default class GroupService implements IGroupService {
         score =
           score +
           Math.round(
-            SearchWeightValues.LOCATION / SearchWeightValues.MAX / 100
+            SearchWeightValues.LOCATION /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           );
       } else if (!searchDto.location || group.criteria.location === "") {
         score =
           score +
           Math.round(
-            SearchWeightValues.LOCATION / SearchWeightValues.MAX / 100
+            SearchWeightValues.LOCATION /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           ) /
             2;
       }
@@ -418,23 +438,33 @@ export default class GroupService implements IGroupService {
       if (group.criteria.school === searchDto.school) {
         score =
           score +
-          Math.round(SearchWeightValues.SCHOOL / SearchWeightValues.MAX / 100);
+          Math.round(
+            SearchWeightValues.SCHOOL /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
+          );
       } else if (!searchDto.school || group.criteria.school === "Ikke satt") {
         score =
           score +
-          Math.round(SearchWeightValues.SCHOOL / SearchWeightValues.MAX / 100) /
+          Math.round(
+            SearchWeightValues.SCHOOL /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
+          ) /
             2;
       }
       return score;
     }
 
     function checkSubjects(group: GroupOutDto, score: number) {
-      if (searchDto.subject) {
+      if (searchDto.subjects) {
         const scorePerSubject =
           Math.round(
-            SearchWeightValues.SUBJECTS / SearchWeightValues.MAX / 100
-          ) / searchDto.subject?.length;
-        searchDto.subject.forEach((sub) => {
+            SearchWeightValues.SUBJECTS /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
+          ) / searchDto.subjects?.length;
+        searchDto.subjects.forEach((sub) => {
           if (group.criteria.subjects) {
             if (group.criteria.subjects.includes(sub)) {
               score = score + scorePerSubject;

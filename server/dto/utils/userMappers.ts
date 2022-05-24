@@ -1,5 +1,5 @@
 import { UserEntity } from "../../entity/UserEntity";
-import { UserInDto, UserOutDto } from "../UserInDto";
+import { UserInDto, UserOutDto } from "../UserInOutDto";
 import { SchoolEntity } from "../../entity/SchoolEntity";
 
 export function userEntityToDto(entity: UserEntity): UserOutDto {
