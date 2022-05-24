@@ -26,7 +26,6 @@ export class GroupMemberEntity {
   @ManyToOne(() => UserEntity, (user) => user.groups)
   @JoinColumn({ name: "user_uuid" })
   user!: UserEntity;
-
   @ManyToOne(() => GroupEntity, (group) => group.users)
   @JoinColumn({ name: "group_uuid" })
   group!: GroupEntity;

@@ -2,6 +2,7 @@ import WebSocketServer from "ws";
 import { Server } from "http";
 import dotenv from "dotenv";
 import ChatService from "../service/chatService";
+import { ChatMessageEntity } from "../entity/ChatMessageEntity";
 
 const sockets = new Map<string, Map<string, WebSocket>>();
 dotenv.config();
@@ -70,7 +71,7 @@ export default (expressServer: Server, chatService: ChatService) => {
             }
           }
           try {
-            // chatRepo.addMessage(new ChatMessageEntity(message));
+            // chatService.addMessage(new ChatMessageEntity(message));
           } catch (e) {
             console.error(e);
           }

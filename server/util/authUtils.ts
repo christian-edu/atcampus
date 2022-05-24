@@ -20,6 +20,8 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     console.log(req.userId);
     next();
   } catch (e) {
+    console.info("Token expired/not valid");
+    res.clearCookie("auth_token");
     res.status(401);
     res.send();
   }
