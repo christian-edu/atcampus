@@ -175,7 +175,7 @@ export default class GroupService implements IGroupService {
     }
   }
 
-  async updateGroup(group: GroupUpdateDto): Promise<GroupOutDto> {
+  async updateGroup(group: GroupInDto): Promise<GroupOutDto> {
     if (!group.uuid)
       throw new HttpException(
         "No group uuid found in body. Expected {\ngroup: groupName\n}",
@@ -193,7 +193,62 @@ export default class GroupService implements IGroupService {
       });
 
     // TODO: finish this travesty
-    // const groupEntity = await this.checkSubjectsAndSchool(group);
+    if (group.name && group.name !== groupEntity.name) {
+      groupEntity.name = group.name;
+    }
+
+    if (group.rules && group.rules !== groupEntity.rules) {
+      groupEntity.rules = group.rules;
+    }
+
+    if (
+      group.isPrivate !== undefined &&
+      group.isPrivate !== groupEntity.isPrivate
+    ) {
+      groupEntity.isPrivate = group.isPrivate;
+    }
+
+    if (
+      group.criteria.gradeGoal &&
+      group.criteria.gradeGoal !== groupEntity.criteria.grade_goal
+    ) {
+      groupEntity.criteria.grade_goal = group.criteria.gradeGoal;
+    }
+
+    if (
+      group.criteria.workFrequency &&
+      group.criteria.workFrequency !== groupEntity.criteria.work_frequency
+    ) {
+      groupEntity.criteria.work_frequency = group.criteria.workFrequency;
+    }
+
+    if (
+      group.criteria.language &&
+      group.criteria.language !== groupEntity.criteria.language
+    ) {
+      groupEntity.criteria.language = group.criteria.language;
+    }
+
+    if (
+      group.criteria.maxSize &&
+      group.criteria.maxSize !== groupEntity.criteria.max_size
+    ) {
+      groupEntity.criteria.max_size = group.criteria.maxSize;
+    }
+
+    if (
+      group.criteria.location &&
+      group.criteria.location !== groupEntity.criteria.location
+    ) {
+      groupEntity.criteria.location = group.criteria.location;
+    }
+
+    if (
+      group.criteria.workType &&
+      group.criteria.workType !== groupEntity.criteria.work_type
+    ) {
+      groupEntity.criteria.work_type = group.criteria.workType;
+    }
 
     return await this.groupRepo
       .save(groupEntity)
