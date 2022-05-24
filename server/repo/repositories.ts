@@ -1,12 +1,12 @@
 import { AppDataSource } from "./AppDataSource";
-import { UserEntity } from "./entity/UserEntity";
-import { ChatMessageEntity } from "./entity/ChatMessageEntity";
-import { CriteriaEntity } from "./entity/CriteriaEntity";
-import { GroupMemberEntity } from "./entity/GroupMemberEntity";
-import { GroupEntity } from "./entity/GroupEntity";
-import { GroupRequestEntity } from "./entity/GroupRequestEntity";
-import { SchoolEntity } from "./entity/SchoolEntity";
-import { SubjectEntity } from "./entity/SubjectEntity";
+import { UserEntity } from "../entity/UserEntity";
+import { ChatMessageEntity } from "../entity/ChatMessageEntity";
+import { CriteriaEntity } from "../entity/CriteriaEntity";
+import { GroupMemberEntity } from "../entity/GroupMemberEntity";
+import { GroupEntity } from "../entity/GroupEntity";
+import { GroupRequestEntity } from "../entity/GroupRequestEntity";
+import { SchoolEntity } from "../entity/SchoolEntity";
+import { SubjectEntity } from "../entity/SubjectEntity";
 import { Repository } from "typeorm";
 
 type repoTypes = {
@@ -19,6 +19,8 @@ type repoTypes = {
   schoolRepo: Repository<SchoolEntity>;
   subjectRepo: Repository<SubjectEntity>;
 };
+
+// TODO: Bør kanskje ha dette som en singleton, eller det det slik object literals funker i js out of the box? Sjekke opp...
 export const repositories: Promise<repoTypes> = (() => {
   return AppDataSource.initialize().then((dataSource) => {
     return {

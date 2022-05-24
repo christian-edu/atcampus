@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import { UserDto } from "./dto/userDto";
 import UserService from "./service/userService";
 import { SchoolEntity } from "./entity/SchoolEntity";
-import { repositories } from "./repositories";
+import { repositories } from "./repo/repositories";
 import GroupService from "./service/groupService";
 import GroupRouter from "./controller/groupRouter";
 import AuthRouter from "./controller/authRouter";
