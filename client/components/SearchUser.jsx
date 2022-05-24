@@ -33,7 +33,7 @@ const SearchUser = () => {
 
   return (
     <>
-      <div className='grid grid-cols-1 gap-4 bg-white p-6 rounded-standard border border-purple-4 mb-6'>
+      <div className='grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard max-w-2xl mx-auto mb-6'>
         <div>
           <h2 className='text-xl font-bold'>Legg til medlem</h2>
         </div>
@@ -53,16 +53,19 @@ const SearchUser = () => {
         </ul>
       </div>
 
-      <div className='bg-white p-6 rounded-standard border border-purple-4'>
+      <div className='bg-white text-dark-1 p-6 rounded-standard max-w-2xl mx-auto'>
         <div>
           <h2 className='text-xl font-bold'>Søk etter gruppekriterier</h2>
           <h4>Trykk på en gruppe for å sende forespørsel</h4>
         </div>
+        
         <div className='flex flex-col gap-8'>
           <GroupCriteria />
-          <Button to='/group/members/searchUser/searchUserResults'>
-            Søk etter medlem
-          </Button>
+          <div className="grid grid-cols-1 md:grid-cols-3">
+            <Button to='/group/members/searchUser/searchUserResults' className="md:col-start-2">
+              Søk etter medlem
+            </Button>
+          </div>
         </div>
       </div>
     </>
