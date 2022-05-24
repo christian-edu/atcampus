@@ -11,7 +11,7 @@ export type searchResult = {
 export interface IGroupService {
   fetchAllGroups(): Promise<GroupOutDto[]>;
 
-  addGroup(group: GroupInDto): Promise<GroupOutDto>;
+  addGroup(group: GroupInDto, adminUuid: string): Promise<GroupOutDto>;
 
   fetchGroupById(groupId: string): Promise<GroupOutDto>;
 

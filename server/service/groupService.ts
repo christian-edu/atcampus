@@ -40,9 +40,9 @@ export default class GroupService implements IGroupService {
       });
   }
 
-  async addGroup(group: GroupInDto): Promise<GroupOutDto> {
+  async addGroup(group: GroupInDto, adminUuid: string): Promise<GroupOutDto> {
     const admin = await this.userRepo
-      .findOneBy({ uuid: group.admin_uuid })
+      .findOneBy({ uuid: adminUuid })
       .catch(() => {
         throw new HttpException("Database connection lost", 500);
       });
@@ -191,7 +191,6 @@ export default class GroupService implements IGroupService {
         throw new HttpException("Database connection lost", 500);
       });
 
-    // TODO: finish this travesty
     if (group.name && group.name !== groupEntity.name) {
       groupEntity.name = group.name;
     }

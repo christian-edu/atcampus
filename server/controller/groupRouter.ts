@@ -24,15 +24,15 @@ export default class GroupRouter extends ServerRouter {
 
     router.post("/", async (req, res) => {
       const newGroup = this.extractGroupDtoFromRequest(req);
+      const admin = req.userId;
       try {
-        res.json(await service.addGroup(newGroup));
+        res.json(await service.addGroup(newGroup, admin));
       } catch (e: unknown) {
         this.sendError(res, e);
       }
     });
 
     router.patch("/", async (req, res) => {
-
       const group = this.extractGroupDtoFromRequest(req);
       try {
         res.json(await service.updateGroup(group));
