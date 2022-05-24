@@ -30,7 +30,7 @@ export function criteriaDtoToEntity(dto: CriteriaDto): CriteriaEntity {
   });
 
   return new CriteriaEntity(
-    dto.gradeGoal,
+    dto.gradeGoal!,
     dto.workFrequency,
     dto.workType,
     dto.maxSize,

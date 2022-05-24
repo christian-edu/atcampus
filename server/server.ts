@@ -13,6 +13,7 @@ import { verifyToken } from "./util/authUtils";
 import path from "path";
 import ChatService from "./service/chatService";
 import WebSocketServer from "./websockets/webSocketServer";
+import AuthService from "./controller/authService";
 
 dotenv.config();
 const app = express();
@@ -43,7 +44,10 @@ repo
         repos.userRepo
       );
       const groupRoutes = new GroupRouter(groupService, express.Router());
-      const authRouter = new AuthRouter(groupService, express.Router());
+      const authRouter = new AuthRouter(
+        new AuthService(repos.userRepo),
+        express.Router()
+      );
 
       app.use(express.json());
       app.use(cookieParser(process.env.COOKIE_SECRET || "SuperSecret"));
