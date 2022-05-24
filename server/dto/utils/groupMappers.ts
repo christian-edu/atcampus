@@ -4,9 +4,10 @@ import { memberEntityToDto_user } from "./memberMappers";
 import { GroupInDto, GroupOutDto } from "../GroupInOutDto";
 import { UserEntity } from "../../entity/UserEntity";
 import { GroupMemberEntity } from "../../entity/GroupMemberEntity";
+import { GroupMemberDto_user } from "../groupMemberDto";
 
 export function groupEntityToDto(entity: GroupEntity): GroupOutDto {
-  const members = entity.users.map((entity) => {
+  const members: GroupMemberDto_user[] = entity.users.map((entity) => {
     return memberEntityToDto_user(entity);
   });
 

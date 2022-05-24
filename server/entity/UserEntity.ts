@@ -57,13 +57,13 @@ export class UserEntity {
   @Column({ name: "last_name" })
   lastName: string;
 
-  @ManyToOne(() => SchoolEntity, (school) => school.users, { eager: true })
+  @ManyToOne(() => SchoolEntity, (school) => school.users, { eager: false })
   @JoinColumn({ name: "school_uuid" })
   school: SchoolEntity;
 
-  @OneToMany(() => GroupMemberEntity, (gm) => gm.user, { eager: true })
-  groups: GroupMemberEntity[] | undefined;
+  @OneToMany(() => GroupMemberEntity, (gm) => gm.user, { eager: false })
+  groups: Promise<GroupMemberEntity[]> | undefined;
 
-  @OneToMany(() => GroupRequestEntity, (gr) => gr.user)
-  requests: GroupRequestEntity[] | undefined;
+  // @OneToMany(() => GroupRequestEntity, (gr) => gr.user)
+  // requests: GroupRequestEntity[] | undefined;
 }

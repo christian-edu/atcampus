@@ -17,6 +17,8 @@ import { SchoolEntity } from "../entity/SchoolEntity";
 import { GroupInDto, GroupOutDto } from "../dto/GroupInOutDto";
 import { UserOutDto } from "../dto/UserInOutDto";
 import { CriteriaDto } from "../dto/criteriaDto";
+import { MaxSize } from "../entity/enums/MaxSize";
+import { where } from "sequelize";
 
 export default class GroupService implements IGroupService {
   constructor(
@@ -35,8 +37,8 @@ export default class GroupService implements IGroupService {
           return groupEntityToDto(entity);
         });
       })
-      .catch(() => {
-        // TODO: skriv bedre feilmelding(er)
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -44,8 +46,8 @@ export default class GroupService implements IGroupService {
   async addGroup(group: GroupInDto, adminUuid: string): Promise<GroupOutDto> {
     const admin = await this.userRepo
       .findOneBy({ uuid: adminUuid })
-      .catch(() => {
-        // TODO: skriv bedre feilmelding(er)
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
 
@@ -55,7 +57,10 @@ export default class GroupService implements IGroupService {
       const { subjects, school } = await this.createOrFetchSubjectsAndSchool(
         groupEntity.criteria.school,
         groupEntity.criteria.subjects
-      );
+      ).catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
+        throw new HttpException("Database connection lost", 500);
+      });
       groupEntity.criteria.school = school;
       groupEntity.criteria.subjects = subjects;
     } else {
@@ -65,8 +70,8 @@ export default class GroupService implements IGroupService {
     return await this.groupRepo
       .save(groupEntity)
       .then((entity) => groupEntityToDto(entity))
-      .catch(() => {
-        // TODO: skriv bedre feilmelding(er)
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -83,28 +88,31 @@ export default class GroupService implements IGroupService {
         if (!entity) throw new HttpException("Group not found", 404);
         return groupEntityToDto(entity);
       })
-      .catch(() => {
-        // TODO: skriv bedre feilmelding(er)
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
   }
 
   async deleteMember(groupId: string, userId: string): Promise<GroupOutDto> {
     const { user, group } = await this.fetchUserAndGroup(userId, groupId).catch(
-      (ex: HttpException) => {
-        throw ex;
+      (ex) => {
+        if (ex instanceof HttpException) throw ex;
+        throw new HttpException("Database connection lost", 500);
       }
     );
 
     const rowsAffected = await this.groupMemberRepo
-      .delete({
-        user: user,
-        group: group,
-      })
+      .createQueryBuilder()
+      .delete()
+      .where("user_uuid = :userId", { userId: user.uuid })
+      .andWhere("group_uuid = :groupId", { groupId: group.uuid })
+      .execute()
       .then((response: DeleteResult) => {
         return response.affected;
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Deletion failed", 500);
       });
 
@@ -119,15 +127,17 @@ export default class GroupService implements IGroupService {
         }
         return groupEntityToDto(group);
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
   }
 
   async addMember(groupId: string, userId: string): Promise<GroupOutDto> {
     const { user, group } = await this.fetchUserAndGroup(userId, groupId).catch(
-      (ex: HttpException) => {
-        throw ex;
+      (ex) => {
+        if (ex instanceof HttpException) throw ex;
+        throw new HttpException("Database connection lost", 500);
       }
     );
 
@@ -141,7 +151,8 @@ export default class GroupService implements IGroupService {
       .then((gme: GroupMemberEntity) => {
         return groupEntityToDto(gme.group);
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -153,24 +164,39 @@ export default class GroupService implements IGroupService {
         400
       );
     const members = new Array<UserOutDto>();
-    await this.groupRepo.findOneBy({ uuid: groupId }).then(async (group) => {
-      if (!group) throw new HttpException("Group not found", 404);
 
-      await this.groupMemberRepo
-        .find({
-          where: { group },
-          relations: ["user"],
-        })
-        .then((it: GroupMemberEntity[]) => {
-          if (!it) throw new HttpException("Users not found", 404);
-          it.forEach((memberRow: GroupMemberEntity) => {
-            members.push(userEntityToDto(memberRow.user));
+    // const foundGroup = await this.groupRepo.findOneBy({uuid: groupId})
+    //     .then((group) => {
+    //       if (!group) throw new HttpException("Group not found", 404);
+    //       return group
+    //     })
+    //
+    // const memberEntities = await this.groupMemberRepo.findBy({group: foundGroup})
+
+    await this.groupRepo
+      .findOneBy({ uuid: groupId })
+      .then(async (group) => {
+        if (!group) throw new HttpException("Group not found", 404);
+        group;
+        await this.groupMemberRepo
+          .find({
+            where: { group: { uuid: groupId } },
+          })
+          .then((it: GroupMemberEntity[]) => {
+            if (!it) throw new HttpException("Users not found", 404);
+            it.forEach((memberRow: GroupMemberEntity) => {
+              members.push(userEntityToDto(memberRow.user));
+            });
+          })
+          .catch((ex) => {
+            if (ex instanceof HttpException) throw ex;
+            throw new HttpException("Database connection lost", 500);
           });
-        })
-        .catch(() => {
-          throw new HttpException("Database connection lost", 500);
-        });
-    });
+      })
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
+        throw new HttpException("Database connection lost", 500);
+      });
     if (members.length > 0) {
       return members;
     } else {
@@ -191,7 +217,8 @@ export default class GroupService implements IGroupService {
         if (!it) throw new HttpException("Group not found", 404);
         return it;
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
 
@@ -268,7 +295,10 @@ export default class GroupService implements IGroupService {
       if (!groupEntity.criteria.subjects) {
         groupEntity.criteria.subjects = await this.createOrFetchSubjects(
           subjectsToCheck
-        );
+        ).catch((ex) => {
+          if (ex instanceof HttpException) throw ex;
+          throw new HttpException("Database connection lost", 500);
+        });
       } else {
         const oldSubjects = groupEntity.criteria.subjects.map((subject) => {
           subject.name;
@@ -279,7 +309,10 @@ export default class GroupService implements IGroupService {
         ) {
           groupEntity.criteria.subjects = await this.createOrFetchSubjects(
             subjectsToCheck
-          );
+          ).catch((ex) => {
+            if (ex instanceof HttpException) throw ex;
+            throw new HttpException("Database connection lost", 500);
+          });
         }
       }
     }
@@ -287,7 +320,8 @@ export default class GroupService implements IGroupService {
     return await this.groupRepo
       .save(groupEntity)
       .then((entity) => groupEntityToDto(entity))
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -303,7 +337,8 @@ export default class GroupService implements IGroupService {
       .then((result) => {
         return result.affected;
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
     return false;
@@ -317,6 +352,7 @@ export default class GroupService implements IGroupService {
     });
 
     const tempResult: searchResult = {};
+    const tempResult2: any[] = [];
 
     function checkGradeGoal(group: GroupOutDto, score: number) {
       if (group.criteria.gradeGoal === searchDto.gradeGoal) {
@@ -342,7 +378,7 @@ export default class GroupService implements IGroupService {
           );
       } else if (
         searchDto.workFrequency === WorkFrequency.ANY ||
-        !group.criteria.workFrequency
+        group.criteria.workFrequency === WorkFrequency.ANY
       ) {
         score =
           score +
@@ -367,7 +403,7 @@ export default class GroupService implements IGroupService {
           );
       } else if (
         searchDto.workType === WorkType.ANY ||
-        !group.criteria.workType
+        group.criteria.workType === WorkType.ANY
       ) {
         score =
           score +
@@ -390,6 +426,18 @@ export default class GroupService implements IGroupService {
               SearchWeightValues.MAX_POSSIBLE_SCORE /
               100
           );
+      } else if (
+        searchDto.maxSize === MaxSize.ANY ||
+        group.criteria.maxSize === MaxSize.ANY
+      ) {
+        score =
+          score +
+          Math.round(
+            SearchWeightValues.MAX_SIZE /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
+          ) /
+            2;
       }
       return score;
     }
@@ -403,7 +451,11 @@ export default class GroupService implements IGroupService {
               SearchWeightValues.MAX_POSSIBLE_SCORE /
               100
           );
-      } else if (!searchDto.language || group.criteria.language === "") {
+      } else if (
+        !searchDto.language ||
+        searchDto.language === "" ||
+        group.criteria.language === ""
+      ) {
         score =
           score +
           Math.round(
@@ -425,7 +477,11 @@ export default class GroupService implements IGroupService {
               SearchWeightValues.MAX_POSSIBLE_SCORE /
               100
           );
-      } else if (!searchDto.location || group.criteria.location === "") {
+      } else if (
+        !searchDto.location ||
+        searchDto.location === "" ||
+        group.criteria.location === ""
+      ) {
         score =
           score +
           Math.round(
@@ -447,7 +503,11 @@ export default class GroupService implements IGroupService {
               SearchWeightValues.MAX_POSSIBLE_SCORE /
               100
           );
-      } else if (!searchDto.school || group.criteria.school === "Ikke satt") {
+      } else if (
+        !searchDto.school ||
+        searchDto.school === "" ||
+        group.criteria.school === "Ikke satt"
+      ) {
         score =
           score +
           Math.round(
@@ -462,12 +522,13 @@ export default class GroupService implements IGroupService {
 
     function checkSubjects(group: GroupOutDto, score: number) {
       if (searchDto.subjects) {
+        const numberOfSubjects = searchDto.subjects.length;
         const scorePerSubject =
           Math.round(
             SearchWeightValues.SUBJECTS /
               SearchWeightValues.MAX_POSSIBLE_SCORE /
               100
-          ) / searchDto.subjects?.length;
+          ) / numberOfSubjects;
         searchDto.subjects.forEach((sub) => {
           if (group.criteria.subjects) {
             if (group.criteria.subjects.includes(sub)) {
@@ -487,26 +548,18 @@ export default class GroupService implements IGroupService {
       // Burde være mulig å sette opp lavere poengsum om man er 1 karakter unna
       score = checkGradeGoal(group, score);
 
-      // Arbeidsfrekvens
       score = checkWorkFrequency(group, score);
 
-      // Arbeidsmetode
       score = checkWorkMethod(group, score);
 
-      // Maks gruppestørrelse
-      // Foreløpig versjon, må være mer forseggjort
       score = checkSize(group, score);
 
-      // Språk
       score = checkLanguage(group, score);
 
-      // Sted
       score = checkLocation(group, score);
 
-      // Skole
       score = checkSchool(group, score);
 
-      // Emner
       score = checkSubjects(group, score);
 
       // Tar høyde for avrundingsfeil
@@ -516,8 +569,10 @@ export default class GroupService implements IGroupService {
         // Dette kan aldri skje, men TypeScript
         // blir sint på meg om jeg ikke har det med
         tempResult[group.name] = { group, score };
+        tempResult2.push([group, score]);
       } else {
         tempResult[group.uuid] = { group, score };
+        tempResult2.push([group, score]);
       }
     });
 
@@ -553,7 +608,8 @@ export default class GroupService implements IGroupService {
           }
           return foundSubject;
         })
-        .catch(() => {
+        .catch((ex) => {
+          if (ex instanceof HttpException) throw ex;
           throw new HttpException("Database connection lost", 500);
         });
       checkedSubjects.push(checked);
@@ -568,7 +624,8 @@ export default class GroupService implements IGroupService {
         if (it) return it;
         return null;
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
 
@@ -578,7 +635,8 @@ export default class GroupService implements IGroupService {
         if (it) return it;
         return null;
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
 
@@ -594,11 +652,10 @@ export default class GroupService implements IGroupService {
     subjects?: SubjectEntity[]
   ) {
     if (subjects) {
-      subjects = await this.createOrFetchSubjects(subjects).catch(
-        (ex: HttpException) => {
-          throw ex;
-        }
-      );
+      subjects = await this.createOrFetchSubjects(subjects).catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
+        throw new HttpException("Database connection lost", 500);
+      });
     }
     school = await this.createOrFetchSchool(school);
     return { subjects, school };
@@ -615,7 +672,8 @@ export default class GroupService implements IGroupService {
         }
         return foundSchool;
       })
-      .catch(() => {
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
   }

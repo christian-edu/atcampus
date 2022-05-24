@@ -55,6 +55,6 @@ export class GroupEntity {
   @OneToMany(() => GroupMemberEntity, (gm) => gm.group, { eager: true })
   users: GroupMemberEntity[];
 
-  @OneToMany(() => GroupRequestEntity, (gr) => gr.group)
-  requests: GroupRequestEntity[] | undefined;
+  // @OneToMany(() => GroupRequestEntity, (gr) => gr.group)
+  // requests: GroupRequestEntity[] | undefined;
 }

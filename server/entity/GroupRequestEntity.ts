@@ -15,8 +15,8 @@ export class GroupRequestEntity {
     this.uuid = uuidv4();
     this.recipient = recipient;
     this.message = message;
-    this.user = user;
-    this.group = group;
+    // this.user = user;
+    // this.group = group;
   }
 
   @PrimaryColumn()
@@ -28,11 +28,11 @@ export class GroupRequestEntity {
   @Column({ type: "text" })
   message: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.requests)
-  @JoinColumn({ name: "user_uuid" })
-  user!: UserEntity;
-
-  @ManyToOne(() => GroupEntity, (group) => group.requests)
-  @JoinColumn({ name: "group_uuid" })
-  group!: GroupEntity;
+  // @ManyToOne(() => UserEntity, (user) => user.requests)
+  // @JoinColumn({ name: "user_uuid" })
+  // user!: UserEntity;
+  //
+  // @ManyToOne(() => GroupEntity, (group) => group.requests)
+  // @JoinColumn({ name: "group_uuid" })
+  // group!: GroupEntity;
 }
