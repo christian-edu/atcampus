@@ -17,6 +17,7 @@ import { SchoolEntity } from "../entity/SchoolEntity";
 import { GroupInDto, GroupOutDto } from "../dto/GroupInOutDto";
 import { UserOutDto } from "../dto/UserInOutDto";
 import { CriteriaDto } from "../dto/criteriaDto";
+import { MaxSize } from "../entity/enums/MaxSize";
 
 export default class GroupService implements IGroupService {
   constructor(
@@ -341,6 +342,7 @@ export default class GroupService implements IGroupService {
     });
 
     const tempResult: searchResult = {};
+    const tempResult2: any[] = [];
 
     function checkGradeGoal(group: GroupOutDto, score: number) {
       if (group.criteria.gradeGoal === searchDto.gradeGoal) {
@@ -366,7 +368,7 @@ export default class GroupService implements IGroupService {
           );
       } else if (
         searchDto.workFrequency === WorkFrequency.ANY ||
-        !group.criteria.workFrequency
+        group.criteria.workFrequency === WorkFrequency.ANY
       ) {
         score =
           score +
@@ -391,7 +393,7 @@ export default class GroupService implements IGroupService {
           );
       } else if (
         searchDto.workType === WorkType.ANY ||
-        !group.criteria.workType
+        group.criteria.workType === WorkType.ANY
       ) {
         score =
           score +
@@ -414,6 +416,18 @@ export default class GroupService implements IGroupService {
               SearchWeightValues.MAX_POSSIBLE_SCORE /
               100
           );
+      } else if (
+        searchDto.maxSize === MaxSize.ANY ||
+        group.criteria.maxSize === MaxSize.ANY
+      ) {
+        score =
+          score +
+          Math.round(
+            SearchWeightValues.MAX_SIZE /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
+          ) /
+            2;
       }
       return score;
     }
@@ -427,7 +441,11 @@ export default class GroupService implements IGroupService {
               SearchWeightValues.MAX_POSSIBLE_SCORE /
               100
           );
-      } else if (!searchDto.language || group.criteria.language === "") {
+      } else if (
+        !searchDto.language ||
+        searchDto.language === "" ||
+        group.criteria.language === ""
+      ) {
         score =
           score +
           Math.round(
@@ -449,7 +467,11 @@ export default class GroupService implements IGroupService {
               SearchWeightValues.MAX_POSSIBLE_SCORE /
               100
           );
-      } else if (!searchDto.location || group.criteria.location === "") {
+      } else if (
+        !searchDto.location ||
+        searchDto.location === "" ||
+        group.criteria.location === ""
+      ) {
         score =
           score +
           Math.round(
@@ -471,7 +493,11 @@ export default class GroupService implements IGroupService {
               SearchWeightValues.MAX_POSSIBLE_SCORE /
               100
           );
-      } else if (!searchDto.school || group.criteria.school === "Ikke satt") {
+      } else if (
+        !searchDto.school ||
+        searchDto.school === "" ||
+        group.criteria.school === "Ikke satt"
+      ) {
         score =
           score +
           Math.round(
@@ -486,12 +512,13 @@ export default class GroupService implements IGroupService {
 
     function checkSubjects(group: GroupOutDto, score: number) {
       if (searchDto.subjects) {
+        const numberOfSubjects = searchDto.subjects.length;
         const scorePerSubject =
           Math.round(
             SearchWeightValues.SUBJECTS /
               SearchWeightValues.MAX_POSSIBLE_SCORE /
               100
-          ) / searchDto.subjects?.length;
+          ) / numberOfSubjects;
         searchDto.subjects.forEach((sub) => {
           if (group.criteria.subjects) {
             if (group.criteria.subjects.includes(sub)) {
@@ -511,26 +538,18 @@ export default class GroupService implements IGroupService {
       // Burde være mulig å sette opp lavere poengsum om man er 1 karakter unna
       score = checkGradeGoal(group, score);
 
-      // Arbeidsfrekvens
       score = checkWorkFrequency(group, score);
 
-      // Arbeidsmetode
       score = checkWorkMethod(group, score);
 
-      // Maks gruppestørrelse
-      // Foreløpig versjon, må være mer forseggjort
       score = checkSize(group, score);
 
-      // Språk
       score = checkLanguage(group, score);
 
-      // Sted
       score = checkLocation(group, score);
 
-      // Skole
       score = checkSchool(group, score);
 
-      // Emner
       score = checkSubjects(group, score);
 
       // Tar høyde for avrundingsfeil
@@ -540,8 +559,10 @@ export default class GroupService implements IGroupService {
         // Dette kan aldri skje, men TypeScript
         // blir sint på meg om jeg ikke har det med
         tempResult[group.name] = { group, score };
+        tempResult2.push([group, score]);
       } else {
         tempResult[group.uuid] = { group, score };
+        tempResult2.push([group, score]);
       }
     });
 
