@@ -27,7 +27,7 @@ export class GroupMemberEntity {
   @JoinColumn({ name: "user_uuid" })
   user!: UserEntity;
 
-  @ManyToOne(() => GroupEntity, (group) => group.users, { eager: true })
+  @ManyToOne(() => GroupEntity, (group) => group.users, { lazy: true })
   @JoinColumn({ name: "group_uuid" })
-  group!: GroupEntity;
+  group!: Promise<GroupEntity>;
 }
