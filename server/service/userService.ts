@@ -54,4 +54,6 @@ export default class UserService {
   public async findUserById(userId: string) {
     return await this.userRepo.findOneBy({ uuid: userId });
   }
+
+  // getGroupsByUserId
 }
