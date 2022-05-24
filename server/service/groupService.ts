@@ -18,6 +18,7 @@ import { GroupInDto, GroupOutDto } from "../dto/GroupInOutDto";
 import { UserOutDto } from "../dto/UserInOutDto";
 import { CriteriaDto } from "../dto/criteriaDto";
 import { MaxSize } from "../entity/enums/MaxSize";
+import { where } from "sequelize";
 
 export default class GroupService implements IGroupService {
   constructor(
@@ -102,10 +103,11 @@ export default class GroupService implements IGroupService {
     );
 
     const rowsAffected = await this.groupMemberRepo
-      .delete({
-        user: user,
-        group: group,
-      })
+      .createQueryBuilder()
+      .delete()
+      .where("user_uuid = :userId", { userId: user.uuid })
+      .andWhere("group_uuid = :groupId", { groupId: group.uuid })
+      .execute()
       .then((response: DeleteResult) => {
         return response.affected;
       })
@@ -162,15 +164,23 @@ export default class GroupService implements IGroupService {
         400
       );
     const members = new Array<UserOutDto>();
+
+    // const foundGroup = await this.groupRepo.findOneBy({uuid: groupId})
+    //     .then((group) => {
+    //       if (!group) throw new HttpException("Group not found", 404);
+    //       return group
+    //     })
+    //
+    // const memberEntities = await this.groupMemberRepo.findBy({group: foundGroup})
+
     await this.groupRepo
       .findOneBy({ uuid: groupId })
       .then(async (group) => {
         if (!group) throw new HttpException("Group not found", 404);
-
+        group;
         await this.groupMemberRepo
           .find({
-            where: { group },
-            relations: ["user"],
+            where: { group: { uuid: groupId } },
           })
           .then((it: GroupMemberEntity[]) => {
             if (!it) throw new HttpException("Users not found", 404);
