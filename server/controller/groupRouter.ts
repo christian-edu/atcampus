@@ -16,7 +16,7 @@ export default class GroupRouter extends ServerRouter {
     router.get("/", async (req, res, next) => {
       const { group_id } = req?.query;
       if (group_id) {
-        await this.fetchGroupById(service, group_id as string, req.userId, res);
+        await this.fetchGroupById(group_id as string, req.userId, res);
         return;
       }
       await this.fetchAllGroups(res, service);
@@ -126,14 +126,9 @@ export default class GroupRouter extends ServerRouter {
     return new GroupInDto(isPrivate, name, criteria, req.userId, rules, uuid);
   }
 
-  private async fetchGroupById(
-    service: IGroupService,
-    groupId: string,
-    userId: string,
-    res: Response
-  ) {
+  private async fetchGroupById(groupId: string, userId: string, res: Response) {
     try {
-      res.json(await service.fetchGroupById(groupId, userId));
+      res.json(await this.groupService.fetchGroupById(groupId, userId));
     } catch (e: unknown) {
       this.sendError(res, e);
     }
