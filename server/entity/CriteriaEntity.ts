@@ -73,12 +73,14 @@ export class CriteriaEntity {
   @Column()
   location: string;
 
-  @ManyToMany(() => SubjectEntity)
+  @ManyToMany(() => SubjectEntity, { eager: true })
   @JoinTable({ name: "criteria_subjects" })
   @JoinColumn({ name: "subject_uuid" })
   subjects: SubjectEntity[] | undefined;
 
-  @ManyToOne(() => SchoolEntity, (school) => school.criteriaCollection)
+  @ManyToOne(() => SchoolEntity, (school) => school.criteriaCollection, {
+    eager: true,
+  })
   @JoinColumn({ name: "school_uuid" })
   school: SchoolEntity;
 }
