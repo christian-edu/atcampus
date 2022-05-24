@@ -1,25 +1,23 @@
-import { GroupDto } from "../dto/groupDto";
-import { GroupInDto, GroupOutDto } from "../dto/GroupInDto";
-import { UserOutDto } from "../dto/UserInDto";
-import { SearchDTO } from "../dto/searchDTO";
-import { SubjectEntity } from "../entity/SubjectEntity";
+import { GroupInDto, GroupOutDto } from "../dto/GroupInOutDto";
+import { UserOutDto } from "../dto/UserInOutDto";
+import { CriteriaDto } from "../dto/criteriaDto";
 
 export type searchResult = {
   [key: string]: {
-    group: GroupDto;
+    group: GroupOutDto;
     score: number;
   };
 };
 export interface IGroupService {
   fetchAllGroups(): Promise<GroupOutDto[]>;
 
-  addGroup(group: GroupInDto): Promise<GroupDto>;
+  addGroup(group: GroupInDto, adminUuid: string): Promise<GroupOutDto>;
 
-  fetchGroupById(groupId: string, userId: string): Promise<GroupOutDto>;
+  fetchGroupById(groupId: string): Promise<GroupOutDto>;
 
-  deleteMember(groupId: string, userId: string): Promise<GroupDto>;
+  deleteMember(groupId: string, userId: string): Promise<GroupOutDto>;
 
-  addMember(group: string, user: string): Promise<GroupDto>;
+  addMember(group: string, user: string): Promise<GroupOutDto>;
 
   fetchGroupMembers(groupId: string): Promise<UserOutDto[]>;
 
@@ -27,7 +25,5 @@ export interface IGroupService {
 
   deleteGroup(group: string): Promise<boolean>;
 
-  searchGroup(searchDto: SearchDTO): Promise<searchResult>;
-
-  //createOrFetchSubjects(subjects: SubjectEntity[]): Promise<SubjectEntity[]>;
+  searchGroup(searchDto: CriteriaDto): Promise<GroupOutDto[] | searchResult>;
 }

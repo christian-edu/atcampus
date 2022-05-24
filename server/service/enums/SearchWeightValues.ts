@@ -18,7 +18,7 @@ export enum SearchWeightValues {
   LOCATION = LocationWeight.SUM,
   SCHOOL = SchoolWeight.SUM,
   SUBJECTS = SubjectWeight.SUM,
-  MAX = GRADE_GOAL +
+  MAX_POSSIBLE_SCORE = GRADE_GOAL +
     WORK_FREQUENCY +
     WORK_TYPE +
     MAX_SIZE +

@@ -6,7 +6,6 @@ export class GroupInDto {
     public isPrivate: boolean,
     public name: string,
     public criteria: CriteriaDto,
-    public admin_uuid: string,
     public rules?: string,
     public uuid?: string
   ) {}

@@ -25,7 +25,7 @@ export function criteriaEntityToDto(entity: CriteriaEntity): CriteriaDto {
 }
 
 export function criteriaDtoToEntity(dto: CriteriaDto): CriteriaEntity {
-  const subjects = dto.subject?.map((name) => {
+  const subjects = dto.subjects?.map((name) => {
     return new SubjectEntity(name);
   });
 

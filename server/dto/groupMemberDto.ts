@@ -1,15 +1,25 @@
 export class GroupMemberDto_user {
-  constructor(public user: string, public isAdmin: boolean) {}
+  constructor(
+    public user_uuid: string,
+    public user_name: string,
+    public isAdmin: boolean
+  ) {}
 }
 
 export class GroupMemberDto_group {
-  constructor(public group: string, public isAdmin: boolean) {}
+  constructor(
+    public group_uuid: string,
+    public group_name: string,
+    public isAdmin: boolean
+  ) {}
 }
 
 export class GroupMemberDto_both {
   constructor(
-    public user: string,
-    public group: string,
+    public user_uuid: string,
+    public user_name: string,
+    public group_uuid: string,
+    public group_name: string,
     public isAdmin: boolean
   ) {}
 }

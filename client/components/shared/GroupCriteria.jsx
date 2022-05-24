@@ -36,12 +36,35 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
 
     }
 
+    useEffect( async () => {
+
+        // Use effect, to wait for all the fields to get their right value, either from chosen in input or if not chosen, gets the old criteria
+
+        if(language === "velg" || gradeGoal === "velg" || place === "velg" || size === "velg" || school === "velg" || workFrequency === "velg" || workType === "velg"){
+            console.log("Preparing to send data")
+        }else {
+
+
+            const res = await fetch(fetchLink, {
+                method: "PATCH",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({gradeGoal, language, place, size, school, subject, workFrequency, workType, isPrivate})
+            })
+
+            setGroupResult( "No Content")
+
+        }
+
+    }, [gradeGoal, language, place, size, school, subject, workFrequency, workType, isPrivate])
+
     useEffect(() => {
 
 
         if(groupResult !== undefined && createGroup){
             const group = groupResult
-            navigate('/group/specific', { state: { group } })
+            navigate('/groups/specific', { state: { group } })
         }
 
         // DONT WORK
@@ -49,13 +72,13 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
             // since response is 203 no content, it will be undefined
 
             // We know we searched for group
-            navigate("/searchGroup/searchGroupResults", { state: { groupResult} })
+            navigate("/groups/searchGroup/searchGroupResults", { state: { groupResult} })
 
         }
 
         if(patchGroup && groupResult === "No Content"){
 
-            navigate('/group/specific', { state: { group } })
+            navigate('/groups/specific', { state: { group } })
         }
 
 
@@ -72,16 +95,38 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                 if(isPrivate === undefined ) {
                     setError("Velg public eller private")
                 }else{
-                    const res = await fetch(fetchLink, {
-                        method: "PATCH",
-                        headers: {
-                            "content-type": "application/json"
-                        },
-                        body: JSON.stringify({language, size, gradeGoal, workFrequency, workType, place, school, subject, groupName, isPrivate})
-                    })
 
-                    setGroupResult( "No Content")
+                    if(gradeGoal === "velg"){
 
+                        setGradeGoal(group.criteria.gradeGoal)
+
+                    }
+                if(language === "velg"){
+                    setLanguage(group.criteria.language)
+                }
+
+                if(place === "velg"){
+                    setPlace(group.criteria.language)
+                }
+
+                if(size === "velg"){
+                    setSize(group.criteria.size)
+                }
+                if(school === "velg"){
+                    setSchool(group.criteria.school)
+                }
+
+                if(workFrequency === "velg"){
+                    setWorkFrequency(group.criteria.workFrequency)
+                }
+
+                if(workType === "velg"){
+                    setWorkType(group.criteria.workType)
+                }
+
+                if(subject[0].subject.length === 0){
+                    setSubject( group.criteria.subject)
+                }
                 }
 
 
@@ -103,6 +148,7 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                 }
             }else if(searchGroup) {
                 // Here we search for the group
+
                 const res = await fetch(fetchLink, {
                     method: "POST",
                     headers: {
@@ -216,7 +262,7 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                     </div>
                 </div>
                 
-            <div className="flex gap-3 items-center whitespace-nowrap mt-4 mb-8">
+            <div className="flex gap-3 items-center mt-4 mb-8">
                 <div>
                     <input type="radio" name={"metode"} id={"fysisk"} value={"LOCAL"} onChange={(e) => setWorkType(e.target.value)}
                     className="form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"/>

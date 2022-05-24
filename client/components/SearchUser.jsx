@@ -4,35 +4,36 @@ import { GroupCriteria } from './shared/GroupCriteria';
 import UserCard from './shared/UserCard';
 
 const SearchUser = () => {
-
   // Needs work
-  
+
   const [users, setUsers] = useState([]);
   const [input, setInput] = useState('');
 
-  const getGroups = useCallback(async () => {
-    const res = await fetch('/api/v1/groups');
-    const data = await res.json();
-    setUsers(data.flatMap((group) => group.groupMember));
-  });
+  // const fetchGroups = async () => {
+  //   const res = await fetch('/api/v1/groups');
+  //   const data = await res.json();
+
+  // };
 
   const inputHandler = (e) => setInput(e.target.value);
 
   useEffect(() => {
-    getGroups();
+    // fetchGroups();
   }, []);
 
-  useEffect(()=> {
+  useEffect(() => {
     console.log(users);
-  },[users])
+  }, [users]);
 
   const filteredUsers = users.filter((user) =>
-    user.toLowerCase().includes(input.toLowerCase())
+    user.username.toLowerCase().includes(input.toLowerCase())
   );
+
+  console.log(users);
 
   return (
     <>
-      <div className='grid grid-cols-1 gap-4 bg-white p-6 rounded-standard border border-purple-4 mb-6'>
+      <div className='grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard max-w-2xl mx-auto mb-6'>
         <div>
           <h2 className='text-xl font-bold'>Legg til medlem</h2>
         </div>
@@ -48,23 +49,23 @@ const SearchUser = () => {
         </div>
         <ul className='grid gap-4'>
           {input && filteredUsers.length === 0 && 'Fant ingen brukere'}
-          {input &&
-            filteredUsers.map((user) => (
-              <UserCard key={user} user={user} search={true} />
-            ))}
+          {input && filteredUsers.map((user, i) => <li>Li</li>)}
         </ul>
       </div>
 
-      <div className='bg-white p-6 rounded-standard border border-purple-4'>
+      <div className='bg-white text-dark-1 p-6 rounded-standard max-w-2xl mx-auto'>
         <div>
           <h2 className='text-xl font-bold'>Søk etter gruppekriterier</h2>
           <h4>Trykk på en gruppe for å sende forespørsel</h4>
         </div>
+        
         <div className='flex flex-col gap-8'>
           <GroupCriteria />
-          <Button to='/group/members/searchUser/searchUserResults'>
-            Søk etter medlem
-          </Button>
+          <div className="grid grid-cols-1 md:grid-cols-3">
+            <Button to='/group/members/searchUser/searchUserResults' className="md:col-start-2">
+              Søk etter medlem
+            </Button>
+          </div>
         </div>
       </div>
     </>

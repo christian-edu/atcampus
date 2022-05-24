@@ -14,7 +14,6 @@ import path from "path";
 import ChatService from "./service/chatService";
 import WebSocketServer from "./websockets/webSocketServer";
 import AuthService from "./service/authService";
-import UserRouter from "./controller/userRouter";
 
 dotenv.config();
 const app = express();
@@ -26,6 +25,8 @@ repo
     const server = app.listen(process.env.PORT || 8345, async () => {
       console.info("Connected to db ");
       const schoolEntity = new SchoolEntity("HK");
+      const schoolRepo = repos.schoolRepo;
+      await schoolRepo.save(schoolEntity);
       const user = new UserDto(
         "christian",
         "chgr007@egms.no",
@@ -59,6 +60,8 @@ repo
       app.use("/api/v1/groups", groupRoutes.fetchRoutes());
       app.use("/api/v1/user", userRouter.fetchRoutes());
       app.use(authRouter.fetchRoutes());
+
+      app.use(verifyToken);
 
       app.use(express.static("../client/dist"));
 

@@ -1,7 +1,5 @@
 import HttpException from "../util/httpException";
-import { SearchDTO } from "../dto/searchDTO";
 import { IGroupService, searchResult } from "./IGroupService";
-import { GroupDto } from "../dto/groupDto";
 import { DeleteResult, Repository } from "typeorm";
 import { GroupEntity } from "../entity/GroupEntity";
 import { SubjectEntity } from "../entity/SubjectEntity";
@@ -16,8 +14,9 @@ import { SearchWeightValues } from "./enums/SearchWeightValues";
 import { WorkFrequency } from "../entity/enums/WorkFrequency";
 import { WorkType } from "../entity/enums/WorkType";
 import { SchoolEntity } from "../entity/SchoolEntity";
-import { GroupInDto, GroupOutDto } from "../dto/GroupInDto";
-import { UserOutDto } from "../dto/UserInDto";
+import { GroupInDto, GroupOutDto } from "../dto/GroupInOutDto";
+import { UserOutDto } from "../dto/UserInOutDto";
+import { CriteriaDto } from "../dto/criteriaDto";
 
 export default class GroupService implements IGroupService {
   constructor(
@@ -37,14 +36,16 @@ export default class GroupService implements IGroupService {
         });
       })
       .catch(() => {
+        // TODO: skriv bedre feilmelding(er)
         throw new HttpException("Database connection lost", 500);
       });
   }
 
-  async addGroup(group: GroupInDto): Promise<GroupDto> {
+  async addGroup(group: GroupInDto, adminUuid: string): Promise<GroupOutDto> {
     const admin = await this.userRepo
-      .findOneBy({ uuid: group.admin_uuid })
+      .findOneBy({ uuid: adminUuid })
       .catch(() => {
+        // TODO: skriv bedre feilmelding(er)
         throw new HttpException("Database connection lost", 500);
       });
 
@@ -65,6 +66,7 @@ export default class GroupService implements IGroupService {
       .save(groupEntity)
       .then((entity) => groupEntityToDto(entity))
       .catch(() => {
+        // TODO: skriv bedre feilmelding(er)
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -82,6 +84,7 @@ export default class GroupService implements IGroupService {
         return groupEntityToDto(entity);
       })
       .catch(() => {
+        // TODO: skriv bedre feilmelding(er)
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -192,7 +195,6 @@ export default class GroupService implements IGroupService {
         throw new HttpException("Database connection lost", 500);
       });
 
-    // TODO: finish this travesty
     if (group.name && group.name !== groupEntity.name) {
       groupEntity.name = group.name;
     }
@@ -250,6 +252,38 @@ export default class GroupService implements IGroupService {
       groupEntity.criteria.work_type = group.criteria.workType;
     }
 
+    if (
+      group.criteria.school &&
+      group.criteria.school !== groupEntity.criteria.school.name
+    ) {
+      groupEntity.criteria.school = await this.createOrFetchSchool(
+        new SchoolEntity(group.criteria.school)
+      );
+    }
+
+    if (group.criteria.subjects) {
+      const subjectsToCheck = group.criteria.subjects.map((subject) => {
+        return new SubjectEntity(subject);
+      });
+      if (!groupEntity.criteria.subjects) {
+        groupEntity.criteria.subjects = await this.createOrFetchSubjects(
+          subjectsToCheck
+        );
+      } else {
+        const oldSubjects = groupEntity.criteria.subjects.map((subject) => {
+          subject.name;
+        });
+        if (
+          group.criteria.subjects.sort().join(",") !==
+          oldSubjects.sort().join(",")
+        ) {
+          groupEntity.criteria.subjects = await this.createOrFetchSubjects(
+            subjectsToCheck
+          );
+        }
+      }
+    }
+
     return await this.groupRepo
       .save(groupEntity)
       .then((entity) => groupEntityToDto(entity))
@@ -275,7 +309,7 @@ export default class GroupService implements IGroupService {
     return false;
   }
 
-  async searchGroup(searchDto: SearchDTO): Promise<searchResult> {
+  async searchGroup(searchDto: CriteriaDto): Promise<searchResult> {
     if (!searchDto) throw new HttpException("No searchDto provided", 400);
 
     const allGroups = await this.fetchAllGroups().catch((ex) => {
@@ -284,23 +318,27 @@ export default class GroupService implements IGroupService {
 
     const tempResult: searchResult = {};
 
-    function checkGradeGoal(group: GroupDto, score: number) {
+    function checkGradeGoal(group: GroupOutDto, score: number) {
       if (group.criteria.gradeGoal === searchDto.gradeGoal) {
         score =
           score +
           Math.round(
-            SearchWeightValues.GRADE_GOAL / SearchWeightValues.MAX / 100
+            SearchWeightValues.GRADE_GOAL /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           );
       }
       return score;
     }
 
-    function checkWorkFrequency(group: GroupDto, score: number) {
+    function checkWorkFrequency(group: GroupOutDto, score: number) {
       if (group.criteria.workFrequency === searchDto.workFrequency) {
         score =
           score +
           Math.round(
-            SearchWeightValues.WORK_FREQUENCY / SearchWeightValues.MAX / 100
+            SearchWeightValues.WORK_FREQUENCY /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           );
       } else if (
         searchDto.workFrequency === WorkFrequency.ANY ||
@@ -309,19 +347,23 @@ export default class GroupService implements IGroupService {
         score =
           score +
           Math.round(
-            SearchWeightValues.WORK_FREQUENCY / SearchWeightValues.MAX / 100
+            SearchWeightValues.WORK_FREQUENCY /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           ) /
             2;
       }
       return score;
     }
 
-    function checkWorkMethod(group: GroupDto, score: number) {
+    function checkWorkMethod(group: GroupOutDto, score: number) {
       if (group.criteria.workType === searchDto.workType) {
         score =
           score +
           Math.round(
-            SearchWeightValues.WORK_TYPE / SearchWeightValues.MAX / 100
+            SearchWeightValues.WORK_TYPE /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           );
       } else if (
         searchDto.workType === WorkType.ANY ||
@@ -330,83 +372,105 @@ export default class GroupService implements IGroupService {
         score =
           score +
           Math.round(
-            SearchWeightValues.WORK_TYPE / SearchWeightValues.MAX / 100
+            SearchWeightValues.WORK_TYPE /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           ) /
             2;
       }
       return score;
     }
 
-    function checkSize(group: GroupDto, score: number) {
+    function checkSize(group: GroupOutDto, score: number) {
       if (group.criteria.maxSize === searchDto.maxSize) {
         score =
           score +
           Math.round(
-            SearchWeightValues.MAX_SIZE / SearchWeightValues.MAX / 100
+            SearchWeightValues.MAX_SIZE /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           );
       }
       return score;
     }
 
-    function checkLanguage(group: GroupDto, score: number) {
+    function checkLanguage(group: GroupOutDto, score: number) {
       if (group.criteria.language === searchDto.language) {
         score =
           score +
           Math.round(
-            SearchWeightValues.LANGUAGE / SearchWeightValues.MAX / 100
+            SearchWeightValues.LANGUAGE /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           );
       } else if (!searchDto.language || group.criteria.language === "") {
         score =
           score +
           Math.round(
-            SearchWeightValues.LANGUAGE / SearchWeightValues.MAX / 100
+            SearchWeightValues.LANGUAGE /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           ) /
             2;
       }
       return score;
     }
 
-    function checkLocation(group: GroupDto, score: number) {
+    function checkLocation(group: GroupOutDto, score: number) {
       if (group.criteria.location === searchDto.location) {
         score =
           score +
           Math.round(
-            SearchWeightValues.LOCATION / SearchWeightValues.MAX / 100
+            SearchWeightValues.LOCATION /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           );
       } else if (!searchDto.location || group.criteria.location === "") {
         score =
           score +
           Math.round(
-            SearchWeightValues.LOCATION / SearchWeightValues.MAX / 100
+            SearchWeightValues.LOCATION /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
           ) /
             2;
       }
       return score;
     }
 
-    function checkSchool(group: GroupDto, score: number) {
+    function checkSchool(group: GroupOutDto, score: number) {
       if (group.criteria.school === searchDto.school) {
         score =
           score +
-          Math.round(SearchWeightValues.SCHOOL / SearchWeightValues.MAX / 100);
+          Math.round(
+            SearchWeightValues.SCHOOL /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
+          );
       } else if (!searchDto.school || group.criteria.school === "Ikke satt") {
         score =
           score +
-          Math.round(SearchWeightValues.SCHOOL / SearchWeightValues.MAX / 100) /
+          Math.round(
+            SearchWeightValues.SCHOOL /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
+          ) /
             2;
       }
       return score;
     }
 
-    function checkSubjects(group: GroupDto, score: number) {
-      if (searchDto.subject) {
+    function checkSubjects(group: GroupOutDto, score: number) {
+      if (searchDto.subjects) {
         const scorePerSubject =
           Math.round(
-            SearchWeightValues.SUBJECTS / SearchWeightValues.MAX / 100
-          ) / searchDto.subject?.length;
-        searchDto.subject.forEach((sub) => {
-          if (group.criteria.subject) {
-            if (group.criteria.subject.includes(sub)) {
+            SearchWeightValues.SUBJECTS /
+              SearchWeightValues.MAX_POSSIBLE_SCORE /
+              100
+          ) / searchDto.subjects?.length;
+        searchDto.subjects.forEach((sub) => {
+          if (group.criteria.subjects) {
+            if (group.criteria.subjects.includes(sub)) {
               score = score + scorePerSubject;
             }
           }
@@ -478,7 +542,7 @@ export default class GroupService implements IGroupService {
 
     for (let i = 0; i < subjects.length; i++) {
       const checked = await this.subjectRepo
-        .findOneByOrFail({ name: subjects[i].name })
+        .findOneBy({ name: subjects[i].name })
         .then(async (foundSubject) => {
           if (!foundSubject) {
             return await this.subjectRepo
@@ -498,28 +562,29 @@ export default class GroupService implements IGroupService {
   }
 
   private async fetchUserAndGroup(userId: string, groupId: string) {
-    let user: UserEntity | null = null;
-    let group: GroupEntity | null = null;
-
-    await this.userRepo
+    const user = await this.userRepo
       .findOneBy({ uuid: userId })
-      .then((it: UserEntity | null) => {
-        if (it) user = it as UserEntity;
+      .then((it) => {
+        if (it) return it;
+        return null;
       })
       .catch(() => {
         throw new HttpException("Database connection lost", 500);
       });
-    await this.groupRepo
+
+    const group = await this.groupRepo
       .findOneBy({ uuid: groupId })
       .then((it) => {
-        if (it) group = it;
+        if (it) return it;
+        return null;
       })
       .catch(() => {
         throw new HttpException("Database connection lost", 500);
       });
 
-    if (!user || !group)
+    if (!user || !group) {
       throw new HttpException("User or group not found", 404);
+    }
 
     return { user, group };
   }
@@ -535,8 +600,13 @@ export default class GroupService implements IGroupService {
         }
       );
     }
-    school = await this.schoolRepo
-      .findOneByOrFail({ name: school.name })
+    school = await this.createOrFetchSchool(school);
+    return { subjects, school };
+  }
+
+  private async createOrFetchSchool(school: SchoolEntity) {
+    return await this.schoolRepo
+      .findOneBy({ name: school.name })
       .then(async (foundSchool) => {
         if (!foundSchool) {
           return this.groupRepo.save(school).then((savedSchool) => {
@@ -548,6 +618,5 @@ export default class GroupService implements IGroupService {
       .catch(() => {
         throw new HttpException("Database connection lost", 500);
       });
-    return { subjects, school };
   }
 }
