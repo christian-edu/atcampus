@@ -30,17 +30,18 @@ export default class GroupService implements IGroupService {
   ) {}
 
   async fetchAllGroups(): Promise<GroupOutDto[]> {
-    return await this.groupRepo
-      .find()
-      .then((entities) => {
-        return entities.map((entity) => {
-          return groupEntityToDto(entity);
-        });
-      })
-      .catch((ex) => {
-        if (ex instanceof HttpException) throw ex;
-        throw new HttpException("Database connection lost", 500);
-      });
+    const entities = await this.groupRepo.find().catch((ex) => {
+      throw ex;
+    });
+    const dtos: GroupOutDto[] = [];
+    entities.forEach(async (entity) => {
+      dtos.push(
+        await groupEntityToDto(entity).catch((ex) => {
+          throw ex;
+        })
+      );
+    });
+    return dtos;
   }
 
   async addGroup(group: GroupInDto, adminUuid: string): Promise<GroupOutDto> {
@@ -53,7 +54,7 @@ export default class GroupService implements IGroupService {
 
     let groupEntity: GroupEntity;
     if (admin != null) {
-      groupEntity = newGroupEntityFromDto(group, admin);
+      groupEntity = newGroupEntityFromDto(group);
       const { subjects, school } = await this.createOrFetchSubjectsAndSchool(
         groupEntity.criteria.school,
         groupEntity.criteria.subjects
@@ -63,6 +64,14 @@ export default class GroupService implements IGroupService {
       });
       groupEntity.criteria.school = school;
       groupEntity.criteria.subjects = subjects;
+
+      const groupMemberEntity = new GroupMemberEntity();
+      groupMemberEntity.group = groupEntity;
+      groupMemberEntity.user = admin;
+      groupMemberEntity.is_admin = true;
+      await this.groupMemberRepo.save(groupMemberEntity).catch((ex) => {
+        throw ex;
+      });
     } else {
       throw new HttpException("User not found", 404);
     }
@@ -143,12 +152,13 @@ export default class GroupService implements IGroupService {
 
     const newMember = new GroupMemberEntity();
     newMember.user = user;
+    newMember.group = group;
     newMember.is_admin = false;
 
     return await this.groupMemberRepo
       .save(newMember)
-      .then(async (gme: GroupMemberEntity) => {
-        return groupEntityToDto(await gme.group);
+      .then((gme: GroupMemberEntity) => {
+        return groupEntityToDto(gme.group);
       })
       .catch((ex) => {
         if (ex instanceof HttpException) throw ex;
@@ -282,9 +292,18 @@ export default class GroupService implements IGroupService {
       group.criteria.school &&
       group.criteria.school !== groupEntity.criteria.school.name
     ) {
-      groupEntity.criteria.school = await this.createOrFetchSchool(
+      const newSchool = await this.createOrFetchSchool(
         new SchoolEntity(group.criteria.school)
-      );
+      )
+        .then((it) => {
+          if (it instanceof SchoolEntity) return it;
+          throw new HttpException("ORM error", 500);
+        })
+        .catch((ex) => {
+          if (ex instanceof HttpException) throw ex;
+          throw new HttpException("Database connection lost", 500);
+        });
+      groupEntity.criteria.school = newSchool;
     }
 
     if (group.criteria.subjects) {
@@ -665,7 +684,7 @@ export default class GroupService implements IGroupService {
       .findOneBy({ name: school.name })
       .then(async (foundSchool) => {
         if (!foundSchool) {
-          return this.groupRepo.save(school).then((savedSchool) => {
+          return this.schoolRepo.save(school).then((savedSchool) => {
             return savedSchool;
           });
         }
