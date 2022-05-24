@@ -13,7 +13,7 @@ export default class AuthRouter extends ServerRouter {
       const { userName, email, password } = req?.body;
 
       try {
-        const jwt = this.authService.authenticateUser(
+        const jwt = await this.authService.authenticateUser(
           userName,
           email,
           password
