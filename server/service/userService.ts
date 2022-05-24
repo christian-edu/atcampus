@@ -70,22 +70,26 @@ export default class UserService {
     return userEntityToDto(user);
   }
 
-  public async getGroupsByUserId(userId: string): Promise<GroupOutDto[]> {
+  public async getGroupsByUserId(userId: string): Promise<GroupEntity[]> {
     let groups;
     try {
       groups = await this.groupRepo.find({
         where: {
           users: {
-            uuid: userId,
+            user: {
+              uuid: userId,
+            },
           },
         },
       });
     } catch (e) {
       throw new HttpException("Something went wrong!", 500);
     }
-    console.log(groups);
     if (!groups || groups.length === 0)
       throw new HttpException("No groups found", 204);
-    return groups.map((group) => groupEntityToDto(group));
+    console.log(groups);
+    return groups;
+    // debugger;
+    // return groups.map((group) => groupEntityToDto(group));
   }
 }
