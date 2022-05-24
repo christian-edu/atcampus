@@ -14,6 +14,7 @@ import path from "path";
 import ChatService from "./service/chatService";
 import WebSocketServer from "./websockets/webSocketServer";
 import AuthService from "./service/authService";
+import UserRouter from "./controller/userRouter";
 
 dotenv.config();
 const app = express();
