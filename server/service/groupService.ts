@@ -16,7 +16,7 @@ import { SearchWeightValues } from "./enums/SearchWeightValues";
 import { WorkFrequency } from "../entity/enums/WorkFrequency";
 import { WorkType } from "../entity/enums/WorkType";
 import { SchoolEntity } from "../entity/SchoolEntity";
-import { GroupInDto, GroupOutDto, GroupUpdateDto } from "../dto/GroupInDto";
+import { GroupInDto, GroupOutDto } from "../dto/GroupInDto";
 import { UserOutDto } from "../dto/UserInDto";
 
 export default class GroupService implements IGroupService {
