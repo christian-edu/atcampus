@@ -33,7 +33,11 @@ repo
         "pirate",
         "a88493c3-263d-4aa6-808f-ace53f8e1eb7"
       );
-      const userService = new UserService(repos.userRepo, schoolRepo);
+      const userService = new UserService(
+        repos.userRepo,
+        schoolRepo,
+        repos.groupRepo
+      );
       const res = await userService.addUser(user);
       console.info(res);
       const groupService = new GroupService(

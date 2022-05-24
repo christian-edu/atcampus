@@ -36,6 +36,7 @@ export default class GroupService implements IGroupService {
         });
       })
       .catch(() => {
+        // TODO: skriv bedre feilmelding(er)
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -44,6 +45,7 @@ export default class GroupService implements IGroupService {
     const admin = await this.userRepo
       .findOneBy({ uuid: adminUuid })
       .catch(() => {
+        // TODO: skriv bedre feilmelding(er)
         throw new HttpException("Database connection lost", 500);
       });
 
@@ -64,6 +66,7 @@ export default class GroupService implements IGroupService {
       .save(groupEntity)
       .then((entity) => groupEntityToDto(entity))
       .catch(() => {
+        // TODO: skriv bedre feilmelding(er)
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -81,6 +84,7 @@ export default class GroupService implements IGroupService {
         return groupEntityToDto(entity);
       })
       .catch(() => {
+        // TODO: skriv bedre feilmelding(er)
         throw new HttpException("Database connection lost", 500);
       });
   }
