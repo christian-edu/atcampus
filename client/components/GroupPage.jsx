@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Modal from './shared/Modal';
 import GroupSettings from './shared/GroupSettings';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   MenuAlt1Icon,
   UserGroupIcon,

@@ -38,7 +38,10 @@ const ProfileMenu = ({ onClick }) => {
           {profileMenu.map(({ path, title, Icon }) => {
             if (title === 'Logg ut')
               return (
-                <li className='flex flex-row justify-between my-1 hover:bg-purple-2 px-4'>
+                <li
+                  className='flex flex-row justify-between my-1 hover:bg-purple-2 px-4'
+                  key={title}
+                >
                   <button
                     className='flex flex-row w-full py-3'
                     onClick={logOut}
@@ -50,7 +53,10 @@ const ProfileMenu = ({ onClick }) => {
                 </li>
               );
             return (
-              <li className='flex flex-row justify-between my-1 hover:bg-purple-2 px-4'>
+              <li
+                className='flex flex-row justify-between my-1 hover:bg-purple-2 px-4'
+                key={title}
+              >
                 <Link className='flex flex-row w-full py-3' to={path}>
                   <Icon className='h-6 w-6 text-white mr-4' />
                   {title}
