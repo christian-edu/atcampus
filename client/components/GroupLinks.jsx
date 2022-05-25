@@ -20,7 +20,7 @@ const GroupLinks = () => {
   const { data, error, loading } = useLoader(() => fetchJSON('/api/v1/user/groups'));
 
 
-    /*console.log(data[0].name)*/
+    console.log(data)
 
 
 
@@ -54,12 +54,12 @@ const GroupLinks = () => {
               <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
 
                   {data.map((group) => (
-                      <h3>{group.name}</h3>
-                      /*<GroupCard
+
+                      <GroupCard
                         group={group}
                         key={group.name}
                         onClick={() => navigate('/group/specific', { state: { group } })}
-                      />*/
+                      />
                   ))}
               </div>
           </div>

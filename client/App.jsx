@@ -51,12 +51,12 @@ const App = () => {
                 />
                 <Route path={'/group/specific'} element={<GroupPage />} />
                 <Route
-                  path={'/group/groupCriteria'}
+                  path={'/groups/specific/groupCriteria'}
                   element={<ShowCriteriaPage/>}
                 />
                 <Route path={'/group/members'} element={<GroupMembers />} />
                 <Route
-                  path={'/group/editProfile'}
+                  path={'/groups/specific/editProfile'}
                   element={<EditGroupProfile />}
                 />
                 <Route

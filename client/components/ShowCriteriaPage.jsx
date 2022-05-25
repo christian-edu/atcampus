@@ -15,9 +15,11 @@ function ShowList({group}){
     useEffect(()=>{
 
 
-        const frequencyValue = group.criteria.workFrequency;
 
-        const workTypeValue = group.criteria.workType;
+
+        const frequencyValue = group.criteria.work_frequency;
+
+        const workTypeValue = group.criteria.work_type;
 
         if(workTypeValue === "HYBRID"){
             setUserFriendlyWorkType("Både digitalt og fysisk")
@@ -29,7 +31,7 @@ function ShowList({group}){
         if(workTypeValue === "digitalt"){
             setUserFriendlyWorkType("Bare digitalt")
         }
-        if(frequencyValue === "W1"){
+      /*  if(frequencyValue === "W1"){
             setUserFriendlyFrequency("1 gang i uken")
         }
         if(frequencyValue === "W2"){
@@ -55,23 +57,23 @@ function ShowList({group}){
         }
         if(frequencyValue === "M2"){
             setUserFriendlyFrequency("2 ganger i månden")
-        }
+        }*/
     },[])
 
 
 
     return <div>
-        <h4>Dine kriterier</h4>
-        <h4>Skole: {group.criteria.school}</h4>
+      <h4>Dine kriterier</h4>
+        <h4>Skole: {group.criteria.school.name}</h4>
         <h4>Sted: {group.criteria.location}</h4>
-        <h4>Karaktermål: {group.criteria.gradeGoal}</h4>
+        <h4>Karaktermål: {group.criteria.grade_goal}</h4>
         <h4>Arbeidsfrekvens: {userFriendlyFrequency}</h4>
         <h4>Språk: {group.criteria.language}</h4>
-        <h4>Størrelse: {group.criteria.maxSize}</h4>
+        <h4>Størrelse: {group.criteria.max_size}</h4>
         <h4>Arbeidstype: {userFriendlyWorkType}</h4>
         <h4>Emner:</h4>
-        {group.criteria.subject.map((subject) => (
-            <h4 key={subject}>{subject}</h4>
+        {group.criteria.subjects.map((subject) => (
+            <h4 key={subject}>{subject.name}</h4>
         ))}
     </div>
 }
