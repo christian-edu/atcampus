@@ -346,8 +346,7 @@ export default class GroupService implements IGroupService {
       throw ex;
     });
 
-    const tempResult: searchResult = {};
-    const tempResult2: any[] = [];
+    const resultArray: any[] = [];
 
     function checkGradeGoal(group: GroupOutDto, score: number) {
       if (group.criteria.gradeGoal === searchDto.gradeGoal) {
@@ -539,8 +538,6 @@ export default class GroupService implements IGroupService {
     allGroups.forEach((group) => {
       let score = 0;
 
-      //Karaktermål
-      // Burde være mulig å sette opp lavere poengsum om man er 1 karakter unna
       score = checkGradeGoal(group, score);
 
       score = checkWorkFrequency(group, score);
@@ -560,26 +557,15 @@ export default class GroupService implements IGroupService {
       // Tar høyde for avrundingsfeil
       if (score > 100) score = 100;
 
-      if (!group.uuid) {
-        // Dette kan aldri skje, men TypeScript
-        // blir sint på meg om jeg ikke har det med
-        tempResult[group.name] = { group, score };
-        tempResult2.push([group, score]);
-      } else {
-        tempResult[group.uuid] = { group, score };
-        tempResult2.push([group, score]);
-      }
+      resultArray.push([group, score]);
     });
 
-    // Dette er en hacky løsning, og MÅ refaktoreres
-    const resultArray = Object.entries(tempResult)
-      .sort(([, a], [, b]) => a.score - b.score)
-      .slice(0, 20); // tar bare de 20 beste resultatene
+    resultArray.sort((a, b) => a[1] - b[1]).slice(0, 20);
 
     const actualResult: searchResult = {};
 
     resultArray.forEach((element) => {
-      actualResult[element[0]] = element[1];
+      actualResult[element[0].uuid] = element[1];
     });
 
     return actualResult;
