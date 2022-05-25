@@ -1,7 +1,7 @@
 import UserService from "../service/userService";
 import { IRouter } from "express";
 import { ServerRouter } from "./serverRouter";
-import HttpException from "../util/errorUtils";
+import { UserDto } from "../dto/userDto";
 
 export default class UserRouter extends ServerRouter {
   constructor(private userService: UserService, private router: IRouter) {
@@ -12,6 +12,18 @@ export default class UserRouter extends ServerRouter {
     this.router.get("/", async (req, res) => {
       try {
         res.json(await this.userService.findUserById(req.userId));
+      } catch (e) {
+        this.sendError(res, e);
+      }
+    });
+    this.router.post("/", async (req, res) => {
+      const { userName, email, password } = req.body;
+
+      try {
+        const savedUser = this.userService.addUser(
+          new UserDto(userName, email, password)
+        );
+        res.json(savedUser);
       } catch (e) {
         this.sendError(res, e);
       }
