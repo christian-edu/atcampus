@@ -46,7 +46,8 @@ repo
         repos.groupMemberRepo,
         repos.schoolRepo,
         repos.subjectRepo,
-        repos.userRepo
+        repos.userRepo,
+        repos.criteriaRepo
       );
       const groupRoutes = new GroupRouter(groupService, express.Router());
       const authRouter = new AuthRouter(
