@@ -1,18 +1,24 @@
-import { Link, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { fetchJSON } from '../fetchJSON';
 import { useLoader } from '../useLoader';
 import Loading from './shared/Loading';
 import GroupCard from './shared/GroupCard';
 import Button from './shared/Button';
 
+
 const GroupLinks = () => {
   // Should get the data for the group names you are a part of
 
   const navigate = useNavigate();
 
-  // Should fetch data related to the user, and save it in the context
+
+  // Send request to /user, if there is no access token saved in the cookie, returns 401 for a redirect back to /login
+
+    // if its not a 401, we take the user data and save it in a context
 
   const { data, error, loading } = useLoader(() => fetchJSON('/api/v1/groups'));
+
+
 
   if (loading) return <Loading />;
 
@@ -24,6 +30,8 @@ const GroupLinks = () => {
       </div>
     );
   }
+
+  // Return this only if they are logged in
 
   return (
     <div>
@@ -42,7 +50,7 @@ const GroupLinks = () => {
           <GroupCard
             group={group}
             key={group.name}
-            onClick={() => navigate('/groups/specific', { state: { group } })}
+            onClick={() => navigate('/group/specific', { state: { group } })}
           />
         ))}
       </div>

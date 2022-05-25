@@ -21,7 +21,9 @@ const GroupPage = () => {
 
   const toggleSettings = () => setShowSettings((showSettings) => !showSettings);
 
-  let visible = '';
+
+  let visible;
+
   if (group.isPrivate) {
     visible = 'Privat';
   } else {
@@ -67,9 +69,7 @@ const GroupPage = () => {
         </li>
         <li className='border-b-2 border-purple-1 hover:bg-dark-6'>
           <button
-            onClick={() =>
-              navigate('/groups/specific/members', { state: { group } })
-            }
+            onClick={() => navigate('/group/members', { state: { group } })}
           >
             <Link to='/' className='flex gap-2 items-center text-lg py-4'>
               <UserGroupIcon className='h-6 text-purple-1' />

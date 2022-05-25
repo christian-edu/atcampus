@@ -16,8 +16,15 @@ import LeftNavBar from './components/shared/LeftNavBar';
 import { EditGroupProfile } from './components/EditGroupProfile';
 import BackButton from './components/shared/BackButton';
 import Breadcrumbs from './components/shared/Breadcrumbs';
+import {Login} from "./components/Login";
+import {ShowCriteriaPage} from "./components/ShowCriteriaPage";
+
+
 
 const App = () => {
+
+
+
   return (
     <>
       <BrowserRouter>
@@ -31,36 +38,33 @@ const App = () => {
               </div>
               <Breadcrumbs />
               <Routes>
-                <Route path='/' element={<Navigate replace to='/groups' />} />
-                <Route path={'/groups'} element={<GroupLinks />} />
-                <Route path={'/groups/searchGroup'} element={<SearchGroup />} />
+                <Route path={'/'} element={<GroupLinks />} />
+                <Route path={'/login'} element={<Login/>} />
+                <Route path={'/searchGroup'} element={<SearchGroup />} />
                 <Route
-                  path={'/groups/searchGroup/searchGroupResults'}
+                  path={'/searchGroup/searchGroupResults'}
                   element={<SearchGroupResults />}
                 />
                 <Route
-                  path={'/groups/createGroup'}
+                  path={'/createGroup'}
                   element={<GroupCriteriaPage createdGroup={true} />}
                 />
-                <Route path={'/groups/specific'} element={<GroupPage />} />
+                <Route path={'/group/specific'} element={<GroupPage />} />
                 <Route
-                  path={'/groups/specific/groupCriteria'}
-                  element={<GroupCriteriaPage editGroup={true} />}
+                  path={'/group/groupCriteria'}
+                  element={<ShowCriteriaPage/>}
                 />
+                <Route path={'/group/members'} element={<GroupMembers />} />
                 <Route
-                  path={'/groups/specific/members'}
-                  element={<GroupMembers />}
-                />
-                <Route
-                  path={'/groups/specific/editProfile'}
+                  path={'/group/editProfile'}
                   element={<EditGroupProfile />}
                 />
                 <Route
-                  path={'/groups/specific/members/searchUser'}
+                  path={'/group/members/searchUser'}
                   element={<SearchUser />}
                 />
                 <Route
-                  path={'/groups/specific/members/searchUser/searchUserResults'}
+                  path={'/group/members/searchUser/searchUserResults'}
                   element={<SearchUserResults />}
                 />
                 <Route path={'/questions'} element={<Questions />} />
