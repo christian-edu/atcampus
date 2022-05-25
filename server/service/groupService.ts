@@ -1,4 +1,3 @@
-import HttpException from "../util/httpException";
 import { IGroupService, searchResult } from "./IGroupService";
 import { DeleteResult, Repository } from "typeorm";
 import { GroupEntity } from "../entity/GroupEntity";
@@ -18,7 +17,8 @@ import { GroupInDto, GroupOutDto } from "../dto/GroupInOutDto";
 import { UserOutDto } from "../dto/UserInOutDto";
 import { CriteriaDto } from "../dto/criteriaDto";
 import { MaxSize } from "../entity/enums/MaxSize";
-import { memberEntityToDto_user } from "../dto/utils/memberMappers";
+import HttpException, { queryFailedGuard } from "../util/errorUtils";
+import { CriteriaEntity } from "../entity/CriteriaEntity";
 
 export default class GroupService implements IGroupService {
   constructor(
@@ -26,7 +26,8 @@ export default class GroupService implements IGroupService {
     private groupMemberRepo: Repository<GroupMemberEntity>,
     private schoolRepo: Repository<SchoolEntity>,
     private subjectRepo: Repository<SubjectEntity>,
-    private userRepo: Repository<UserEntity>
+    private userRepo: Repository<UserEntity>,
+    private criteriaRepo: Repository<CriteriaEntity>
   ) {}
 
   async fetchAllGroups(): Promise<GroupOutDto[]> {
@@ -46,9 +47,9 @@ export default class GroupService implements IGroupService {
       .findOneBy({ uuid: adminUuid })
       .catch((ex) => {
         if (ex instanceof HttpException) throw ex;
+        console.error(ex);
         throw new HttpException("Database connection lost", 500);
       });
-
     let groupEntity: GroupEntity;
     if (admin != null) {
       groupEntity = newGroupEntityFromDto(group);
@@ -57,18 +58,21 @@ export default class GroupService implements IGroupService {
         groupEntity.criteria.subjects
       ).catch((ex) => {
         if (ex instanceof HttpException) throw ex;
+        console.error(ex);
         throw new HttpException("Database connection lost", 500);
       });
       groupEntity.criteria.school = school;
       groupEntity.criteria.subjects = subjects;
+      let groupCriteriaRes = await this._saveGroupCriteria(
+        groupEntity.criteria
+      );
 
-      const groupMemberEntity = new GroupMemberEntity();
-      groupMemberEntity.group = groupEntity;
-      groupMemberEntity.user = admin;
-      groupMemberEntity.is_admin = true;
-      await this.groupMemberRepo.save(groupMemberEntity).catch((ex) => {
-        throw ex;
-      });
+      let groupEntityRes = await this._saveGroupEntity(
+        groupCriteriaRes,
+        groupEntity
+      );
+
+      await this._saveGroupMemberEntity(groupEntityRes, admin);
     } else {
       throw new HttpException("User not found", 404);
     }
@@ -78,6 +82,7 @@ export default class GroupService implements IGroupService {
       .then((entity) => groupEntityToDto(entity))
       .catch((ex) => {
         if (ex instanceof HttpException) throw ex;
+        console.error(ex);
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -174,121 +179,142 @@ export default class GroupService implements IGroupService {
   }
 
   async updateGroup(group: GroupInDto): Promise<GroupOutDto> {
-    if (!group.uuid)
-      throw new HttpException(
-        "No group uuid found in body. Expected {\ngroup: groupName\n}",
-        400
-      );
+    if (!group.uuid) throw new HttpException("No group uuid found", 400);
 
-    return await this.groupRepo
-      .findOneBy({ uuid: group.uuid })
-      .then(async (groupEntity) => {
-        if (!groupEntity) throw new HttpException("Group not found", 404);
-        if (group.name && group.name !== groupEntity.name) {
-          groupEntity.name = group.name;
-        }
-        if (group.rules && group.rules !== groupEntity.rules) {
-          groupEntity.rules = group.rules;
-        }
-        if (
-          group.isPrivate !== undefined &&
-          group.isPrivate !== groupEntity.isPrivate
-        ) {
-          groupEntity.isPrivate = group.isPrivate;
-        }
-        if (
-          group.criteria.gradeGoal &&
-          group.criteria.gradeGoal !== groupEntity.criteria.grade_goal
-        ) {
-          groupEntity.criteria.grade_goal = group.criteria.gradeGoal;
-        }
-        if (
-          group.criteria.workFrequency &&
-          group.criteria.workFrequency !== groupEntity.criteria.work_frequency
-        ) {
-          groupEntity.criteria.work_frequency = group.criteria.workFrequency;
-        }
-        if (
-          group.criteria.language &&
-          group.criteria.language !== groupEntity.criteria.language
-        ) {
-          groupEntity.criteria.language = group.criteria.language;
-        }
-        if (
-          group.criteria.maxSize &&
-          group.criteria.maxSize !== groupEntity.criteria.max_size
-        ) {
-          groupEntity.criteria.max_size = group.criteria.maxSize;
-        }
-        if (
-          group.criteria.location &&
-          group.criteria.location !== groupEntity.criteria.location
-        ) {
-          groupEntity.criteria.location = group.criteria.location;
-        }
-        if (
-          group.criteria.workType &&
-          group.criteria.workType !== groupEntity.criteria.work_type
-        ) {
-          groupEntity.criteria.work_type = group.criteria.workType;
-        }
-        if (
-          group.criteria.school &&
-          group.criteria.school !== groupEntity.criteria.school.name
-        ) {
-          groupEntity.criteria.school = await this.createOrFetchSchool(
-            new SchoolEntity(group.criteria.school)
-          )
-            .then((it) => {
-              if (it instanceof SchoolEntity) return it;
-              throw new HttpException("ORM error", 500);
-            })
-            .catch((ex) => {
-              if (ex instanceof HttpException) throw ex;
-              throw new HttpException("Database connection lost", 500);
-            });
-        }
+    const groupRes = await this._getGroupById(group.uuid);
+    if (!groupRes)
+      throw new HttpException("Could not find any group by that id", 400);
 
-        if (group.criteria.subjects) {
-          const subjectsToCheck = group.criteria.subjects.map((subject) => {
-            return new SubjectEntity(subject);
-          });
-          if (!groupEntity.criteria.subjects) {
-            groupEntity.criteria.subjects = await this.createOrFetchSubjects(
-              subjectsToCheck
-            ).catch((ex) => {
-              if (ex instanceof HttpException) throw ex;
-              throw new HttpException("Database connection lost", 500);
-            });
-          } else {
-            const oldSubjects = groupEntity.criteria.subjects.map((subject) => {
-              return subject.name;
-            });
-            if (
-              group.criteria.subjects.sort().join(",") !==
-              oldSubjects.sort().join(",")
-            ) {
-              groupEntity.criteria.subjects = await this.createOrFetchSubjects(
-                subjectsToCheck
-              ).catch((ex) => {
-                if (ex instanceof HttpException) throw ex;
-                throw new HttpException("Database connection lost", 500);
-              });
-            }
-          }
-        }
-        return groupEntity;
-      })
-      .then((entity) => {
-        return this.groupRepo.save(entity);
-      })
-      .then(async (savedEntity) => {
-        return await groupEntityToDto(savedEntity);
-      })
-      .catch((ex) => {
-        if (ex instanceof HttpException) throw ex;
-        throw new HttpException("Database connection lost", 500);
-      });
+    const groupEntity = newGroupEntityFromDto(group);
+    const { subjects, school } = await this.createOrFetchSubjectsAndSchool(
+      groupEntity.criteria.school,
+      groupEntity.criteria.subjects
+    );
+
+    groupEntity.uuid = group.uuid;
+    groupEntity.criteria.school = school;
+    groupEntity.criteria.subjects = subjects;
+    groupEntity.users = groupRes.users;
+
+    try {
+      return groupEntityToDto(await this.groupRepo.save(groupEntity));
+    } catch (e) {
+      if (queryFailedGuard(e)) {
+        throw new HttpException(e.message, 500);
+      } else {
+        throw e;
+      }
+    }
+
+    // return await this.groupRepo
+    //   .findOneBy({ uuid: group.uuid })
+    //   .then(async (groupEntity) => {
+    //     if (!groupEntity) throw new HttpException("Group not found", 404);
+    //     if (group.name && group.name !== groupEntity.name) {
+    //       groupEntity.name = group.name;
+    //     }
+    //     if (group.rules && group.rules !== groupEntity.rules) {
+    //       groupEntity.rules = group.rules;
+    //     }
+    //     if (
+    //       group.isPrivate !== undefined &&
+    //       group.isPrivate !== groupEntity.isPrivate
+    //     ) {
+    //       groupEntity.isPrivate = group.isPrivate;
+    //     }
+    //     if (
+    //       group.criteria.gradeGoal &&
+    //       group.criteria.gradeGoal !== groupEntity.criteria.grade_goal
+    //     ) {
+    //       groupEntity.criteria.grade_goal = group.criteria.gradeGoal;
+    //     }
+    //     if (
+    //       group.criteria.workFrequency &&
+    //       group.criteria.workFrequency !== groupEntity.criteria.work_frequency
+    //     ) {
+    //       groupEntity.criteria.work_frequency = group.criteria.workFrequency;
+    //     }
+    //     if (
+    //       group.criteria.language &&
+    //       group.criteria.language !== groupEntity.criteria.language
+    //     ) {
+    //       groupEntity.criteria.language = group.criteria.language;
+    //     }
+    //     if (
+    //       group.criteria.maxSize &&
+    //       group.criteria.maxSize !== groupEntity.criteria.max_size
+    //     ) {
+    //       groupEntity.criteria.max_size = group.criteria.maxSize;
+    //     }
+    //     if (
+    //       group.criteria.location &&
+    //       group.criteria.location !== groupEntity.criteria.location
+    //     ) {
+    //       groupEntity.criteria.location = group.criteria.location;
+    //     }
+    //     if (
+    //       group.criteria.workType &&
+    //       group.criteria.workType !== groupEntity.criteria.work_type
+    //     ) {
+    //       groupEntity.criteria.work_type = group.criteria.workType;
+    //     }
+    //     if (
+    //       group.criteria.school &&
+    //       group.criteria.school !== groupEntity.criteria.school.name
+    //     ) {
+    //       groupEntity.criteria.school = await this.createOrFetchSchool(
+    //         new SchoolEntity(group.criteria.school)
+    //       )
+    //         .then((it) => {
+    //           if (it instanceof SchoolEntity) return it;
+    //           throw new HttpException("ORM error", 500);
+    //         })
+    //         .catch((ex) => {
+    //           if (ex instanceof HttpException) throw ex;
+    //           throw new HttpException("Database connection lost", 500);
+    //         });
+    //     }
+    //
+    //     if (group.criteria.subjects) {
+    //       const subjectsToCheck = group.criteria.subjects.map((subject) => {
+    //         return new SubjectEntity(subject);
+    //       });
+    //       if (!groupEntity.criteria.subjects) {
+    //         groupEntity.criteria.subjects = await this.createOrFetchSubjects(
+    //           subjectsToCheck
+    //         ).catch((ex) => {
+    //           if (ex instanceof HttpException) throw ex;
+    //           throw new HttpException("Database connection lost", 500);
+    //         });
+    //       } else {
+    //         const oldSubjects = groupEntity.criteria.subjects.map((subject) => {
+    //           return subject.name;
+    //         });
+    //         if (
+    //           group.criteria.subjects.sort().join(",") !==
+    //           oldSubjects.sort().join(",")
+    //         ) {
+    //           groupEntity.criteria.subjects = await this.createOrFetchSubjects(
+    //             subjectsToCheck
+    //           ).catch((ex) => {
+    //             if (ex instanceof HttpException) throw ex;
+    //             throw new HttpException("Database connection lost", 500);
+    //           });
+    //         }
+    //       }
+    //     }
+    //     return groupEntity;
+    //   })
+    //   .then((entity) => {
+    //     return this.groupRepo.save(entity);
+    //   })
+    //   .then(async (savedEntity) => {
+    //     return await groupEntityToDto(savedEntity);
+    //   })
+    //   .catch((ex) => {
+    //     if (ex instanceof HttpException) throw ex;
+    //     throw new HttpException("Database connection lost", 500);
+    //   });
   }
 
   async deleteGroup(groupId: string): Promise<boolean> {
@@ -628,5 +654,58 @@ export default class GroupService implements IGroupService {
         if (ex instanceof HttpException) throw ex;
         throw new HttpException("Database connection lost", 500);
       });
+  }
+
+  private async _saveGroupCriteria(criteria: CriteriaEntity) {
+    try {
+      return await this.criteriaRepo.save(criteria);
+    } catch (e) {
+      if (queryFailedGuard(e)) {
+        throw new HttpException(e.message, 500);
+      } else throw new HttpException("Something went wrong!", 500);
+    }
+  }
+
+  private async _saveGroupMemberEntity(
+    groupEntityRes: GroupEntity | undefined,
+    admin: UserEntity
+  ) {
+    const groupMemberEntity = new GroupMemberEntity();
+
+    if (groupEntityRes) {
+      groupMemberEntity.group = groupEntityRes;
+      groupMemberEntity.user = admin;
+      groupMemberEntity.is_admin = true;
+      await this.groupMemberRepo.save(groupMemberEntity).catch((ex) => {
+        console.error(ex);
+        throw ex;
+      });
+    } else throw new HttpException("Could not store the group", 500);
+  }
+
+  private async _saveGroupEntity(
+    groupCriteria: CriteriaEntity,
+    groupEntity: GroupEntity
+  ) {
+    if (groupCriteria) {
+      try {
+        return await this.groupRepo.save(groupEntity);
+      } catch (e: unknown) {
+        if (queryFailedGuard(e)) {
+          throw new HttpException(e.message, 500);
+        }
+      }
+    } else throw new HttpException("Could not store the criterias!", 500);
+  }
+
+  private async _getGroupById(uuid: string) {
+    try {
+      return await this.groupRepo.findOneBy({ uuid: uuid });
+    } catch (e) {
+      if (queryFailedGuard(e)) {
+        throw new HttpException(e.message, 500);
+      }
+      throw new HttpException("Something went wrong", 500);
+    }
   }
 }
