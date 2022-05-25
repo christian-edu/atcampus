@@ -8,12 +8,10 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     return;
   }
   const { auth_token } = req.signedCookies;
-  console.log("Checking token");
   if (!auth_token) {
     next();
     return;
   }
-  console.log("Has auth token!");
   try {
     const verifiedToken = jwt.verify(auth_token, process.env.JWT_KEY as string);
     req.userId = (verifiedToken as JwtPayload)?.userId;
@@ -34,6 +32,7 @@ export class HttpPath {
   ) {}
 }
 
+// todo: klasse som singleton, kan konfigureres i en config-fil og sette den som middleware i server elns?
 export function setProtectedRoutes(
   req: Request,
   res: Response,

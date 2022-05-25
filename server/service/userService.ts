@@ -64,6 +64,7 @@ export default class UserService {
         uuid: userId,
       });
     } catch (e) {
+      console.error(e);
       throw new HttpException("Something went wrong!", 500);
     }
     if (!user) throw new HttpException("Could not get user", 204);
