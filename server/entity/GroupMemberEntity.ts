@@ -3,7 +3,7 @@ import { UserEntity } from "./UserEntity";
 import { GroupEntity } from "./GroupEntity";
 import { v4 as uuidv4 } from "uuid";
 
-@Entity()
+@Entity({ name: "group_members" })
 export class GroupMemberEntity {
   // constructor(
   //   user: UserEntity,
@@ -24,10 +24,10 @@ export class GroupMemberEntity {
   is_admin: boolean = false;
 
   @ManyToOne(() => UserEntity, (user) => user.groups, { eager: true })
-  @JoinColumn({ name: "user_uuid" })
+  @JoinColumn({ name: "user" })
   user!: UserEntity;
 
   @ManyToOne(() => GroupEntity, (group) => group.users, { eager: true })
-  @JoinColumn({ name: "group_uuid" })
+  @JoinColumn({ name: "group" })
   group!: GroupEntity;
 }

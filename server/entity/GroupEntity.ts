@@ -12,7 +12,7 @@ import { GroupRequestEntity } from "./GroupRequestEntity";
 import { v4 as uuidv4 } from "uuid";
 import { UserEntity } from "./UserEntity";
 
-@Entity()
+@Entity({ name: "groups" })
 export class GroupEntity {
   constructor(
     name: string,
@@ -49,7 +49,7 @@ export class GroupEntity {
   isPrivate: boolean;
 
   @OneToOne(() => CriteriaEntity, { eager: true })
-  @JoinColumn({ name: "criteria_uuid" })
+  @JoinColumn({ name: "criteria" })
   criteria: CriteriaEntity;
 
   @OneToMany(() => GroupMemberEntity, (gm) => gm.group, { lazy: true })

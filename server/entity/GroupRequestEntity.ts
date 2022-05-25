@@ -4,7 +4,7 @@ import { GroupEntity } from "./GroupEntity";
 import { Recipient } from "./enums/Recipient";
 import { v4 as uuidv4 } from "uuid";
 
-@Entity()
+@Entity({ name: "group_requests" })
 export class GroupRequestEntity {
   constructor(
     recipient: Recipient,

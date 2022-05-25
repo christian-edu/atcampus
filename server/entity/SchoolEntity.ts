@@ -3,7 +3,7 @@ import { CriteriaEntity } from "./CriteriaEntity";
 import { UserEntity } from "./UserEntity";
 import { v4 as uuidv4 } from "uuid";
 
-@Entity()
+@Entity({ name: "schools" })
 export class SchoolEntity {
   constructor(name = "Ikke satt") {
     this.uuid = uuidv4();

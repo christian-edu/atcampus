@@ -137,6 +137,7 @@ export default class GroupService implements IGroupService {
   }
 
   async addMember(groupId: string, userId: string): Promise<GroupOutDto> {
+    console.log("adding member");
     return await this.fetchUserAndGroup(userId, groupId).then(
       async ({ foundUser: user, foundGroup: group }) => {
         const newMember = new GroupMemberEntity();
@@ -151,7 +152,7 @@ export default class GroupService implements IGroupService {
           })
           .catch((ex) => {
             if (ex instanceof HttpException) throw ex;
-            throw new HttpException("Database connection lost", 500);
+            throw ex;
           });
       }
     );
@@ -595,6 +596,7 @@ export default class GroupService implements IGroupService {
       .findOneBy({ uuid: userId })
       .then((foundUser) => {
         if (!foundUser) throw new HttpException("User not found", 404);
+        console.log("user found");
         return foundUser;
       })
       .then((foundUser) => {
@@ -602,12 +604,13 @@ export default class GroupService implements IGroupService {
           .findOneBy({ uuid: groupId })
           .then((foundGroup) => {
             if (!foundGroup) throw new HttpException("Group not found", 404);
+            console.log("group found");
             return { foundUser, foundGroup };
           });
       })
       .catch((ex) => {
         if (ex instanceof HttpException) throw ex;
-        throw new HttpException("Database connection lost", 500);
+        throw ex;
       });
   }
 

@@ -10,7 +10,7 @@ import { UserEntity } from "./UserEntity";
 import { GroupEntity } from "./GroupEntity";
 import { v4 as uuidv4 } from "uuid";
 
-@Entity()
+@Entity({ name: "chat_messages" })
 export class ChatMessageEntity {
   constructor(
     message: string,
@@ -31,11 +31,11 @@ export class ChatMessageEntity {
   message: string;
 
   @ManyToOne(() => UserEntity)
-  @JoinColumn({ name: "user_uuid" })
+  @JoinColumn({ name: "user" })
   user!: UserEntity;
 
   @ManyToOne(() => GroupEntity)
-  @JoinColumn({ name: "group_uuid" })
+  @JoinColumn({ name: "group" })
   group!: GroupEntity;
 
   @CreateDateColumn({

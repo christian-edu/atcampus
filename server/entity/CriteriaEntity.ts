@@ -15,7 +15,7 @@ import { SchoolEntity } from "./SchoolEntity";
 import { v4 as uuidv4 } from "uuid";
 import { MaxSize } from "./enums/MaxSize";
 
-@Entity()
+@Entity({ name: "criterias" })
 export class CriteriaEntity {
   constructor(
     gradeGoal = GradeGoal.PASS,
@@ -75,12 +75,12 @@ export class CriteriaEntity {
 
   @ManyToMany(() => SubjectEntity, { eager: true })
   @JoinTable({ name: "criteria_subjects" })
-  @JoinColumn({ name: "subject_uuid" })
+  @JoinColumn({ name: "subjects" })
   subjects: SubjectEntity[] | undefined;
 
   @ManyToOne(() => SchoolEntity, (school) => school.criteriaCollection, {
     eager: true,
   })
-  @JoinColumn({ name: "school_uuid" })
+  @JoinColumn({ name: "school" })
   school: SchoolEntity;
 }

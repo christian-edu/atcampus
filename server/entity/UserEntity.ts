@@ -12,7 +12,7 @@ import { GroupMemberEntity } from "./GroupMemberEntity";
 import { GroupRequestEntity } from "./GroupRequestEntity";
 import { v4 as uuidv4 } from "uuid";
 
-@Entity()
+@Entity({ name: "users" })
 export class UserEntity {
   constructor(
     userName: string,
