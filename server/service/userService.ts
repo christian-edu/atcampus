@@ -64,16 +64,25 @@ export default class UserService {
         uuid: userId,
       });
     } catch (e) {
+      console.error(e);
       throw new HttpException("Something went wrong!", 500);
     }
     if (!user) throw new HttpException("Could not get user", 204);
     return userEntityToDto(user);
   }
 
-  public async getGroupsByUserId(userId: string): Promise<GroupEntity[]> {
+  public async fetchGroupsByUserId(userId: string): Promise<GroupEntity[]> {
+    const groups = await this._fetchGroupsByUserId(userId);
+    if (!groups || groups.length === 0)
+      throw new HttpException("No groups found", 204);
+    return groups;
+    // return groups.map((group) => groupEntityToDto(group));
+  }
+
+  private async _fetchGroupsByUserId(userId: string) {
     let groups;
     try {
-      groups = await this.groupRepo.find({
+      return await this.groupRepo.find({
         where: {
           users: {
             user: {
@@ -85,11 +94,5 @@ export default class UserService {
     } catch (e) {
       throw new HttpException("Something went wrong!", 500);
     }
-    if (!groups || groups.length === 0)
-      throw new HttpException("No groups found", 204);
-    console.log(groups);
-    return groups;
-    // debugger;
-    // return groups.map((group) => groupEntityToDto(group));
   }
 }

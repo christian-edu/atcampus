@@ -20,28 +20,23 @@ export default class AuthService implements IAuthService {
     }
     if (!password) throw new HttpException("Password must be provided!", 400);
 
-    try {
-      const userFromDb = await this.userRepo.findOne({
-        where: [{ userName }, { email }],
-      });
-      console.log(userFromDb);
-      if (!userFromDb)
-        throw new HttpException("Details provided did not match any user", 400);
+    const userFromDb = await this.userRepo.findOne({
+      where: { userName },
+    });
+    if (!userFromDb)
+      throw new HttpException("Details provided did not match any user", 400);
 
-      const user = userFromDb as UserEntity;
-      const passwordsMatches = await bcrypt.compare(password, user.password);
-      if (!passwordsMatches)
-        throw new HttpException("Details provided did not match any user", 400);
+    const user = userFromDb as UserEntity;
+    const passwordsMatches = await bcrypt.compare(password, user.password);
+    if (!passwordsMatches)
+      throw new HttpException("Details provided did not match any user", 400);
 
-      return AuthService.generateToken(user);
-    } catch (e) {
-      throw new HttpException("Database connection lost", 500);
-    }
+    return AuthService.generateToken(user);
   }
 
   private static generateToken(user: UserEntity) {
     return jwt.sign({ userId: user.uuid }, process.env.JWT_KEY as string, {
       expiresIn: "1h",
-    });
+    }); //
   }
 }

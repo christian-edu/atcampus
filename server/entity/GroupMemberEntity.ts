@@ -23,11 +23,11 @@ export class GroupMemberEntity {
   @Column()
   is_admin: boolean = false;
 
-  @ManyToOne(() => UserEntity, (user) => user.groups)
+  @ManyToOne(() => UserEntity, (user) => user.groups, { eager: true })
   @JoinColumn({ name: "user_uuid" })
   user!: UserEntity;
 
-  @ManyToOne(() => GroupEntity, (group) => group.users)
+  @ManyToOne(() => GroupEntity, (group) => group.users, { eager: true })
   @JoinColumn({ name: "group_uuid" })
   group!: GroupEntity;
 }

@@ -18,7 +18,7 @@ export class GroupEntity {
     name: string,
     criteria: CriteriaEntity,
     isPrivate: boolean,
-    members: Array<GroupMemberEntity>,
+    // members: GroupMemberEntity[],
     rules = "",
     uuid = uuidv4()
   ) {
@@ -26,7 +26,7 @@ export class GroupEntity {
     this.name = name;
     this.criteria = criteria;
     this.isPrivate = isPrivate;
-    this.users = members!;
+    // this.users = members!;
     this.rules = rules;
   }
   @PrimaryColumn()
@@ -52,9 +52,9 @@ export class GroupEntity {
   @JoinColumn({ name: "criteria_uuid" })
   criteria: CriteriaEntity;
 
-  @OneToMany(() => GroupMemberEntity, (gm) => gm.group, { eager: true })
-  users: GroupMemberEntity[];
+  @OneToMany(() => GroupMemberEntity, (gm) => gm.group, { lazy: true })
+  users: Promise<GroupMemberEntity[]> | undefined;
 
-  @OneToMany(() => GroupRequestEntity, (gr) => gr.group)
-  requests: GroupRequestEntity[] | undefined;
+  // @OneToMany(() => GroupRequestEntity, (gr) => gr.group)
+  // requests: GroupRequestEntity[] | undefined;
 }

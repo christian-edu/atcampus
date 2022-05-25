@@ -7,7 +7,7 @@ export function userEntityToDto(entity: UserEntity): UserOutDto {
     entity.uuid,
     entity.userName,
     entity.email,
-    entity.school.name,
+    // entity.school.name,
     entity.firstName,
     entity.lastName
   );
