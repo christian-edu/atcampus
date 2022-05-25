@@ -1,12 +1,16 @@
 import { ChevronRightIcon } from '@heroicons/react/solid';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
+import { routes } from '../../services/routes';
 
 const Breadcrumbs = () => {
   // Component for breadcrumbs
   // WIP
 
-  const breadcrumbs = useBreadcrumbs();
+  const location = useLocation();
+
+  console.log(location.state);
+  const breadcrumbs = useBreadcrumbs(routes(location));
 
   return (
     <ul className='flex'>

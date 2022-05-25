@@ -17,7 +17,7 @@ export function Login() {
             headers: {
                 "content-type": "application/json"
             },
-            body: JSON.stringify({username, password})
+            body: JSON.stringify({userName: username, password})
         })
 
       if(res.status === 200){

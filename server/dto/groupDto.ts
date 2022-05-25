@@ -1,13 +1,13 @@
-import { GroupCriteriaDto } from "./groupCriteriaDto";
-import { GroupMemberDto } from "./groupMemberDto";
+import { CriteriaDto } from "./criteriaDto";
+import { GroupMemberDto_both } from "./groupMemberDto";
 
 export class GroupDto {
   constructor(
-    public isPrivate: boolean | null,
+    public isPrivate: boolean,
     public name: string,
-    public rules: string | null,
-    public criteria: GroupCriteriaDto | null,
-    public uuid: string | null,
-    public groupMember: GroupMemberDto[] | null
+    public criteria: CriteriaDto,
+    public groupMembers: GroupMemberDto_both[],
+    public rules?: string,
+    public uuid?: string
   ) {}
 }

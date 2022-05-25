@@ -19,6 +19,7 @@ const GroupLinks = () => {
   const { data, error, loading } = useLoader(() => fetchJSON('/api/v1/groups'));
 
 
+
   if (loading) return <Loading />;
 
   if (error) {
@@ -35,8 +36,10 @@ const GroupLinks = () => {
   return (
     <div>
       <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8 mt-6'>
-        <Button to='/createGroup' className='lg:col-start-2'>Opprett gruppe</Button>
-        <Button to='/searchGroup' className='lg:col-start-3'>
+        <Button to='/groups/createGroup' className='lg:col-start-2'>
+          Opprett gruppe
+        </Button>
+        <Button to='/groups/searchGroup' className='lg:col-start-3'>
           Søk etter gruppe
         </Button>
       </div>
@@ -49,9 +52,7 @@ const GroupLinks = () => {
             key={group.name}
             onClick={() => navigate('/group/specific', { state: { group } })}
           />
-
         ))}
-
       </div>
     </div>
   );

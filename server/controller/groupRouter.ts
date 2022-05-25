@@ -1,9 +1,9 @@
-import { SearchDTO } from "../dto/searchDTO";
 import e, { IRouter, Response } from "express";
 import { IGroupService } from "../service/IGroupService";
 import HttpException from "../util/httpException";
-import { GroupDto } from "../dto/groupDto";
 import { ServerRouter } from "./serverRouter";
+import { GroupInDto } from "../dto/GroupInOutDto";
+import { CriteriaDto } from "../dto/criteriaDto";
 
 export default class GroupRouter extends ServerRouter {
   constructor(private groupService: IGroupService, private router: IRouter) {
@@ -16,24 +16,24 @@ export default class GroupRouter extends ServerRouter {
     router.get("/", async (req, res, next) => {
       const { group_id } = req?.query;
       if (group_id) {
-        await this.fetchGroupById(service, group_id as string, res);
+        await this.fetchGroupById(group_id as string, req.userId, res);
         return;
       }
       await this.fetchAllGroups(res, service);
     });
 
     router.post("/", async (req, res) => {
-      const newGroup = this.extractGroupDtoFromRequest(req);
+      const newGroup = GroupRouter.extractGroupDtoFromRequest(req);
+      const admin = req.userId;
       try {
-        res.json(await service.addGroup(newGroup));
+        res.json(await service.addGroup(newGroup, admin));
       } catch (e: unknown) {
         this.sendError(res, e);
       }
     });
 
     router.patch("/", async (req, res) => {
-      const group = this.extractGroupDtoFromRequest(req);
-
+      const group = GroupRouter.extractGroupDtoFromRequest(req);
       try {
         res.json(await service.updateGroup(group));
       } catch (e: unknown) {
@@ -43,8 +43,6 @@ export default class GroupRouter extends ServerRouter {
 
     router.delete("/", async (req, res) => {
       const { groupId } = req.body;
-
-      this.extractGroupDtoFromRequest(req);
 
       try {
         res.json(await service.deleteGroup(groupId));
@@ -96,17 +94,16 @@ export default class GroupRouter extends ServerRouter {
         school,
       } = req.body;
 
-      const searchDto = new SearchDTO(
-        language?.toString(),
-        workMethod?.toString(),
+      return new CriteriaDto(
         gradeGoal?.toString(),
         frequency?.toString(),
+        language?.toString(),
         size?.toString(),
-        subject as string[],
         place?.toString(),
+        subject as string[],
+        workMethod?.toString(),
         school?.toString()
       );
-      return searchDto;
     }
 
     router.post("/search", async (req, res) => {
@@ -121,18 +118,15 @@ export default class GroupRouter extends ServerRouter {
     return router;
   }
 
-  private extractGroupDtoFromRequest(req: e.Request) {
-    const { uuid, name, criteria, rules, groupMember, isPrivate } = req.body;
+  private static extractGroupDtoFromRequest(req: e.Request) {
+    const { uuid, name, criteria, rules, isPrivate } = req.body;
 
-    return new GroupDto(isPrivate, name, rules, criteria, uuid, groupMember);
+    return new GroupInDto(isPrivate, name, criteria, rules, uuid);
   }
-  private async fetchGroupById(
-    service: IGroupService,
-    group_id: string,
-    res: Response
-  ) {
+
+  private async fetchGroupById(groupId: string, userId: string, res: Response) {
     try {
-      res.json(await service.fetchGroupById(group_id));
+      res.json(await this.groupService.fetchGroupById(groupId /*, userId */));
     } catch (e: unknown) {
       this.sendError(res, e);
     }

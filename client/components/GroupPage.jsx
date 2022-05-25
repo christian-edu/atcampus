@@ -17,7 +17,6 @@ const GroupPage = () => {
   const navigate = useNavigate();
   const group = location.state.group;
 
-
   const [showSettings, setShowSettings] = useState(false);
 
   const toggleSettings = () => setShowSettings((showSettings) => !showSettings);
@@ -34,14 +33,14 @@ const GroupPage = () => {
   return (
     <div className='bg-white p-6 max-w-xl mx-auto rounded-standard'>
       <div className='flex flex-row gap-4'>
-        <Image className="h-16" group />
+        <Image className='h-16' group />
         <div>
           <h2 className='text-dark-1 text-xl font-bold'>{group.name}</h2>
           <h4 className='font-bold text-dark-3 mb-8'>({visible})</h4>
         </div>
         {showSettings && (
           <Modal onClick={toggleSettings}>
-            <GroupSettings group={group}/>
+            <GroupSettings onClick={toggleSettings} group={group} />
           </Modal>
         )}
         <CogIcon

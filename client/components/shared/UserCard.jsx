@@ -2,7 +2,7 @@ import {
   DotsHorizontalIcon,
   PlusIcon,
   KeyIcon,
-  TrashIcon
+  TrashIcon,
 } from '@heroicons/react/solid';
 import { useState } from 'react';
 import Image from './Image';
@@ -60,9 +60,8 @@ const UserCard = (props) => {
       Here we want to only show this if the user is admin of the group*/}
       {modalIsVisible && props.edit && (
         <Modal onClick={toggleModal}>
-          <GroupUserSettings user={props.user}/>
+          <GroupUserSettings user={props.user} />
         </Modal>
-
       )}
       {/* Render search modal if props search is set to true */}
       {modalIsVisible && props.search && (
@@ -76,10 +75,7 @@ const UserCard = (props) => {
           <MatchRequest onClick={toggleModal} user={props.user} />
         </Modal>
       )}
-      <li
-        className='bg-white flex items-center p-4 gap-4 rounded-standard border border-purple-4'
-        
-      >
+      <li className='bg-white flex items-center p-4 gap-4 rounded-standard border border-purple-4'>
         <Image className='h-10' />
         <h2 className='font-bold text-lg text-dark-1'>{user.username}</h2>
         <button className='ml-auto' onClick={toggleModal}>

@@ -1,5 +1,3 @@
-import * as QueryString from "querystring";
-
 export class SearchDTO {
   constructor(
     public language: string | undefined,
