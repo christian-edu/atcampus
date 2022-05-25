@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
 import { ChatMessageEntity } from "../entity/ChatMessageEntity";
-import HttpException from "../util/httpException";
+import HttpException from "../util/errorUtils";
 
 export default class ChatService {
   constructor(private chatRepo: Repository<ChatMessageEntity>) {}

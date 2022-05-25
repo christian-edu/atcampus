@@ -1,9 +1,9 @@
 import e, { IRouter, Response } from "express";
 import { IGroupService } from "../service/IGroupService";
-import HttpException from "../util/httpException";
 import { ServerRouter } from "./serverRouter";
 import { GroupInDto } from "../dto/GroupInOutDto";
 import { CriteriaDto } from "../dto/criteriaDto";
+import HttpException from "../util/errorUtils";
 
 export default class GroupRouter extends ServerRouter {
   constructor(private groupService: IGroupService, private router: IRouter) {
@@ -119,9 +119,41 @@ export default class GroupRouter extends ServerRouter {
   }
 
   private static extractGroupDtoFromRequest(req: e.Request) {
-    const { uuid, name, criteria, rules, isPrivate } = req.body;
+    const {
+      gradeGoal,
+      language,
+      place,
+      size,
+      school,
+      subject,
+      workFrequency,
+      workType,
+      isPrivate,
+      uuid,
+      groupName,
+      rules,
+    } = req.body;
 
-    return new GroupInDto(isPrivate, name, criteria, rules, uuid);
+    const criteriaDto = new CriteriaDto(
+      gradeGoal,
+      workFrequency,
+      language,
+      size,
+      place,
+      subject,
+      workType,
+      school,
+      uuid
+    );
+    const groupDto = new GroupInDto(
+      isPrivate,
+      groupName,
+      criteriaDto,
+      rules,
+      uuid
+    );
+    console.log(groupDto);
+    return groupDto;
   }
 
   private async fetchGroupById(groupId: string, userId: string, res: Response) {

@@ -1,7 +1,9 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
+import dotenv from "dotenv";
 const protectedRoutes = new Array<HttpPath>();
 
+dotenv.config();
 export function verifyToken(req: Request, res: Response, next: NextFunction) {
   if (req.path.endsWith("/login")) {
     next();
@@ -13,6 +15,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     return;
   }
   try {
+    console.log("trying to verify token");
     const verifiedToken = jwt.verify(auth_token, process.env.JWT_KEY as string);
     req.userId = (verifiedToken as JwtPayload)?.userId;
     console.log(req.userId);

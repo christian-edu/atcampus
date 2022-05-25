@@ -5,7 +5,7 @@ import { GroupInDto, GroupOutDto } from "../GroupInOutDto";
 import { UserEntity } from "../../entity/UserEntity";
 import { GroupMemberEntity } from "../../entity/GroupMemberEntity";
 import { GroupMemberDto_user } from "../groupMemberDto";
-import HttpException from "../../util/httpException";
+import HttpException from "../../util/errorUtils";
 
 export async function groupEntityToDto(
   entity: GroupEntity
