@@ -25,19 +25,20 @@ export default class UserService {
       throw Error(e);
     }
     if (schoolEntity) {
-      return bcrypt
-        .hash(userDto.password, parseInt(process.env.SALT_ROUNDS!))
-        .then(async (hash) => {
-          const user = this.mapUserEntity(userDto, hash, schoolEntity!);
+      const hash = await bcrypt.hash(
+        userDto.password,
+        parseInt(process.env.SALT_ROUNDS!)
+      );
 
-          try {
-            return userEntityToDto(await this.userRepo.save(user));
-          } catch (e: unknown) {
-            if (queryFailedGuard(e) && e.code === "ER_DUP_ENTRY") {
-              throw new HttpException("User already exists", 409);
-            } else this.handleException(e);
-          }
-        });
+      const user = this.mapUserEntity(userDto, hash, schoolEntity!);
+
+      try {
+        return userEntityToDto(await this.userRepo.save(user));
+      } catch (e: unknown) {
+        if (queryFailedGuard(e) && e.code === "ER_DUP_ENTRY") {
+          throw new HttpException("User already exists", 409);
+        } else this.handleException(e);
+      }
     }
   }
 
