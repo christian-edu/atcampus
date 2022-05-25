@@ -25,22 +25,22 @@ repo
   .then((repos) => {
     const server = app.listen(process.env.PORT || 8345, async () => {
       console.info("Connected to db ");
-      const schoolEntity = new SchoolEntity("HK");
-      const schoolRepo = repos.schoolRepo;
-      //await schoolRepo.save(schoolEntity);
+      const schoolEntity = new SchoolEntity("BI");
+      //const schoolRepo = repos.schoolRepo;
+      //console.log(await schoolRepo.save(schoolEntity));
       const user = new UserDto(
-        "christian",
-        "chgr007@egms.no",
+        "jimbob",
+        "jim@bob.no",
         "pirate",
-        "fb67adb7-f1e8-48b2-874c-1b9464815ac2"
+        "3cf543a7-614b-4ef9-896d-fad8b85e1f9b"
       );
       const userService = new UserService(
         repos.userRepo,
         repos.schoolRepo,
         repos.groupRepo
       );
-      //const res = await userService.addUser(user);
-      //console.info(res);
+      // const res = await userService.addUser(user);
+      // console.info(res);
       const groupService = new GroupService(
         repos.groupRepo,
         repos.groupMemberRepo,
