@@ -16,8 +16,15 @@ import LeftNavBar from './components/shared/LeftNavBar';
 import { EditGroupProfile } from './components/EditGroupProfile';
 import BackButton from './components/shared/BackButton';
 import Breadcrumbs from './components/shared/Breadcrumbs';
+import {Login} from "./components/Login";
+import {ShowCriteriaPage} from "./components/ShowCriteriaPage";
+
+
 
 const App = () => {
+
+
+
   return (
     <>
       <BrowserRouter>
@@ -32,6 +39,7 @@ const App = () => {
               <Breadcrumbs />
               <Routes>
                 <Route path={'/'} element={<GroupLinks />} />
+                <Route path={'/login'} element={<Login/>} />
                 <Route path={'/searchGroup'} element={<SearchGroup />} />
                 <Route
                   path={'/searchGroup/searchGroupResults'}
@@ -44,7 +52,7 @@ const App = () => {
                 <Route path={'/group/specific'} element={<GroupPage />} />
                 <Route
                   path={'/group/groupCriteria'}
-                  element={<GroupCriteriaPage editGroup={true} />}
+                  element={<ShowCriteriaPage/>}
                 />
                 <Route path={'/group/members'} element={<GroupMembers />} />
                 <Route

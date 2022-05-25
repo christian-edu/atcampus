@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {useLocation, useNavigate} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import Button from "./Button"
 
 export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupName, createGroup, searchGroup, group}) {
@@ -45,12 +45,13 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
         }else {
 
 
+
             const res = await fetch(fetchLink, {
                 method: "PATCH",
                 headers: {
                     "content-type": "application/json"
                 },
-                body: JSON.stringify({gradeGoal, language, place, size, school, subject, workFrequency, workType, isPrivate})
+                body: JSON.stringify({gradeGoal, language, place, size, school, subject, workFrequency, workType, isPrivate, uuid: group.uuid})
             })
 
             setGroupResult( "No Content")
@@ -92,6 +93,7 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
 
             if(patchGroup){
 
+                // sjekker om brukeren vil oppdatere valget sitt, eller bruke samme verdi som var fra før for kriterier
                 if(isPrivate === undefined ) {
                     setError("Velg public eller private")
                 }else{
@@ -127,6 +129,8 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                 if(subject[0].subject.length === 0){
                     setSubject( group.criteria.subject)
                 }
+
+
                 }
 
 
@@ -156,10 +160,8 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                     },
                     body: JSON.stringify({language, size, gradeGoal, workFrequency, workType, place, school, subject, groupName, isPrivate})
                 })
-                /*setGroupResult( await res.json())*/
-                //Doesnt return data??
 
-                //Temp fix with mock data
+                // runs rest in useEffect when data is returned
                 setGroupResult( await res.json())
 
 
@@ -175,12 +177,12 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                 <div>
                     {patchGroup||createGroup?<div className="flex gap-3 items-center my-4">
                         <div className="form-check">
-                            <input type="radio" name={"private"} id={"public"} value={"Public"} onChange={(e) => setIsPrivate(false)}
+                            <input type="radio" name={"private"} id={"public"} value={"Public"} onChange={() => setIsPrivate(false)}
                             className="form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"/>
                             <label htmlFor="public" className="ml-1">Offentlig</label>
                         </div>
                         <div>
-                            <input type="radio" name={"private"} id={"private"} value={"Private"} onChange={(e) => setIsPrivate(true)}
+                            <input type="radio" name={"private"} id={"private"} value={"Private"} onChange={() => setIsPrivate(true)}
                             className="form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"/>
                             <label htmlFor="private" className="ml-1">Privat</label>
                         </div>
@@ -223,7 +225,7 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                         className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'>
                             <option value="velg" disabled>Gruppestørrelse</option>
                             <option value="liten">Liten (1-4stk)</option>
-                            <option value="Medium">Liten (5-7stk)</option>
+                            <option value="Medium">Medium (5-7stk)</option>
                             <option value="Stor">Stor (8+)</option>
                             <option value="Null">Ikke viktig</option>
                         </select>

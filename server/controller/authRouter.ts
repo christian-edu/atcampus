@@ -9,7 +9,8 @@ export default class AuthRouter extends ServerRouter {
   }
 
   public fetchRoutes() {
-    this.router.post("/api/v1/login", async (req, res) => {
+   this.router.post("/api/v1/login", async (req, res) => {
+
       const token = jwt.sign(
         { userId: "dsa89dsa" },
         process.env.JWT_KEY || "aaaa",

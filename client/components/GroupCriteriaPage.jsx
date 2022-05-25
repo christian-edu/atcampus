@@ -45,20 +45,6 @@ const GroupCriteriaPage = ({createdGroup, lookingForGroup, editGroup}) => {
 
        return <div className='bg-white p-6 text-dark-1 max-w-xl mx-auto rounded-standard'>
            <GroupCriteria title={"Endre kriterier på gruppen din"} buttonText={"Endre kriterier"} patchGroup={true} fetchLink={"/api/v1/groups"} groupName={groupname} group={group} />
-
-           <h4>Dine kriterier</h4>
-           <h4>Skole: {group.criteria.school}</h4>
-           <h4>Sted: {group.criteria.location}</h4>
-           <h4>Karaktermål: {group.criteria.gradeGoal}</h4>
-           <h4>Arbeidsfrekvens: {group.criteria.workFrequency}</h4>
-           <h4>Språk: {group.criteria.language}</h4>
-           <h4>Størrelse: {group.criteria.maxSize}</h4>
-           <h4>Arbeidstype: {group.criteria.workType}</h4>
-           <h4>Emner:</h4>
-           {group.criteria.subject.map((subject) => (
-               <h4 key={subject}>{subject}</h4>
-           ))}
-
        </div>
 
    }
