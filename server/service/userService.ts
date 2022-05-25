@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { QueryFailedError, Repository } from "typeorm";
 import { UserEntity } from "../entity/UserEntity";
 import { UserDto } from "../dto/userDto";
 import bcrypt from "bcrypt";
@@ -9,6 +9,11 @@ import { GroupEntity } from "../entity/GroupEntity";
 import { groupEntityToDto } from "../dto/utils/groupMappers";
 import { UserOutDto } from "../dto/UserInOutDto";
 import { GroupOutDto } from "../dto/GroupInOutDto";
+
+const queryFailedGuard = (
+  err: any
+): err is QueryFailedError & { code: string } =>
+  err instanceof QueryFailedError;
 
 export default class UserService {
   constructor(
@@ -32,14 +37,20 @@ export default class UserService {
 
           try {
             return userEntityToDto(await this.userRepo.save(user));
-          } catch (e: any) {
-            if (e.code === "ER_DUP_ENTRY") {
+          } catch (e: unknown) {
+            if (queryFailedGuard(e) && e.code === "ER_DUP_ENTRY") {
               throw new HttpException("User already exists", 409);
-            }
-            throw new HttpException("Something went wrong", 500);
+            } else this.handleException(e);
           }
         });
     }
+  }
+
+  private handleException(e: unknown) {
+    if (queryFailedGuard(e)) {
+      throw new HttpException(e.message, 500);
+    }
+    throw new HttpException("Something went wrong", 500);
   }
 
   private mapUserEntity(
@@ -64,23 +75,22 @@ export default class UserService {
         uuid: userId,
       });
     } catch (e) {
-      console.error(e);
-      throw new HttpException("Something went wrong!", 500);
+      this.handleException(e);
     }
     if (!user) throw new HttpException("Could not get user", 204);
     return userEntityToDto(user);
   }
 
-  public async fetchGroupsByUserId(userId: string): Promise<GroupEntity[]> {
+  public async fetchGroupsByUserId(userId: string): Promise<GroupOutDto[]> {
     const groups = await this._fetchGroupsByUserId(userId);
     if (!groups || groups.length === 0)
       throw new HttpException("No groups found", 204);
-    return groups;
-    // return groups.map((group) => groupEntityToDto(group));
+    return Promise.all(
+      groups.map(async (group) => await groupEntityToDto(group))
+    );
   }
 
   private async _fetchGroupsByUserId(userId: string) {
-    let groups;
     try {
       return await this.groupRepo.find({
         where: {
@@ -92,7 +102,7 @@ export default class UserService {
         },
       });
     } catch (e) {
-      throw new HttpException("Something went wrong!", 500);
+      this.handleException(e);
     }
   }
 }
