@@ -1,19 +1,14 @@
-import { QueryFailedError, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { UserEntity } from "../entity/UserEntity";
 import { UserDto } from "../dto/userDto";
 import bcrypt from "bcrypt";
-import HttpException from "../util/httpException";
 import { SchoolEntity } from "../entity/SchoolEntity";
 import { userEntityToDto } from "../dto/utils/userMappers";
 import { GroupEntity } from "../entity/GroupEntity";
 import { groupEntityToDto } from "../dto/utils/groupMappers";
 import { UserOutDto } from "../dto/UserInOutDto";
 import { GroupOutDto } from "../dto/GroupInOutDto";
-
-const queryFailedGuard = (
-  err: any
-): err is QueryFailedError & { code: string } =>
-  err instanceof QueryFailedError;
+import HttpException, { queryFailedGuard } from "../util/errorUtils";
 
 export default class UserService {
   constructor(

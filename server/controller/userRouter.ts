@@ -1,7 +1,7 @@
 import UserService from "../service/userService";
 import { IRouter } from "express";
-import HttpException from "../util/httpException";
 import { ServerRouter } from "./serverRouter";
+import HttpException from "../util/errorUtils";
 
 export default class UserRouter extends ServerRouter {
   constructor(private userService: UserService, private router: IRouter) {

@@ -1,9 +1,9 @@
 import e, { IRouter, Response } from "express";
 import { IGroupService } from "../service/IGroupService";
-import HttpException from "../util/httpException";
 import { ServerRouter } from "./serverRouter";
 import { GroupInDto } from "../dto/GroupInOutDto";
 import { CriteriaDto } from "../dto/criteriaDto";
+import HttpException from "../util/errorUtils";
 
 export default class GroupRouter extends ServerRouter {
   constructor(private groupService: IGroupService, private router: IRouter) {

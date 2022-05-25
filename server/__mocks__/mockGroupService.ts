@@ -1,10 +1,10 @@
 import { GroupDto } from "../dto/groupDto";
-import HttpException from "../util/httpException";
 import { UserDto } from "../dto/userDto";
 import { SearchDTO } from "../dto/searchDTO";
 import { groups, users } from "./mockData";
 import { Repository } from "typeorm";
 import { GroupEntity } from "../entity/GroupEntity";
+import HttpException from "../util/errorUtils";
 
 export default class MockGroupService {
   constructor(public groupRepo: Repository<GroupEntity>) {}

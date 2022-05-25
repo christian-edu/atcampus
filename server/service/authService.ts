@@ -1,10 +1,10 @@
 import { Repository } from "typeorm";
 import { UserEntity } from "../entity/UserEntity";
-import HttpException from "../util/httpException";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import IAuthService from "./IAuthService";
 import dotenv from "dotenv";
+import HttpException from "../util/errorUtils";
 
 dotenv.config();
 export default class AuthService implements IAuthService {

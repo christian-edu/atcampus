@@ -1,5 +1,5 @@
 import { IRouter, Response } from "express";
-import HttpException from "../util/httpException";
+import HttpException from "../util/errorUtils";
 
 export abstract class ServerRouter {
   sendError(res: Response, e: unknown) {
