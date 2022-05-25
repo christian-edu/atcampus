@@ -22,6 +22,7 @@ export async function groupEntityToDto(
     });
   if (fetchedUsers !== undefined) {
     members = fetchedUsers.map((entity) => {
+      console.log(entity.user.userName);
       return memberEntityToDto_user(entity);
     });
   } else {

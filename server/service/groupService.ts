@@ -29,18 +29,14 @@ export default class GroupService implements IGroupService {
   ) {}
 
   async fetchAllGroups(): Promise<GroupOutDto[]> {
-    const entities = await this.groupRepo.find().catch((ex) => {
-      throw ex;
-    });
-    const dtos: GroupOutDto[] = [];
-    entities.forEach(async (entity) => {
-      dtos.push(
-        await groupEntityToDto(entity).catch((ex) => {
-          throw ex;
+    console.log("Fetching all groups");
+    return await this.groupRepo.find().then(async (array) => {
+      return await Promise.all(
+        array.map(async (entity) => {
+          return await groupEntityToDto(entity);
         })
       );
     });
-    return dtos;
   }
 
   async addGroup(group: GroupInDto, adminUuid: string): Promise<GroupOutDto> {
