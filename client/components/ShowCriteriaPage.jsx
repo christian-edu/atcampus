@@ -54,7 +54,7 @@ function ShowList({group}){
             setUserFriendlyFrequency("1 gang i månden")
         }
         if(frequencyValue === "M2"){
-            setUserFriendlyFrequency("1 ganger i månden")
+            setUserFriendlyFrequency("2 ganger i månden")
         }
     },[])
 
