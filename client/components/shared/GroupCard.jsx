@@ -59,7 +59,7 @@ const GroupCard = ({ group, onClick, match, search }) => {
           <div className='flex flex-row items-center text-dark-3 mt-2'>
             <UserGroupIcon className='h-5 w-5 mr-2' />
 
-            <p className='text-md'>Medlemmer: {groupMember.length}</p>
+            <p className='text-md'>Medlemmer: {group.criteria.max_size}</p>
           </div>
         </div>
         {/* Render plus icon if search or match is true */}

@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import { useNavigate} from "react-router-dom";
 import Button from "./Button"
+import log from "tailwindcss/lib/util/log";
 
 export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupName, createGroup, searchGroup, group}) {
     // Send a request to the backend to search for the required group with the criterias
@@ -18,8 +19,6 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
     const [isPrivate, setIsPrivate] = useState();
 
     const navigate = useNavigate();
-
-
 
 
     function addSubjectField () {
@@ -79,7 +78,7 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
 
         if(patchGroup && groupResult === "No Content"){
 
-            navigate('/groups/specific', { state: { group } })
+            /*navigate('/group/specific', { state: { group } })*/
         }
 
 
@@ -127,7 +126,8 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                 }
 
                 if(subject[0].subject.length === 0){
-                    setSubject( group.criteria.subject)
+
+                    setSubject( group.criteria.subjects)
                 }
 
 
@@ -200,6 +200,7 @@ export function GroupCriteria({title, fetchLink, buttonText, patchGroup, groupNa
                 </div>
                 <div>
                     <h4 className="text-dark-1">Emner:</h4>
+
                     {subject.map((subInput, index) => (
                         <div key={index}>
                             <input name={"subject"} placeholder={"eks. Avansert Java"} onChange={(event => handleInputChange(event, index))}
