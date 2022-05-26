@@ -1,6 +1,7 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
+import Logger from "./logger";
 const protectedRoutes = new Array<HttpPath>();
 
 dotenv.config();
@@ -15,13 +16,13 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     return;
   }
   try {
-    console.log("trying to verify token");
+    Logger.debug("verify token", "trying to verify token");
     const verifiedToken = jwt.verify(auth_token, process.env.JWT_KEY as string);
     req.userId = (verifiedToken as JwtPayload)?.userId;
     console.log(req.userId);
     next();
   } catch (e) {
-    console.info("Token expired/not valid");
+    Logger.debug("verify token", "Token expired/not valid");
     res.clearCookie("auth_token");
     res.status(401);
     res.send();
@@ -57,10 +58,10 @@ export function setProtectedRoutes(
   }
 
   if (isProtected && !req.userId) {
-    console.warn("Unauthorized");
+    Logger.error("protected routes", "Unauthorized");
     res.sendStatus(403);
   } else {
-    console.info("Authorized");
+    Logger.info("protected routes", "Authorized");
     next();
   }
 }

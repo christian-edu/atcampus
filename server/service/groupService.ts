@@ -19,6 +19,7 @@ import { CriteriaDto } from "../dto/criteriaDto";
 import { MaxSize } from "../entity/enums/MaxSize";
 import HttpException, { queryFailedGuard } from "../util/errorUtils";
 import { CriteriaEntity } from "../entity/CriteriaEntity";
+import Logger from "../util/logger";
 
 export default class GroupService implements IGroupService {
   constructor(
@@ -47,7 +48,7 @@ export default class GroupService implements IGroupService {
       .findOneBy({ uuid: adminUuid })
       .catch((ex) => {
         if (ex instanceof HttpException) throw ex;
-        console.error(ex);
+        Logger.error("GroupService", ex);
         throw new HttpException("Database connection lost", 500);
       });
     let groupEntity: GroupEntity;
@@ -58,7 +59,7 @@ export default class GroupService implements IGroupService {
         groupEntity.criteria.subjects
       ).catch((ex) => {
         if (ex instanceof HttpException) throw ex;
-        console.error(ex);
+        Logger.error("GroupService", ex);
         throw new HttpException("Database connection lost", 500);
       });
       groupEntity.criteria.school = school;
@@ -82,7 +83,7 @@ export default class GroupService implements IGroupService {
       .then((entity) => groupEntityToDto(entity))
       .catch((ex) => {
         if (ex instanceof HttpException) throw ex;
-        console.error(ex);
+        Logger.error("GroupService", ex);
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -101,6 +102,7 @@ export default class GroupService implements IGroupService {
       })
       .catch((ex) => {
         if (ex instanceof HttpException) throw ex;
+        Logger.error("GroupService", ex);
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -131,6 +133,7 @@ export default class GroupService implements IGroupService {
           })
           .catch((ex) => {
             if (ex instanceof HttpException) throw ex;
+            Logger.error("GroupService", ex);
             throw new HttpException("Database connection lost", 500);
           });
       });
@@ -152,6 +155,7 @@ export default class GroupService implements IGroupService {
           })
           .catch((ex) => {
             if (ex instanceof HttpException) throw ex;
+            Logger.error("GroupService", ex);
             throw ex;
           });
       }
@@ -336,6 +340,7 @@ export default class GroupService implements IGroupService {
       })
       .catch((ex) => {
         if (ex instanceof HttpException) throw ex;
+        Logger.error("GroupService", ex);
         throw new HttpException("Database connection lost", 500);
       });
   }

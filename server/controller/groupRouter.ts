@@ -4,6 +4,7 @@ import { ServerRouter } from "./serverRouter";
 import { GroupInDto } from "../dto/GroupInOutDto";
 import { CriteriaDto } from "../dto/criteriaDto";
 import HttpException from "../util/errorUtils";
+import Logger from "../util/logger";
 
 export default class GroupRouter extends ServerRouter {
   constructor(private groupService: IGroupService, private router: IRouter) {
@@ -47,7 +48,6 @@ export default class GroupRouter extends ServerRouter {
       try {
         res.json(await service.deleteGroup(groupId));
       } catch (e: unknown) {
-        console.log(e);
         this.sendError(res, e as HttpException);
       }
     });
@@ -74,7 +74,6 @@ export default class GroupRouter extends ServerRouter {
 
     router.post("/member", async (req, res) => {
       const { group, user } = req?.body;
-      console.log(req?.body);
       try {
         res.json(await service.addMember(group, user));
       } catch (e: unknown) {
@@ -152,7 +151,6 @@ export default class GroupRouter extends ServerRouter {
       rules,
       uuid
     );
-    console.log(groupDto);
     return groupDto;
   }
 
@@ -168,7 +166,6 @@ export default class GroupRouter extends ServerRouter {
     try {
       res.json(await service.fetchAllGroups());
     } catch (e: unknown) {
-      console.log(e);
       this.sendError(res, e);
     }
   }
