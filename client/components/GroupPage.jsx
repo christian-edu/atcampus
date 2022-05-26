@@ -23,7 +23,7 @@ const GroupPage = () => {
 
   console.log(group);
 
-  const visible = group.isPrivate ? 'Privat' : 'Offtentlig';
+  const visible = group.isPrivate ? 'Privat' : 'Offentlig';
 
   return (
     <div className='bg-white p-6 max-w-xl mx-auto rounded-standard'>
