@@ -1,15 +1,16 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Modal from './shared/Modal';
 import GroupSettings from './shared/GroupSettings';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   MenuAlt1Icon,
   UserGroupIcon,
   ChatIcon,
   CalendarIcon,
   CogIcon,
-} from '@heroicons/react/solid';
-import Image from './shared/Image';
+} from "@heroicons/react/solid";
+import Image from "./shared/Image";
+import { ChatComponent } from "../ChatComponent";
 
 const GroupPage = () => {
   const location = useLocation();
@@ -21,14 +22,9 @@ const GroupPage = () => {
 
   const toggleSettings = () => setShowSettings((showSettings) => !showSettings);
 
+  console.log(group);
 
-  let visible;
-
-  if (group.isPrivate) {
-    visible = 'Privat';
-  } else {
-    visible = 'Offentlig';
-  }
+  const visible = group.isPrivate ? 'Privat' : 'Offentlig';
 
   return (
     <div className='bg-white p-6 max-w-xl mx-auto rounded-standard'>
@@ -67,17 +63,17 @@ const GroupPage = () => {
             Notater
           </Link>
         </li>
-        <li className='border-b-2 border-purple-1 hover:bg-dark-6'>
-          <button
-            onClick={() => navigate('/group/members', { state: { group } })}
-          >
-            <Link to='/' className='flex gap-2 items-center text-lg py-4'>
-              <UserGroupIcon className='h-6 text-purple-1' />
-              Medlemmer
-            </Link>
-          </button>
+        <li
+          className='border-b-2 border-purple-1 hover:bg-dark-6 cursor-pointer'
+          onClick={() => navigate('/group/members', { state: { group } })}
+        >
+          <span to='/' className='flex gap-2 items-center text-lg py-4'>
+            <UserGroupIcon className='h-6 text-purple-1' />
+            Medlemmer
+          </span>
         </li>
       </ul>
+      <ChatComponent groupId={group.uuid} />
     </div>
   );
 };

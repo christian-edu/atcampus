@@ -9,15 +9,16 @@ import { groupEntityToDto } from "../dto/utils/groupMappers";
 import { UserOutDto } from "../dto/UserInOutDto";
 import { GroupOutDto } from "../dto/GroupInOutDto";
 import HttpException, { queryFailedGuard } from "../util/errorUtils";
+import { IUserService } from "./IUserService";
 
-export default class UserService {
+export default class UserService implements IUserService {
   constructor(
     private userRepo: Repository<UserEntity>,
     private schoolRepo: Repository<SchoolEntity>,
     private groupRepo: Repository<GroupEntity>
   ) {}
 
-  public async addUser(userDto: UserDto) {
+  public async addUser(userDto: UserDto): Promise<UserOutDto | undefined> {
     let schoolEntity: SchoolEntity | null;
     try {
       schoolEntity = await this.schoolRepo.findOneBy({ uuid: userDto.school });
@@ -30,15 +31,22 @@ export default class UserService {
         parseInt(process.env.SALT_ROUNDS!)
       );
 
-      const user = this.mapUserEntity(userDto, hash, schoolEntity!);
+      const user = await this._addUser(
+        this.mapUserEntity(userDto, hash, schoolEntity!)
+      );
 
-      try {
-        return userEntityToDto(await this.userRepo.save(user));
-      } catch (e: unknown) {
-        if (queryFailedGuard(e) && e.code === "ER_DUP_ENTRY") {
-          throw new HttpException("User already exists", 409);
-        } else this.handleException(e);
-      }
+      if (!user) throw new HttpException("Could not store user", 500);
+      return user as UserOutDto;
+    }
+  }
+
+  private async _addUser(user: UserEntity) {
+    try {
+      return userEntityToDto(await this.userRepo.save(user));
+    } catch (e: unknown) {
+      if (queryFailedGuard(e) && e.code === "ER_DUP_ENTRY") {
+        throw new HttpException("User already exists", 409);
+      } else this.handleException(e);
     }
   }
 

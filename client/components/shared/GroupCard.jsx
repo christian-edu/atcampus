@@ -18,7 +18,7 @@ const GroupCard = ({ group, onClick, match, search }) => {
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
   // Recieves group as props // <GroupCard group={group} />
-  const { name, groupMember, isPrivate } = group;
+  const { name, groupMembers, isPrivate } = group;
 
   // Render cloesed icon if group is private, render open icon is group is not private
   const privateIcon = isPrivate ? (
@@ -59,7 +59,7 @@ const GroupCard = ({ group, onClick, match, search }) => {
           <div className='flex flex-row items-center text-dark-3 mt-2'>
             <UserGroupIcon className='h-5 w-5 mr-2' />
 
-            <p className='text-md'>Medlemmer: {group.criteria.max_size}</p>
+            <p className='text-md'>Medlemmer: {groupMembers.length}</p>
           </div>
         </div>
         {/* Render plus icon if search or match is true */}
