@@ -119,3 +119,63 @@
 //     expect(Object.keys(res).length > 0).toBe(true);
 //   });
 // });
+
+import { Repository } from "typeorm";
+import { UserEntity } from "../entity/UserEntity";
+import { IUserService } from "../service/IUserService";
+import { createMock } from "ts-auto-mock";
+import UserService from "../service/userService";
+import { SchoolEntity } from "../entity/SchoolEntity";
+import { GroupEntity } from "../entity/GroupEntity";
+import { UserOutDto } from "../dto/UserInOutDto";
+import { method, On } from "ts-auto-mock/extension";
+import { UserDto } from "../dto/userDto";
+
+describe("Tests for user service", () => {
+  let fakeUserRepo: Repository<UserEntity>;
+  let fakeSchoolRepo: Repository<SchoolEntity>;
+  let fakeGroupRepo: Repository<GroupEntity>;
+  let userService: IUserService;
+  beforeEach(() => {
+    fakeUserRepo = createMock<Repository<UserEntity>>();
+    fakeSchoolRepo = createMock<Repository<SchoolEntity>>();
+    fakeGroupRepo = createMock<Repository<GroupEntity>>();
+    userService = new UserService(fakeUserRepo, fakeSchoolRepo, fakeGroupRepo);
+  });
+
+  it("Should add a user", async () => {
+    const userEntity = new UserEntity(
+      "testuser",
+      "testuser@test.com",
+      "pirate",
+      new SchoolEntity("School"),
+      "user",
+      "usersen",
+      "1"
+    );
+    const userDto = new UserDto("testuser", "testuser@test.com", "pirate");
+    const fakeAddUser: jest.Mock = On(fakeUserRepo).get(method((m) => m.save));
+    fakeAddUser.mockImplementation(async () => userEntity);
+    const res = await userService.addUser(userDto);
+    expect(res?.email).toBe(userEntity.email);
+  });
+
+  it("Should get a user", async () => {
+    const userEntity = new UserEntity(
+      "testuser",
+      "testuser@test.com",
+      "pirate",
+      new SchoolEntity("School"),
+      "user",
+      "usersen",
+      "1"
+    );
+    const fakeGetUser: jest.Mock = On(fakeUserRepo).get(
+      method((m) => m.findOneBy)
+    );
+    fakeGetUser.mockImplementation(async () => userEntity);
+    const res = await userService.findUserById("1");
+    expect(res?.email).toBe(userEntity.email);
+    expect(fakeGetUser).toHaveBeenCalledWith({ uuid: "1" });
+  });
+});

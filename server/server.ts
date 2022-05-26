@@ -15,6 +15,7 @@ import ChatService from "./service/chatService";
 import WebSocketServer from "./websockets/webSocketServer";
 import AuthService from "./service/authService";
 import UserRouter from "./controller/userRouter";
+import Logger from "./util/logger";
 
 dotenv.config();
 const app = express();
@@ -74,8 +75,13 @@ repo
         }
       });
 
-      WebSocketServer(server, new ChatService(repos.chatMessageRepo));
-      console.log(
+      WebSocketServer(
+        server,
+        new ChatService(repos.chatMessageRepo),
+        userService
+      );
+      Logger.info(
+        "server",
         `Server started at http://localhost:${
           (server.address() as AddressInfo).port
         }`

@@ -8,8 +8,9 @@ import {
   ChatIcon,
   CalendarIcon,
   CogIcon,
-} from '@heroicons/react/solid';
-import Image from './shared/Image';
+} from "@heroicons/react/solid";
+import Image from "./shared/Image";
+import { ChatComponent } from "../ChatComponent";
 
 const GroupPage = () => {
   const location = useLocation();
@@ -72,6 +73,7 @@ const GroupPage = () => {
           </span>
         </li>
       </ul>
+      <ChatComponent groupId={group.uuid} />
     </div>
   );
 };
