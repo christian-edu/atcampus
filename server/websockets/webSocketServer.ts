@@ -4,38 +4,64 @@ import dotenv from "dotenv";
 import ChatService from "../service/chatService";
 import { ChatMessageEntity } from "../entity/ChatMessageEntity";
 import cookieParser from "cookie-parser";
-
-const sockets = new Map<string, Map<string, WebSocket>>();
+import jwt, { JwtPayload } from "jsonwebtoken";
+import UserService from "../service/userService";
+import { Duplex } from "stream";
+import Logger from "../util/logger";
 dotenv.config();
 
-export default (expressServer: Server, chatService: ChatService) => {
+const sockets = new Map<string, Map<string, WebSocket>>();
+function getUserIdfromCookie(cookie: string) {
+  const sessionCookie = cookie
+    ?.split("; ")
+    ?.find((c: string) => c.startsWith("auth_token"))
+    ?.split("=")[1];
+
+  const signedCookie: any = cookieParser.signedCookie(
+    decodeURIComponent(sessionCookie!),
+    process.env.COOKIE_SECRET as string
+  );
+  const verifiedToken = jwt.verify(signedCookie, process.env.JWT_KEY as string);
+  return (verifiedToken as JwtPayload)?.userId;
+}
+function _writeUnauthorized(socket: Duplex) {
+  socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
+  socket.destroy();
+}
+export default (
+  expressServer: Server,
+  chatService: ChatService,
+  userService: UserService
+) => {
   const wss = new WebSocketServer.Server({ noServer: true, path: "/chat" });
   //https://cheatcode.co/tutorials/how-to-set-up-a-websocket-server-with-node-js-and-express
   //https://github.com/websockets/ws/blob/master/doc/ws.md#class-websocket
-  expressServer.on("upgrade", (request, socket, head) => {
+  expressServer.on("upgrade", async (request, socket, head) => {
     //  request.
     // Authentication goes here!
     // console.info("On upgrade");
-    // const cookie = request.headers.cookie;
-    // if (!cookie) {
-    //   socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
-    //   socket.destroy();
-    //   return;
-    // }
-    //
-    // const sessionCookie = cookie
-    //   ?.split("; ")
-    //   ?.find((c: string) => c.startsWith("auth_token"))
-    //   ?.split("=")[1];
-    //
-    // const signedCookie = cookieParser.signedCookie(
-    //   decodeURIComponent(sessionCookie!),
-    //   process.env.COOKIE_SECRET as string
-    // );
-    // console.log(signedCookie);
-    // TODO: Get user from DB
-    // Check group membership
-    // If member from URL query params checks out, push socket to map Map<GroupID, Map<UserId, Socket>> should do the trick?
+    const cookie = request.headers.cookie;
+    console.log(request as any);
+
+    if (!cookie) {
+      Logger.debug("upgrade", "no cookie");
+      _writeUnauthorized(socket);
+      return;
+    }
+
+    const userId = getUserIdfromCookie(cookie);
+    const requestURL = new URL("http://dummyhost" + request.url!);
+    const queryParams = new URLSearchParams(requestURL.searchParams);
+    const groupId = queryParams.get("groupId");
+    if (!userId || !groupId) {
+      _writeUnauthorized(socket);
+      return;
+    }
+    const userGroups = await userService.fetchGroupsByUserId(userId);
+    const hasAcces = userGroups.filter((g) => g.uuid === groupId);
+    if (hasAcces.length === 0) {
+      _writeUnauthorized(socket);
+    }
 
     wss.handleUpgrade(request, socket, head, (websocket) => {
       wss.emit("connection", websocket, request);
@@ -44,23 +70,22 @@ export default (expressServer: Server, chatService: ChatService) => {
 
   wss.on(
     "connection",
-    function connection(websocketConnection, connectionRequest) {
+    async function connection(websocketConnection, connectionRequest) {
       const requestURL = new URL("http://dummyhost" + connectionRequest.url!);
       const queryParams = new URLSearchParams(requestURL.searchParams);
-
       const groupId = queryParams.get("groupId");
-      console.info(`Requested group: ${groupId}`);
-      let id = 0;
+      const userId = getUserIdfromCookie(connectionRequest.headers.cookie!);
+
       if (!groupId) throw Error("No groupId!");
       if (!sockets.has(groupId)) {
-        sockets.set(groupId, new Map().set(++id, websocketConnection));
+        sockets.set(groupId, new Map().set(userId, websocketConnection));
       } else {
         // Something really fd up going on with the type checking here... So any it is
-        sockets
-          .get(groupId)!
-          .set((++id).toString(), websocketConnection as any);
+        sockets.get(groupId)!.set(userId, websocketConnection as any);
         console.info("Added user");
-        websocketConnection.send("Added user");
+        websocketConnection.send(
+          JSON.stringify({ message: `user with id: ${userId} has connected` })
+        );
       }
 
       websocketConnection.on("message", (message) => {

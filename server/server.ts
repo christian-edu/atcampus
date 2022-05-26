@@ -75,7 +75,11 @@ repo
         }
       });
 
-      WebSocketServer(server, new ChatService(repos.chatMessageRepo));
+      WebSocketServer(
+        server,
+        new ChatService(repos.chatMessageRepo),
+        userService
+      );
       Logger.info(
         "server",
         `Server started at http://localhost:${
