@@ -19,6 +19,7 @@ import { CriteriaDto } from "../dto/criteriaDto";
 import { MaxSize } from "../entity/enums/MaxSize";
 import HttpException, { queryFailedGuard } from "../util/errorUtils";
 import { CriteriaEntity } from "../entity/CriteriaEntity";
+import { GradeGoal } from "../entity/enums/GradeGoal";
 import Logger from "../util/logger";
 
 export default class GroupService implements IGroupService {
@@ -348,25 +349,101 @@ export default class GroupService implements IGroupService {
   async searchGroup(searchDto: CriteriaDto): Promise<searchResult> {
     if (!searchDto) throw new HttpException("No searchDto provided", 400);
 
-    const allGroups = await this.fetchAllGroups().catch((ex) => {
-      throw ex;
-    });
+    return await this.fetchAllGroups()
+      .then((groupDtoArray) => {
+        const resultArray: any[] = [];
 
-    const resultArray: any[] = [];
+        // Bruker vanlig for-loop for effektivitet
+        for (let i = 0; i < groupDtoArray.length; i++) {
+          let score = 0;
 
+          score = checkGradeGoal(groupDtoArray[i], score);
+          score = checkWorkFrequency(groupDtoArray[i], score);
+          score = checkWorkMethod(groupDtoArray[i], score);
+          score = checkSize(groupDtoArray[i], score);
+          score = checkLanguage(groupDtoArray[i], score);
+          score = checkLocation(groupDtoArray[i], score);
+          score = checkSchool(groupDtoArray[i], score);
+          score = checkSubjects(groupDtoArray[i], score);
+
+          // Tar høyde for avrundingsfeil
+          if (score > 100) score = 100;
+
+          resultArray.push([groupDtoArray[i], score]);
+        }
+
+        resultArray.sort((a, b) => a[1] - b[1]).slice(0, 20);
+
+        const resultObject: searchResult = {};
+
+        resultArray.forEach((element) => {
+          resultObject[element[0].uuid] = element[1];
+        });
+
+        return resultObject;
+      })
+      .catch((ex) => {
+        throw ex;
+      });
+
+    // Regner denne delen som ferdig
     function checkGradeGoal(group: GroupOutDto, score: number) {
-      if (group.criteria.gradeGoal === searchDto.gradeGoal) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.GRADE_GOAL /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          );
+      const full = Math.round(
+        SearchWeightValues.GRADE_GOAL /
+          SearchWeightValues.MAX_POSSIBLE_SCORE /
+          100
+      );
+
+      switch (searchDto.gradeGoal) {
+        case GradeGoal.A:
+          if (group.criteria.gradeGoal === GradeGoal.A) {
+            score = score + full;
+          } else if (group.criteria.gradeGoal === GradeGoal.B) {
+            score = score + full / 2;
+          }
+          break;
+        case GradeGoal.B:
+          if (group.criteria.gradeGoal === GradeGoal.B) {
+            score = score + full;
+          } else if (
+            group.criteria.gradeGoal === GradeGoal.A ||
+            group.criteria.gradeGoal === GradeGoal.C
+          ) {
+            score = score + full / 2;
+          }
+          break;
+        case GradeGoal.C:
+          if (group.criteria.gradeGoal === GradeGoal.C) {
+            score = score + full;
+          } else if (
+            group.criteria.gradeGoal === GradeGoal.B ||
+            group.criteria.gradeGoal === GradeGoal.D
+          ) {
+            score = score + full / 2;
+          }
+          break;
+        case GradeGoal.D:
+          if (group.criteria.gradeGoal === GradeGoal.D) {
+            score = score + full;
+          } else if (
+            group.criteria.gradeGoal === GradeGoal.C ||
+            group.criteria.gradeGoal === GradeGoal.PASS
+          ) {
+            score = score + full / 2;
+          }
+          break;
+        case GradeGoal.PASS:
+          if (group.criteria.gradeGoal === GradeGoal.PASS) {
+            score = score + full;
+          } else if (group.criteria.gradeGoal === GradeGoal.D) {
+            score = score + full / 2;
+          }
       }
+
       return score;
     }
 
+    // Regner denne delen som ferdig
     function checkWorkFrequency(group: GroupOutDto, score: number) {
       if (group.criteria.workFrequency === searchDto.workFrequency) {
         score =
@@ -392,6 +469,7 @@ export default class GroupService implements IGroupService {
       return score;
     }
 
+    // Regner denne delen som ferdig
     function checkWorkMethod(group: GroupOutDto, score: number) {
       if (group.criteria.workType === searchDto.workType) {
         score =
@@ -417,6 +495,7 @@ export default class GroupService implements IGroupService {
       return score;
     }
 
+    // Regner denne delen som ferdig
     function checkSize(group: GroupOutDto, score: number) {
       if (group.criteria.maxSize === searchDto.maxSize) {
         score =
@@ -442,6 +521,7 @@ export default class GroupService implements IGroupService {
       return score;
     }
 
+    // Regner denne delen som ferdig
     function checkLanguage(group: GroupOutDto, score: number) {
       if (group.criteria.language === searchDto.language) {
         score =
@@ -468,6 +548,7 @@ export default class GroupService implements IGroupService {
       return score;
     }
 
+    // Regner denne delen som ferdig
     function checkLocation(group: GroupOutDto, score: number) {
       if (group.criteria.location === searchDto.location) {
         score =
@@ -494,6 +575,7 @@ export default class GroupService implements IGroupService {
       return score;
     }
 
+    // Regner denne delen som ferdig
     function checkSchool(group: GroupOutDto, score: number) {
       if (group.criteria.school === searchDto.school) {
         score =
@@ -520,6 +602,7 @@ export default class GroupService implements IGroupService {
       return score;
     }
 
+    // Regner denne delen som ferdig
     function checkSubjects(group: GroupOutDto, score: number) {
       if (searchDto.subjects) {
         const numberOfSubjects = searchDto.subjects.length;
@@ -539,42 +622,6 @@ export default class GroupService implements IGroupService {
       }
       return score;
     }
-
-    // kanskje bedre med vanlig for-loop pga effektivitet?
-    allGroups.forEach((group) => {
-      let score = 0;
-
-      score = checkGradeGoal(group, score);
-
-      score = checkWorkFrequency(group, score);
-
-      score = checkWorkMethod(group, score);
-
-      score = checkSize(group, score);
-
-      score = checkLanguage(group, score);
-
-      score = checkLocation(group, score);
-
-      score = checkSchool(group, score);
-
-      score = checkSubjects(group, score);
-
-      // Tar høyde for avrundingsfeil
-      if (score > 100) score = 100;
-
-      resultArray.push([group, score]);
-    });
-
-    resultArray.sort((a, b) => a[1] - b[1]).slice(0, 20);
-
-    const actualResult: searchResult = {};
-
-    resultArray.forEach((element) => {
-      actualResult[element[0].uuid] = element[1];
-    });
-
-    return actualResult;
   }
 
   private async createOrFetchSubjects(
