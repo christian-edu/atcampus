@@ -8,6 +8,8 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import UserService from "../service/userService";
 import { Duplex } from "stream";
 import Logger from "../util/logger";
+import GroupService from "../service/groupService";
+import HttpException from "../util/errorUtils";
 dotenv.config();
 
 const sockets = new Map<string, Map<string, WebSocket>>();
@@ -41,7 +43,6 @@ export default (
     // Authentication goes here!
     // console.info("On upgrade");
     const cookie = request.headers.cookie;
-    console.log(request as any);
 
     if (!cookie) {
       Logger.debug("upgrade", "no cookie");
@@ -82,29 +83,46 @@ export default (
       } else {
         // Something really fd up going on with the type checking here... So any it is
         sockets.get(groupId)!.set(userId, websocketConnection as any);
-        console.info("Added user");
-        websocketConnection.send(
+        sendMessageToGroup(
           JSON.stringify({ message: `user with id: ${userId} has connected` })
         );
       }
 
-      websocketConnection.on("message", (message) => {
-        try {
-          const groupSockets = sockets.get(groupId);
-
-          if (groupSockets) {
-            for (const user of groupSockets.values()) {
-              user.send(message.toString());
-            }
+      function sendMessageToGroup(message: string) {
+        const groupSockets = sockets.get(groupId!);
+        if (groupSockets) {
+          for (const user of groupSockets.values()) {
+            user.send(message);
           }
-          try {
-            // chatService.addMessage(new ChatMessageEntity(message));
-          } catch (e) {
-            console.error(e);
-          }
-        } catch (e) {
-          console.error(e);
         }
+      }
+
+      websocketConnection.on("message", async (message) => {
+        // save message to db
+        try {
+          const recievedData = JSON.parse(message.toString());
+          const res = await chatService.addMessage(
+            recievedData.message,
+            userId,
+            groupId
+          );
+          console.log(res);
+          const data = {
+            message: recievedData.message,
+            userId: userId,
+            username: res.user.userName,
+          };
+          sendMessageToGroup(JSON.stringify(data));
+        } catch (e) {
+          Logger.error("websocket_server", (e as HttpException).message);
+          websocketConnection.send(
+            JSON.stringify({ error: "could not send message" })
+          );
+        }
+      });
+
+      websocketConnection.on("close", function () {
+        sockets.get(groupId)?.delete(userId);
       });
     }
   );
