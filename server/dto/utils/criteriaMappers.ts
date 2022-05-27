@@ -37,6 +37,7 @@ export function criteriaDtoToEntity(dto: CriteriaDto): CriteriaEntity {
     dto.language,
     dto.location,
     new SchoolEntity(dto.school),
-    subjects
+    subjects,
+    dto.uuid
   );
 }

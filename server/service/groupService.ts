@@ -32,6 +32,7 @@ export default class GroupService implements IGroupService {
     private criteriaRepo: Repository<CriteriaEntity>
   ) {}
 
+  // Testet manuelt, virker som den skal
   async fetchAllGroups(): Promise<GroupOutDto[]> {
     return await this.groupRepo
       .findBy({ isPrivate: false })
@@ -44,6 +45,7 @@ export default class GroupService implements IGroupService {
       });
   }
 
+  // Testet manuelt, virker som den skal
   async addGroup(group: GroupInDto, adminUuid: string): Promise<GroupOutDto> {
     const admin = await this.userRepo
       .findOneBy({ uuid: adminUuid })
@@ -89,6 +91,7 @@ export default class GroupService implements IGroupService {
       });
   }
 
+  // Testet manuelt, virker som den skal
   async fetchGroupById(groupId: string): Promise<GroupOutDto> {
     if (!groupId)
       throw new HttpException(
@@ -108,14 +111,15 @@ export default class GroupService implements IGroupService {
       });
   }
 
+  // Testet manuelt, virker som den skal
   async deleteMember(groupId: string, userId: string): Promise<GroupOutDto> {
     return await this.fetchUserAndGroup(userId, groupId)
       .then(async ({ foundUser: user, foundGroup: group }) => {
         return await this.groupMemberRepo
           .createQueryBuilder()
           .delete()
-          .where("user_uuid = :userId", { userId: user.uuid })
-          .andWhere("group_uuid = :groupId", { groupId: group.uuid })
+          .where("user = :userId", { userId: user.uuid })
+          .andWhere("group = :groupId", { groupId: group.uuid })
           .execute();
       })
       .then((response: DeleteResult) => {
@@ -140,6 +144,7 @@ export default class GroupService implements IGroupService {
       });
   }
 
+  // Testet manuelt, virker som den skal
   async addMember(groupId: string, userId: string): Promise<GroupOutDto> {
     console.log("adding member");
     return await this.fetchUserAndGroup(userId, groupId).then(
@@ -163,10 +168,11 @@ export default class GroupService implements IGroupService {
     );
   }
 
+  // Testet manuelt, virker som den skal
   async fetchGroupMembers(groupId: string): Promise<UserOutDto[]> {
     if (!groupId)
       throw new HttpException(
-        "group_id request parameter must be specified",
+        "groupId request parameter must be specified",
         400
       );
 
@@ -184,158 +190,180 @@ export default class GroupService implements IGroupService {
       });
   }
 
+  // Virker IKKE
   async updateGroup(group: GroupInDto): Promise<GroupOutDto> {
     if (!group.uuid) throw new HttpException("No group uuid found", 400);
 
-    const groupRes = await this._getGroupById(group.uuid);
-    if (!groupRes)
-      throw new HttpException("Could not find any group by that id", 400);
-
-    const groupEntity = newGroupEntityFromDto(group);
-    const { subjects, school } = await this.createOrFetchSubjectsAndSchool(
-      groupEntity.criteria.school,
-      groupEntity.criteria.subjects
-    );
-
-    groupEntity.uuid = group.uuid;
-    groupEntity.criteria.school = school;
-    groupEntity.criteria.subjects = subjects;
-    groupEntity.users = groupRes.users;
-
-    try {
-      return groupEntityToDto(await this.groupRepo.save(groupEntity));
-    } catch (e) {
-      if (queryFailedGuard(e)) {
-        throw new HttpException(e.message, 500);
-      } else {
-        throw e;
-      }
-    }
-
-    // return await this.groupRepo
-    //   .findOneBy({ uuid: group.uuid })
-    //   .then(async (groupEntity) => {
-    //     if (!groupEntity) throw new HttpException("Group not found", 404);
-    //     if (group.name && group.name !== groupEntity.name) {
-    //       groupEntity.name = group.name;
-    //     }
-    //     if (group.rules && group.rules !== groupEntity.rules) {
-    //       groupEntity.rules = group.rules;
-    //     }
-    //     if (
-    //       group.isPrivate !== undefined &&
-    //       group.isPrivate !== groupEntity.isPrivate
-    //     ) {
-    //       groupEntity.isPrivate = group.isPrivate;
-    //     }
-    //     if (
-    //       group.criteria.gradeGoal &&
-    //       group.criteria.gradeGoal !== groupEntity.criteria.grade_goal
-    //     ) {
-    //       groupEntity.criteria.grade_goal = group.criteria.gradeGoal;
-    //     }
-    //     if (
-    //       group.criteria.workFrequency &&
-    //       group.criteria.workFrequency !== groupEntity.criteria.work_frequency
-    //     ) {
-    //       groupEntity.criteria.work_frequency = group.criteria.workFrequency;
-    //     }
-    //     if (
-    //       group.criteria.language &&
-    //       group.criteria.language !== groupEntity.criteria.language
-    //     ) {
-    //       groupEntity.criteria.language = group.criteria.language;
-    //     }
-    //     if (
-    //       group.criteria.maxSize &&
-    //       group.criteria.maxSize !== groupEntity.criteria.max_size
-    //     ) {
-    //       groupEntity.criteria.max_size = group.criteria.maxSize;
-    //     }
-    //     if (
-    //       group.criteria.location &&
-    //       group.criteria.location !== groupEntity.criteria.location
-    //     ) {
-    //       groupEntity.criteria.location = group.criteria.location;
-    //     }
-    //     if (
-    //       group.criteria.workType &&
-    //       group.criteria.workType !== groupEntity.criteria.work_type
-    //     ) {
-    //       groupEntity.criteria.work_type = group.criteria.workType;
-    //     }
-    //     if (
-    //       group.criteria.school &&
-    //       group.criteria.school !== groupEntity.criteria.school.name
-    //     ) {
-    //       groupEntity.criteria.school = await this.createOrFetchSchool(
-    //         new SchoolEntity(group.criteria.school)
-    //       )
-    //         .then((it) => {
-    //           if (it instanceof SchoolEntity) return it;
-    //           throw new HttpException("ORM error", 500);
-    //         })
-    //         .catch((ex) => {
-    //           if (ex instanceof HttpException) throw ex;
-    //           throw new HttpException("Database connection lost", 500);
-    //         });
-    //     }
+    // const groupRes = await this._getGroupById(group.uuid);
+    // if (!groupRes)
+    //   throw new HttpException("Could not find any group by that id", 400);
     //
-    //     if (group.criteria.subjects) {
-    //       const subjectsToCheck = group.criteria.subjects.map((subject) => {
-    //         return new SubjectEntity(subject);
-    //       });
-    //       if (!groupEntity.criteria.subjects) {
-    //         groupEntity.criteria.subjects = await this.createOrFetchSubjects(
-    //           subjectsToCheck
-    //         ).catch((ex) => {
-    //           if (ex instanceof HttpException) throw ex;
-    //           throw new HttpException("Database connection lost", 500);
-    //         });
-    //       } else {
-    //         const oldSubjects = groupEntity.criteria.subjects.map((subject) => {
-    //           return subject.name;
-    //         });
-    //         if (
-    //           group.criteria.subjects.sort().join(",") !==
-    //           oldSubjects.sort().join(",")
-    //         ) {
-    //           groupEntity.criteria.subjects = await this.createOrFetchSubjects(
-    //             subjectsToCheck
-    //           ).catch((ex) => {
-    //             if (ex instanceof HttpException) throw ex;
-    //             throw new HttpException("Database connection lost", 500);
-    //           });
-    //         }
-    //       }
-    //     }
-    //     return groupEntity;
-    //   })
-    //   .then((entity) => {
-    //     return this.groupRepo.save(entity);
-    //   })
-    //   .then(async (savedEntity) => {
-    //     return await groupEntityToDto(savedEntity);
-    //   })
-    //   .catch((ex) => {
-    //     if (ex instanceof HttpException) throw ex;
-    //     throw new HttpException("Database connection lost", 500);
-    //   });
+    // const groupEntity = newGroupEntityFromDto(group);
+    // const { subjects, school } = await this.createOrFetchSubjectsAndSchool(
+    //   groupEntity.criteria.school,
+    //   groupEntity.criteria.subjects
+    // );
+    //
+    // groupEntity.uuid = group.uuid;
+    // groupEntity.criteria.school = school;
+    // groupEntity.criteria.subjects = subjects;
+    // groupEntity.users = groupRes.users;
+    //
+    // try {
+    //   return groupEntityToDto(await this.groupRepo.save(groupEntity));
+    // } catch (e) {
+    //   if (queryFailedGuard(e)) {
+    //     throw new HttpException(e.message, 500);
+    //   } else {
+    //     throw e;
+    //   }
+    // }
+
+    return await this.groupRepo
+      .findOneBy({ uuid: group.uuid })
+      .then(async (groupEntity) => {
+        if (!groupEntity) throw new HttpException("Group not found", 404);
+        group.criteria.uuid = groupEntity.criteria.uuid;
+        if (group.name && group.name !== groupEntity.name) {
+          groupEntity.name = group.name;
+        }
+        if (group.rules && group.rules !== groupEntity.rules) {
+          groupEntity.rules = group.rules;
+        }
+        if (
+          group.isPrivate !== undefined &&
+          group.isPrivate !== groupEntity.isPrivate
+        ) {
+          groupEntity.isPrivate = group.isPrivate;
+        }
+        if (
+          group.criteria.gradeGoal &&
+          group.criteria.gradeGoal !== groupEntity.criteria.grade_goal
+        ) {
+          groupEntity.criteria.grade_goal = group.criteria.gradeGoal;
+        }
+        if (
+          group.criteria.workFrequency &&
+          group.criteria.workFrequency !== groupEntity.criteria.work_frequency
+        ) {
+          groupEntity.criteria.work_frequency = group.criteria.workFrequency;
+        }
+        if (
+          group.criteria.language &&
+          group.criteria.language !== groupEntity.criteria.language
+        ) {
+          groupEntity.criteria.language = group.criteria.language;
+        }
+        if (
+          group.criteria.maxSize &&
+          group.criteria.maxSize !== groupEntity.criteria.max_size
+        ) {
+          groupEntity.criteria.max_size = group.criteria.maxSize;
+        }
+        if (
+          group.criteria.location &&
+          group.criteria.location !== groupEntity.criteria.location
+        ) {
+          groupEntity.criteria.location = group.criteria.location;
+        }
+        if (
+          group.criteria.workType &&
+          group.criteria.workType !== groupEntity.criteria.work_type
+        ) {
+          groupEntity.criteria.work_type = group.criteria.workType;
+        }
+        if (
+          group.criteria.school &&
+          group.criteria.school !== groupEntity.criteria.school.name
+        ) {
+          groupEntity.criteria.school = await this.createOrFetchSchool(
+            new SchoolEntity(group.criteria.school)
+          )
+            .then((it) => {
+              if (it instanceof SchoolEntity) return it;
+              throw new HttpException("ORM error", 500);
+            })
+            .catch((ex) => {
+              if (ex instanceof HttpException) throw ex;
+              throw new HttpException("Database connection lost", 500);
+            });
+        }
+
+        if (group.criteria.subjects) {
+          const subjectsToCheck = group.criteria.subjects.map((subject) => {
+            return new SubjectEntity(subject);
+          });
+          if (!groupEntity.criteria.subjects) {
+            groupEntity.criteria.subjects = await this.createOrFetchSubjects(
+              subjectsToCheck
+            ).catch((ex) => {
+              if (ex instanceof HttpException) throw ex;
+              throw new HttpException("Database connection lost", 500);
+            });
+          } else {
+            const oldSubjects = groupEntity.criteria.subjects.map((subject) => {
+              return subject.name;
+            });
+            if (
+              group.criteria.subjects.sort().join(",") !==
+              oldSubjects.sort().join(",")
+            ) {
+              groupEntity.criteria.subjects = await this.createOrFetchSubjects(
+                subjectsToCheck
+              ).catch((ex) => {
+                if (ex instanceof HttpException) throw ex;
+                throw new HttpException("Database connection lost", 500);
+              });
+            }
+          }
+        }
+        return groupEntity;
+      })
+      .then((entity) => {
+        return this.groupRepo.save(entity);
+      })
+      .then(async (savedEntity) => {
+        return await groupEntityToDto(savedEntity);
+      })
+      .catch((ex) => {
+        if (ex instanceof HttpException) throw ex;
+        throw new HttpException("Database connection lost", 500);
+      });
   }
 
+  // Testet manuelt, virker som den skal
   async deleteGroup(groupId: string): Promise<boolean> {
     if (!groupId)
       throw new HttpException(
         "No groupId found. Expected {\ngroupId: id\n}",
         400
       );
+
     return await this.groupRepo
-      .delete({ uuid: groupId })
-      .then((result) => {
-        return result.affected;
+      .findOneBy({ uuid: groupId })
+      .then((group) => {
+        if (!group)
+          throw new HttpException("Group not found, deletion failed", 400);
+        return group;
+      })
+      .then(async (group) => {
+        return await this.groupMemberRepo
+          .createQueryBuilder()
+          .delete()
+          .where("group = :group", { group: group.uuid })
+          .execute();
+      })
+      .then((delRes) => {
+        if (!delRes.affected || delRes.affected === 0) {
+          throw new HttpException("Deletion failed", 500);
+        }
+        return;
+      })
+      .then(async () => {
+        return await this.groupRepo.delete({ uuid: groupId });
       })
       .then((result) => {
-        if (!result || result == 0)
+        if (!result.affected || result.affected == 0)
           throw new HttpException("Deletion failed", 400);
         return true;
       })
@@ -346,9 +374,9 @@ export default class GroupService implements IGroupService {
       });
   }
 
+  // Testet manuelt, virker som den skal
   async searchGroup(searchDto: CriteriaDto): Promise<searchResult> {
     if (!searchDto) throw new HttpException("No searchDto provided", 400);
-
     return await this.fetchAllGroups()
       .then((groupDtoArray) => {
         const resultArray: any[] = [];
@@ -377,7 +405,10 @@ export default class GroupService implements IGroupService {
         const resultObject: searchResult = {};
 
         resultArray.forEach((element) => {
-          resultObject[element[0].uuid] = element[1];
+          resultObject[element[0].uuid] = {
+            group: element[0],
+            score: element[1],
+          };
         });
 
         return resultObject;
@@ -390,8 +421,7 @@ export default class GroupService implements IGroupService {
     function checkGradeGoal(group: GroupOutDto, score: number) {
       const full = Math.round(
         SearchWeightValues.GRADE_GOAL /
-          SearchWeightValues.MAX_POSSIBLE_SCORE /
-          100
+          (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
       );
 
       switch (searchDto.gradeGoal) {
@@ -445,159 +475,105 @@ export default class GroupService implements IGroupService {
 
     // Regner denne delen som ferdig
     function checkWorkFrequency(group: GroupOutDto, score: number) {
+      const full = Math.round(
+        SearchWeightValues.WORK_FREQUENCY /
+          (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
+      );
       if (group.criteria.workFrequency === searchDto.workFrequency) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.WORK_FREQUENCY /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          );
+        score = score + full;
       } else if (
         searchDto.workFrequency === WorkFrequency.ANY ||
         group.criteria.workFrequency === WorkFrequency.ANY
       ) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.WORK_FREQUENCY /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          ) /
-            2;
+        score = score + full / 2;
       }
       return score;
     }
 
     // Regner denne delen som ferdig
     function checkWorkMethod(group: GroupOutDto, score: number) {
+      const full = Math.round(
+        SearchWeightValues.WORK_TYPE /
+          (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
+      );
       if (group.criteria.workType === searchDto.workType) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.WORK_TYPE /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          );
+        score = score + full;
       } else if (
         searchDto.workType === WorkType.ANY ||
         group.criteria.workType === WorkType.ANY
       ) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.WORK_TYPE /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          ) /
-            2;
+        score = score + full / 2;
       }
       return score;
     }
 
     // Regner denne delen som ferdig
     function checkSize(group: GroupOutDto, score: number) {
+      const full = Math.round(
+        SearchWeightValues.MAX_SIZE /
+          (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
+      );
       if (group.criteria.maxSize === searchDto.maxSize) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.MAX_SIZE /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          );
+        score = score + full;
       } else if (
         searchDto.maxSize === MaxSize.ANY ||
         group.criteria.maxSize === MaxSize.ANY
       ) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.MAX_SIZE /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          ) /
-            2;
+        score = score + full / 2;
       }
       return score;
     }
 
     // Regner denne delen som ferdig
     function checkLanguage(group: GroupOutDto, score: number) {
+      const full = Math.round(
+        SearchWeightValues.LANGUAGE /
+          (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
+      );
       if (group.criteria.language === searchDto.language) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.LANGUAGE /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          );
+        score = score + full;
       } else if (
         !searchDto.language ||
         searchDto.language === "" ||
         group.criteria.language === ""
       ) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.LANGUAGE /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          ) /
-            2;
+        score = score + full / 2;
       }
       return score;
     }
 
     // Regner denne delen som ferdig
     function checkLocation(group: GroupOutDto, score: number) {
+      const full = Math.round(
+        SearchWeightValues.LOCATION /
+          (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
+      );
       if (group.criteria.location === searchDto.location) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.LOCATION /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          );
+        score = score + full;
       } else if (
         !searchDto.location ||
         searchDto.location === "" ||
         group.criteria.location === ""
       ) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.LOCATION /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          ) /
-            2;
+        score = score + full / 2;
       }
       return score;
     }
 
     // Regner denne delen som ferdig
     function checkSchool(group: GroupOutDto, score: number) {
+      const full = Math.round(
+        SearchWeightValues.SCHOOL /
+          (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
+      );
       if (group.criteria.school === searchDto.school) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.SCHOOL /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          );
+        score = score + full;
       } else if (
         !searchDto.school ||
         searchDto.school === "" ||
         group.criteria.school === "Ikke satt"
       ) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.SCHOOL /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          ) /
-            2;
+        score = score + full / 2;
       }
       return score;
     }
@@ -609,8 +585,7 @@ export default class GroupService implements IGroupService {
         const scorePerSubject =
           Math.round(
             SearchWeightValues.SUBJECTS /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
+              (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
           ) / numberOfSubjects;
         searchDto.subjects.forEach((sub) => {
           if (group.criteria.subjects) {
@@ -643,6 +618,7 @@ export default class GroupService implements IGroupService {
     );
   }
 
+  // Virker som den skal, ifølge deleteMember og addMember
   private async fetchUserAndGroup(userId: string, groupId: string) {
     return await this.userRepo
       .findOneBy({ uuid: userId })

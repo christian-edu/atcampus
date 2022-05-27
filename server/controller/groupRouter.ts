@@ -15,10 +15,10 @@ export default class GroupRouter extends ServerRouter {
     const router = this.router;
     const service = this.groupService;
     router.get("/", async (req, res, next) => {
-      const { group_id } = req?.query;
-      if (group_id) {
-        await this.fetchGroupById(group_id as string, req.userId, res);
-        return;
+      const { groupId } = req?.query;
+      if (groupId) {
+        return await this.fetchGroupById(groupId as string, req.userId, res);
+        //return;
       }
       await this.fetchAllGroups(res, service);
     });
@@ -54,9 +54,9 @@ export default class GroupRouter extends ServerRouter {
 
     // Member paths
     router.get("/member", async (req, res) => {
-      const { group_id } = req?.query;
+      const { groupId } = req?.query;
       try {
-        res.json(await service.fetchGroupMembers(group_id as string));
+        res.json(await service.fetchGroupMembers(groupId as string));
       } catch (e: unknown) {
         this.sendError(res, e);
       }
@@ -65,7 +65,7 @@ export default class GroupRouter extends ServerRouter {
       const { groupId, userId } = req?.body;
 
       try {
-        const result = await service.deleteMember(userId, groupId);
+        const result = await service.deleteMember(groupId, userId);
         if (result) res.sendStatus(200);
       } catch (e: unknown) {
         this.sendError(res, e);
@@ -73,9 +73,9 @@ export default class GroupRouter extends ServerRouter {
     });
 
     router.post("/member", async (req, res) => {
-      const { group, user } = req?.body;
+      const { groupId, userId } = req?.body;
       try {
-        res.json(await service.addMember(group, user));
+        res.json(await service.addMember(groupId, userId));
       } catch (e: unknown) {
         this.sendError(res, e);
       }
@@ -107,7 +107,7 @@ export default class GroupRouter extends ServerRouter {
 
     router.post("/search", async (req, res) => {
       const searchDto = extractSearchDtoFromRequest(req);
-
+      Logger.info("SEARCH", "In correct router");
       try {
         res.json(await service.searchGroup(searchDto));
       } catch (e: unknown) {

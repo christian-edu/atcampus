@@ -48,7 +48,10 @@ export class GroupEntity {
   })
   isPrivate: boolean;
 
-  @OneToOne(() => CriteriaEntity, { eager: true })
+  @OneToOne(() => CriteriaEntity, {
+    eager: true,
+    cascade: ["update", "remove"],
+  })
   @JoinColumn({ name: "criteria" })
   criteria: CriteriaEntity;
 
