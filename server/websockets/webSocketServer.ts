@@ -88,8 +88,11 @@ export default (
       } else {
         // Something really fd up going on with the type checking here... So any it is
         sockets.get(groupId)!.set(sessionId, websocketConnection as any);
+        const userFromDb = await chatService.fetchUserById(userId);
         sendMessageToGroup(
-          JSON.stringify({ message: `user with id: ${userId} has connected` })
+          JSON.stringify({
+            server: `${userFromDb?.userName} entered the chat!`,
+          })
         );
       }
 
@@ -124,8 +127,13 @@ export default (
           );
         }
       });
-      websocketConnection.on("close", function () {
+      websocketConnection.on("close", async function () {
+        const userFromDb = await chatService.fetchUserById(userId);
+
         sockets.get(groupId)?.delete(sessionId);
+        sendMessageToGroup(
+          JSON.stringify({ server: `${userFromDb?.userName} left the chat` })
+        );
       });
     }
   );

@@ -13,7 +13,7 @@ export default class ChatService {
   ) {}
 
   public async addMessage(message: string, userId: string, groupId: string) {
-    const user = await this.userRepo.findOneBy({ uuid: userId });
+    const user = await this.fetchUserById(userId);
     const group = await this.groupRepo.findOneBy({ uuid: groupId });
     if (!user || !group)
       throw new HttpException(
@@ -28,6 +28,10 @@ export default class ChatService {
       Logger.error("chatService", e.toString());
       throw new HttpException(e, 500);
     }
+  }
+
+  public async fetchUserById(userId: string) {
+    return await this.userRepo.findOneBy({ uuid: userId });
   }
 
   public async getMessages(groupId: string, userId: string) {
