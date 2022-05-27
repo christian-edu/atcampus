@@ -194,31 +194,6 @@ export default class GroupService implements IGroupService {
   async updateGroup(group: GroupInDto): Promise<GroupOutDto> {
     if (!group.uuid) throw new HttpException("No group uuid found", 400);
 
-    // const groupRes = await this._getGroupById(group.uuid);
-    // if (!groupRes)
-    //   throw new HttpException("Could not find any group by that id", 400);
-    //
-    // const groupEntity = newGroupEntityFromDto(group);
-    // const { subjects, school } = await this.createOrFetchSubjectsAndSchool(
-    //   groupEntity.criteria.school,
-    //   groupEntity.criteria.subjects
-    // );
-    //
-    // groupEntity.uuid = group.uuid;
-    // groupEntity.criteria.school = school;
-    // groupEntity.criteria.subjects = subjects;
-    // groupEntity.users = groupRes.users;
-    //
-    // try {
-    //   return groupEntityToDto(await this.groupRepo.save(groupEntity));
-    // } catch (e) {
-    //   if (queryFailedGuard(e)) {
-    //     throw new HttpException(e.message, 500);
-    //   } else {
-    //     throw e;
-    //   }
-    // }
-
     return await this.groupRepo
       .findOneBy({ uuid: group.uuid })
       .then(async (groupEntity) => {
@@ -347,15 +322,17 @@ export default class GroupService implements IGroupService {
         return group;
       })
       .then(async (group) => {
-        return await this.groupMemberRepo
-          .createQueryBuilder()
-          .delete()
-          .where("group = :group", { group: group.uuid })
-          .execute();
+        const users = await group.users;
+        if (!users)
+          throw new HttpException(
+            "Group members not found, database error",
+            500
+          );
+        return await this.groupMemberRepo.remove(users);
       })
       .then((delRes) => {
-        if (!delRes.affected || delRes.affected === 0) {
-          throw new HttpException("Deletion failed", 500);
+        if (delRes.length > 0) {
+          throw new HttpException("Deletion of members failed", 500);
         }
         return;
       })
@@ -364,7 +341,7 @@ export default class GroupService implements IGroupService {
       })
       .then((result) => {
         if (!result.affected || result.affected == 0)
-          throw new HttpException("Deletion failed", 400);
+          throw new HttpException("Deletion of group failed", 400);
         return true;
       })
       .catch((ex) => {
@@ -599,6 +576,7 @@ export default class GroupService implements IGroupService {
     }
   }
 
+  // Testet manuelt gjennom andre metoder, fungerer
   private async createOrFetchSubjects(
     subjects: SubjectEntity[]
   ): Promise<SubjectEntity[]> {
@@ -642,6 +620,7 @@ export default class GroupService implements IGroupService {
       });
   }
 
+  // Testet manuelt gjennom andre metoder
   private async createOrFetchSubjectsAndSchool(
     school: SchoolEntity,
     subjects?: SubjectEntity[]
@@ -656,6 +635,7 @@ export default class GroupService implements IGroupService {
     return { subjects, school };
   }
 
+  // Testet manuelt gjennom andre metoder
   private async createOrFetchSchool(school: SchoolEntity) {
     return await this.schoolRepo
       .findOneBy({ name: school.name })
@@ -673,6 +653,7 @@ export default class GroupService implements IGroupService {
       });
   }
 
+  // Testet manuelt gjennom andre metoder
   private async _saveGroupCriteria(criteria: CriteriaEntity) {
     try {
       return await this.criteriaRepo.save(criteria);

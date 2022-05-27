@@ -9,6 +9,7 @@ import { GroupEntity } from "../entity/GroupEntity";
 import { GroupInDto } from "../dto/GroupInOutDto";
 import { CriteriaDto } from "../dto/criteriaDto";
 import { MaxSize } from "../entity/enums/MaxSize";
+import { GroupMemberEntity } from "../entity/GroupMemberEntity";
 
 export const userEntities = [
   new UserEntity("jimbob", "jim@bob.com", "password"),
@@ -29,9 +30,19 @@ export const criteriaEntities = [
   ),
 ];
 
-export const groupEntities = [
-  new GroupEntity("A group", criteriaEntities[0], true, "Anarchy", "1"),
-];
+export const groupEntities = () => {
+  const group1 = new GroupEntity(
+    "A group",
+    criteriaEntities[0],
+    false,
+    "Anarchy",
+    "1"
+  );
+  const members1 = new GroupMemberEntity();
+  members1.user = userEntities[0];
+  group1.users = Promise.all([members1]);
+  return [group1];
+};
 
 export const criteriaDtos = [
   new CriteriaDto(GradeGoal.A, WorkFrequency.W1, "Norsk", MaxSize.ANY),

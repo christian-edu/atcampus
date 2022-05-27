@@ -1,14 +1,14 @@
-import { IGroupService } from "../service/IGroupService";
-import express, { Router } from "express";
-import GroupRouter from "../controller/groupRouter";
-import supertest, { SuperAgentTest } from "supertest";
-import { createMock } from "ts-auto-mock";
-import GroupService from "../service/groupService";
-import { GroupEntity } from "../entity/GroupEntity";
-import { Repository } from "typeorm";
-
-const app = express();
-
+// import { IGroupService } from "../service/IGroupService";
+// import express, { Router } from "express";
+// import GroupRouter from "../controller/groupRouter";
+// import supertest, { SuperAgentTest } from "supertest";
+// import { createMock } from "ts-auto-mock";
+// import GroupService from "../service/groupService";
+// import { GroupEntity } from "../entity/GroupEntity";
+// import { Repository } from "typeorm";
+//
+// const app = express();
+//
 // describe("Partial integration test for controller & service", () => {
 //   let groupService: IGroupService;
 //   let mockGroupRepo: Repository<GroupEntity>;
