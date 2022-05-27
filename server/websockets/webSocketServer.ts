@@ -39,9 +39,6 @@ export default (
   //https://cheatcode.co/tutorials/how-to-set-up-a-websocket-server-with-node-js-and-express
   //https://github.com/websockets/ws/blob/master/doc/ws.md#class-websocket
   expressServer.on("upgrade", async (request, socket, head) => {
-    //  request.
-    // Authentication goes here!
-    // console.info("On upgrade");
     const cookie = request.headers.cookie;
 
     if (!cookie) {
@@ -106,7 +103,6 @@ export default (
             userId,
             groupId
           );
-          console.log(res);
           const data = {
             message: recievedData.message,
             userId: userId,
