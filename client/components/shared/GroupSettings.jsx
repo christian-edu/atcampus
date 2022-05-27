@@ -24,11 +24,10 @@ const GroupSettings = (props ) => {
 
   const user = React.useContext(UserInfoContext)
 
-  console.log("IN SETTINGS")
-  console.log("here is ur fkn user" + user.username )
 
   function deleteGroup(){
 
+    console.log("Deleted group")
     fetch("/api/v1/groups", {
       method: 'DELETE',
       headers: {
@@ -42,6 +41,16 @@ const GroupSettings = (props ) => {
 
   function leaveGroup(){
     console.log("Left group")
+    console.log(user.uuid)
+    fetch("/api/v1/groups", {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        groupId, userId: user.uuid
+      }),
+    })
   }
 
   return (

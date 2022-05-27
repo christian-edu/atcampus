@@ -4,6 +4,9 @@ import { useLoader } from '../useLoader';
 import Loading from './shared/Loading';
 import GroupCard from './shared/GroupCard';
 import Button from './shared/Button';
+import {useContext} from "react";
+import {UserInfoContext} from "../App";
+import React from "react";
 
 
 
@@ -13,6 +16,7 @@ const GroupLinks = () => {
 
   const navigate = useNavigate();
 
+  const user = React.useContext(UserInfoContext)
 
   // Send request to /user, if there is no access token saved in the cookie, returns 401 for a redirect back to /login
 
@@ -23,11 +27,17 @@ const GroupLinks = () => {
 
 
 
-    console.log("Main group data data")
+    console.log("Main group data ")
     console.log(groupData)
 
+    console.log("UR SICK USER DATA")
+    console.log(user)
 
 
+
+    if(!user){
+        return <Link to={"/login"}>Login</Link>
+    }
 
 
 
@@ -38,10 +48,17 @@ const GroupLinks = () => {
   if (error) {
     return (
       <div>
+          <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8 mt-6'>
+              <Button to='/createGroup' className='lg:col-start-2'>
+                  Opprett gruppe
+              </Button>
+              <Button to='/searchGroup' className='lg:col-start-3'>
+                  Søk etter gruppe
+              </Button>
+          </div>
         <h2>Error</h2>
         <h3>{error.toString()}</h3>
-        <Link to={"/login"}>Login</Link>
-
+          <h3>Ingen grupper funnet</h3>
       </div>
     );
   }
@@ -60,6 +77,9 @@ const GroupLinks = () => {
 
               <h2 className='text-dark-1 text-xl font-bold mb-4'>Mine grupper</h2>
               <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
+
+                  {/*Only return this id groupdata is nbot undefined*/}
+
 
                   {groupData.map((group) => (
 

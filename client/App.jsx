@@ -30,7 +30,7 @@ const App = () => {
 
   const { data: userData } = useLoader(() => fetchJSON('/api/v1/user'));
 
-
+  console.log(userData)
 
 
   return (
