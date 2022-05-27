@@ -8,7 +8,11 @@
     "start": "ts-node --files server.ts",
     "dev": "nodemon --ext ts,js,json --exec npm start",
     "format": "prettier --write **/*.{tsx,jsx,ts,js,html,json}",
-    "format:check": "prettier --check **/*.{tsx,jsx,ts,js,html,json}"
+    "format:check": "prettier --check **/*.{tsx,jsx,ts,js,html,json}",
+    "typeorm": "typeorm-ts-node-commonjs -d ./repo/AppDataSource.ts",
+    "migration:generate": "typeorm-ts-node-commonjs migration:generate ./server/repo/AppDataSource.ts",
+    "migration:up": "node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:run repo/AppDataSource.ts",
+    "migration:down": "node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:revert repo/AppDataSource.ts"
   },
   "author": "",
   "license": "ISC",
@@ -31,6 +35,7 @@
     "nodemon": "^2.0.16",
     "supertest": "^6.2.3",
     "ts-jest": "^28.0.2",
+    "ts-node": "^10.8.0",
     "ttypescript": "^1.5.13",
     "typescript": "^4.6.4"
   },
@@ -48,7 +53,6 @@
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.19.0",
     "ts-auto-mock": "^3.6.2",
-    "ts-node": "^10.7.0",
     "typeorm": "^0.3.6",
     "uuid": "^8.3.2",
     "ws": "^8.6.0"

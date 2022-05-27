@@ -1,0 +1,18 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 8889,
+  "username": "root",
+  "password": "root",
+  "database": "",
+  "entities": [
+    "entity/*.js"
+  ],
+  "migrationsTableName": "atcampus_migration_table",
+  "migrations": [
+    "migration/*.js"
+  ],
+  "cli": {
+    "migrationsDir": "migration"
+  }
+}

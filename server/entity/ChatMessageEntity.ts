@@ -42,5 +42,5 @@ export class ChatMessageEntity {
     type: "datetime",
     default: () => "NOW()",
   })
-  timestamp = Date.now();
+  timestamp: Date | undefined;
 }

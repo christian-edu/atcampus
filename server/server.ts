@@ -16,6 +16,8 @@ import WebSocketServer from "./websockets/webSocketServer";
 import AuthService from "./service/authService";
 import UserRouter from "./controller/userRouter";
 import Logger from "./util/logger";
+import ChatRouter from "./controller/chatRouter";
+import exp from "constants";
 
 dotenv.config();
 const app = express();
@@ -25,7 +27,7 @@ const repo = repositories;
 repo
   .then((repos) => {
     const server = app.listen(process.env.PORT || 8345, async () => {
-      console.info("Connected to db ");
+      Logger.info("Server", "Connected to db ");
       const schoolEntity = new SchoolEntity("BI");
       //const schoolRepo = repos.schoolRepo;
       //console.log(await schoolRepo.save(schoolEntity));
@@ -40,6 +42,7 @@ repo
         repos.schoolRepo,
         repos.groupRepo
       );
+      const userRouter = new UserRouter(userService, express.Router());
       // const res = await userService.addUser(user);
       // console.info(res);
       const groupService = new GroupService(
@@ -56,11 +59,17 @@ repo
         express.Router()
       );
 
-      const userRouter = new UserRouter(userService, express.Router());
+      const chatService = new ChatService(
+        repos.chatMessageRepo,
+        repos.userRepo,
+        repos.groupRepo
+      );
+      const chatRouter = new ChatRouter(chatService, express.Router());
       app.use(express.json());
       app.use(cookieParser(process.env.COOKIE_SECRET));
       app.use(verifyToken);
       app.use(setProtectedRoutes);
+      app.use("/api/v1/chat", chatRouter.fetchRoutes());
       app.use("/api/v1/groups", groupRoutes.fetchRoutes());
       app.use("/api/v1/user", userRouter.fetchRoutes());
       app.use(authRouter.fetchRoutes());
@@ -75,11 +84,7 @@ repo
         }
       });
 
-      WebSocketServer(
-        server,
-        new ChatService(repos.chatMessageRepo),
-        userService
-      );
+      WebSocketServer(server, chatService, userService);
       Logger.info(
         "server",
         `Server started at http://localhost:${
