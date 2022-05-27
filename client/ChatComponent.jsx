@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { fetchJSON } from "./fetchJSON";
 
 export function ChatComponent({ groupId }) {
   const [messages, setMessages] = useState([]);
@@ -11,8 +12,10 @@ export function ChatComponent({ groupId }) {
   console.info(url);
   const [ws, setWs] = useState(null);
   useEffect(async () => {
+    const msgFromServer = await fetchJSON("/api/v1/chat?group_id=" + groupId);
+    setMessages(msgFromServer);
+    console.info(msgFromServer);
     const websocket = await new WebSocket(url);
-
     setWs(websocket);
 
     websocket.onopen = (event) => {
@@ -36,14 +39,14 @@ export function ChatComponent({ groupId }) {
 
   function handleSendMessage(event) {
     event.preventDefault();
-    console.info(message);
     ws.send(JSON.stringify({ message }));
+    setMessage("");
   }
 
   function parseMessages(messages) {
     return messages.map((message) => (
       <p key={messages.indexOf(message)}>
-        {message.username}: {message.message}
+        {message.userName || "[SERVER]"}: {message.message}
       </p>
     ));
   }
@@ -53,7 +56,7 @@ export function ChatComponent({ groupId }) {
       <div id="chat-messages">{parseMessages(messages)}</div>
       <div id="chat-input">
         <label>
-          New message:{" "}
+          New message:
           <input
             type="text"
             value={message}
