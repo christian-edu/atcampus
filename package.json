@@ -12,9 +12,9 @@
     "client:dev": "cd client && npm run dev",
     "server:dev": "cd server && npm run dev",
     "install:client": "cd client && npm install --include=dev",
-    "install:server": "cd server && npm install --include=dev"
+    "install:server": "cd server && npm install --include=dev",
+    "postinstall": "npm run install:server && npm run install:client"
   },
-  "postinstall": "npm run install:server && npm run install:client",
   "keywords": [],
   "author": "",
   "license": "ISC",
