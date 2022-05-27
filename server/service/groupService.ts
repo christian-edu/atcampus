@@ -32,6 +32,7 @@ export default class GroupService implements IGroupService {
     private criteriaRepo: Repository<CriteriaEntity>
   ) {}
 
+  // Testet manuelt, virker som den skal
   async fetchAllGroups(): Promise<GroupOutDto[]> {
     return await this.groupRepo
       .findBy({ isPrivate: false })
@@ -89,6 +90,7 @@ export default class GroupService implements IGroupService {
       });
   }
 
+  // Testet manuelt, virker som den skal
   async fetchGroupById(groupId: string): Promise<GroupOutDto> {
     if (!groupId)
       throw new HttpException(
@@ -108,14 +110,18 @@ export default class GroupService implements IGroupService {
       });
   }
 
+  // Testet manuelt. Virker, men groupRouter sender ikke oppdatert gruppe tilbake til frontend
+  // (lett å endre)
   async deleteMember(groupId: string, userId: string): Promise<GroupOutDto> {
+    console.log(groupId);
+    console.log(userId);
     return await this.fetchUserAndGroup(userId, groupId)
       .then(async ({ foundUser: user, foundGroup: group }) => {
         return await this.groupMemberRepo
           .createQueryBuilder()
           .delete()
-          .where("user_uuid = :userId", { userId: user.uuid })
-          .andWhere("group_uuid = :groupId", { groupId: group.uuid })
+          .where("user = :userId", { userId: user.uuid })
+          .andWhere("group = :groupId", { groupId: group.uuid })
           .execute();
       })
       .then((response: DeleteResult) => {
@@ -130,6 +136,7 @@ export default class GroupService implements IGroupService {
             if (!group) {
               throw new HttpException("Database connection lost", 500);
             }
+            console.log("group found in return");
             return await groupEntityToDto(group);
           })
           .catch((ex) => {
@@ -140,6 +147,7 @@ export default class GroupService implements IGroupService {
       });
   }
 
+  // Testet manuelt, virker som den skal
   async addMember(groupId: string, userId: string): Promise<GroupOutDto> {
     console.log("adding member");
     return await this.fetchUserAndGroup(userId, groupId).then(
@@ -163,10 +171,11 @@ export default class GroupService implements IGroupService {
     );
   }
 
+  // Testet manuelt, virker som den skal
   async fetchGroupMembers(groupId: string): Promise<UserOutDto[]> {
     if (!groupId)
       throw new HttpException(
-        "group_id request parameter must be specified",
+        "groupId request parameter must be specified",
         400
       );
 
@@ -346,9 +355,9 @@ export default class GroupService implements IGroupService {
       });
   }
 
+  // Testet manuelt, virker som den skal
   async searchGroup(searchDto: CriteriaDto): Promise<searchResult> {
     if (!searchDto) throw new HttpException("No searchDto provided", 400);
-
     return await this.fetchAllGroups()
       .then((groupDtoArray) => {
         const resultArray: any[] = [];
@@ -377,7 +386,10 @@ export default class GroupService implements IGroupService {
         const resultObject: searchResult = {};
 
         resultArray.forEach((element) => {
-          resultObject[element[0].uuid] = element[1];
+          resultObject[element[0].uuid] = {
+            group: element[0],
+            score: element[1],
+          };
         });
 
         return resultObject;
@@ -390,8 +402,7 @@ export default class GroupService implements IGroupService {
     function checkGradeGoal(group: GroupOutDto, score: number) {
       const full = Math.round(
         SearchWeightValues.GRADE_GOAL /
-          SearchWeightValues.MAX_POSSIBLE_SCORE /
-          100
+          (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
       );
 
       switch (searchDto.gradeGoal) {
@@ -445,159 +456,105 @@ export default class GroupService implements IGroupService {
 
     // Regner denne delen som ferdig
     function checkWorkFrequency(group: GroupOutDto, score: number) {
+      const full = Math.round(
+        SearchWeightValues.WORK_FREQUENCY /
+          (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
+      );
       if (group.criteria.workFrequency === searchDto.workFrequency) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.WORK_FREQUENCY /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          );
+        score = score + full;
       } else if (
         searchDto.workFrequency === WorkFrequency.ANY ||
         group.criteria.workFrequency === WorkFrequency.ANY
       ) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.WORK_FREQUENCY /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          ) /
-            2;
+        score = score + full / 2;
       }
       return score;
     }
 
     // Regner denne delen som ferdig
     function checkWorkMethod(group: GroupOutDto, score: number) {
+      const full = Math.round(
+        SearchWeightValues.WORK_TYPE /
+          (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
+      );
       if (group.criteria.workType === searchDto.workType) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.WORK_TYPE /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          );
+        score = score + full;
       } else if (
         searchDto.workType === WorkType.ANY ||
         group.criteria.workType === WorkType.ANY
       ) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.WORK_TYPE /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          ) /
-            2;
+        score = score + full / 2;
       }
       return score;
     }
 
     // Regner denne delen som ferdig
     function checkSize(group: GroupOutDto, score: number) {
+      const full = Math.round(
+        SearchWeightValues.MAX_SIZE /
+          (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
+      );
       if (group.criteria.maxSize === searchDto.maxSize) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.MAX_SIZE /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          );
+        score = score + full;
       } else if (
         searchDto.maxSize === MaxSize.ANY ||
         group.criteria.maxSize === MaxSize.ANY
       ) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.MAX_SIZE /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          ) /
-            2;
+        score = score + full / 2;
       }
       return score;
     }
 
     // Regner denne delen som ferdig
     function checkLanguage(group: GroupOutDto, score: number) {
+      const full = Math.round(
+        SearchWeightValues.LANGUAGE /
+          (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
+      );
       if (group.criteria.language === searchDto.language) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.LANGUAGE /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          );
+        score = score + full;
       } else if (
         !searchDto.language ||
         searchDto.language === "" ||
         group.criteria.language === ""
       ) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.LANGUAGE /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          ) /
-            2;
+        score = score + full / 2;
       }
       return score;
     }
 
     // Regner denne delen som ferdig
     function checkLocation(group: GroupOutDto, score: number) {
+      const full = Math.round(
+        SearchWeightValues.LOCATION /
+          (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
+      );
       if (group.criteria.location === searchDto.location) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.LOCATION /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          );
+        score = score + full;
       } else if (
         !searchDto.location ||
         searchDto.location === "" ||
         group.criteria.location === ""
       ) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.LOCATION /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          ) /
-            2;
+        score = score + full / 2;
       }
       return score;
     }
 
     // Regner denne delen som ferdig
     function checkSchool(group: GroupOutDto, score: number) {
+      const full = Math.round(
+        SearchWeightValues.SCHOOL /
+          (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
+      );
       if (group.criteria.school === searchDto.school) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.SCHOOL /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          );
+        score = score + full;
       } else if (
         !searchDto.school ||
         searchDto.school === "" ||
         group.criteria.school === "Ikke satt"
       ) {
-        score =
-          score +
-          Math.round(
-            SearchWeightValues.SCHOOL /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
-          ) /
-            2;
+        score = score + full / 2;
       }
       return score;
     }
@@ -609,8 +566,7 @@ export default class GroupService implements IGroupService {
         const scorePerSubject =
           Math.round(
             SearchWeightValues.SUBJECTS /
-              SearchWeightValues.MAX_POSSIBLE_SCORE /
-              100
+              (SearchWeightValues.MAX_POSSIBLE_SCORE / 100)
           ) / numberOfSubjects;
         searchDto.subjects.forEach((sub) => {
           if (group.criteria.subjects) {
