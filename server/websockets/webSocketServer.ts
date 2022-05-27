@@ -118,6 +118,7 @@ export default (
             message: recievedData.message,
             userId: userId,
             userName: res.user.userName,
+            timestamp: new Date().toISOString(),
           };
           sendMessageToGroup(JSON.stringify(data));
         } catch (e) {

@@ -11,7 +11,8 @@ export function ChatComponent({ groupId }) {
     window.location.origin.replace(/^http/, "ws") + `/chat?groupId=${groupId}`;
   console.info(url);
   const [ws, setWs] = useState(null);
-  useEffect(async () => {
+
+  async function connectSocket() {
     const msgFromServer = await fetchJSON("/api/v1/chat?group_id=" + groupId);
     setMessages(msgFromServer);
     console.info(msgFromServer);
@@ -35,7 +36,27 @@ export function ChatComponent({ groupId }) {
         console.error(e);
       }
     };
-  }, []);
+    websocket.onclose = function (e) {
+      console.log(
+        "Socket is closed. Reconnect will be attempted in 1 second.",
+        e.reason
+      );
+      setTimeout(function () {
+        connectSocket();
+      }, 1000);
+    };
+
+    websocket.onerror = function (err) {
+      console.error(
+        "Socket encountered error: ",
+        err.message,
+        "Closing socket"
+      );
+      websocket.close();
+    };
+  }
+
+  useEffect(() => connectSocket(), []);
 
   function handleSendMessage(event) {
     event.preventDefault();
