@@ -27,7 +27,7 @@ const repo = repositories;
 repo
   .then((repos) => {
     const server = app.listen(process.env.PORT || 8345, async () => {
-      console.info("Connected to db ");
+      Logger.info("Server", "Connected to db ");
       const schoolEntity = new SchoolEntity("BI");
       //const schoolRepo = repos.schoolRepo;
       //console.log(await schoolRepo.save(schoolEntity));
