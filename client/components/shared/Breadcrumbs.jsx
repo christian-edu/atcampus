@@ -1,16 +1,24 @@
 import { ChevronRightIcon } from '@heroicons/react/solid';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
+import { useParams } from 'react-router-dom';
 import { routes } from '../../services/routes';
+import { useLoader } from '../../useLoader';
+import { fetchJSON } from '../../fetchJSON';
+import Loading from './Loading';
 
 const Breadcrumbs = () => {
-  // Component for breadcrumbs
-  // WIP
+  const params = useParams();
 
-  const location = useLocation();
+  const {
+    data: group,
+    error,
+    loading,
+  } = useLoader(() => fetchJSON(`/api/v1/groups/?groupId=${params.id}`));
 
-  console.log(location.state);
-  const breadcrumbs = useBreadcrumbs(routes(location));
+  const breadcrumbs = useBreadcrumbs(routes(group?.name));
+
+  if (loading) return <Loading />;
 
   return (
     <ul className='flex'>

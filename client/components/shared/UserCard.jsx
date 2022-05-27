@@ -51,7 +51,7 @@ const UserCard = ({ user, edit, search, match }) => {
         onClick={toggleModal}
       >
         <Image className='h-10' />
-        <h2 className='font-bold text-lg text-dark-1'>{user.user_name}</h2>
+        <h2 className='font-bold text-lg text-dark-1'>{user.username}</h2>
         <button className='ml-auto'>
           {/* Render dots icon if props edit is set to true, else render plus icons */}
           {edit ? (

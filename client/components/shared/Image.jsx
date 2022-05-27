@@ -17,4 +17,4 @@ const Image = ({ group, className }) => {
     />
   );
 };
-export default Image;
+export default React.memo(Image);
