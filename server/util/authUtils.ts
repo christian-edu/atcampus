@@ -28,6 +28,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     res.send();
   }
 }
+
 export class HttpPath {
   constructor(
     public path: string,
@@ -46,6 +47,7 @@ export function setProtectedRoutes(
   protectedRoutes.push(new HttpPath("groups", "GET"));
   protectedRoutes.push(new HttpPath("groups", "POST"));
   protectedRoutes.push(new HttpPath("user", "GET"));
+  protectedRoutes.push(new HttpPath("chat", "GET"));
   for (const item of protectedRoutes) {
     if (
       req.path.toLowerCase().includes(item.path.toLowerCase()) &&
