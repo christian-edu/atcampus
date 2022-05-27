@@ -4,13 +4,13 @@ import { memberEntityToDto_user } from "./memberMappers";
 import { GroupInDto, GroupOutDto } from "../GroupInOutDto";
 import { UserEntity } from "../../entity/UserEntity";
 import { GroupMemberEntity } from "../../entity/GroupMemberEntity";
-import { GroupMemberDto_user } from "../groupMemberDto";
+import { GroupMemberDtoUser } from "../groupMemberDto";
 import HttpException from "../../util/errorUtils";
 
 export async function groupEntityToDto(
   entity: GroupEntity
 ): Promise<GroupOutDto> {
-  let members: GroupMemberDto_user[];
+  let members: GroupMemberDtoUser[];
   const fetchedUsers = await entity.users
     ?.then((it) => {
       if (!it) throw new HttpException("Users not found", 404);

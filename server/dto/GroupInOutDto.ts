@@ -1,5 +1,5 @@
 import { CriteriaDto } from "./criteriaDto";
-import { GroupMemberDto_user } from "./groupMemberDto";
+import { GroupMemberDtoUser } from "./groupMemberDto";
 
 export class GroupInDto {
   constructor(
@@ -17,7 +17,7 @@ export class GroupOutDto {
     public isPrivate: boolean,
     public name: string,
     public criteria: CriteriaDto,
-    public groupMembers: GroupMemberDto_user[],
+    public groupMembers: GroupMemberDtoUser[],
     public rules?: string
   ) {}
 }
