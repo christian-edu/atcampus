@@ -13,7 +13,7 @@ import HttpException from "../util/errorUtils";
 dotenv.config();
 
 const sockets = new Map<string, Map<string, WebSocket>>();
-function getUserIdfromCookie(cookie: string) {
+function getIdsFromCookie(cookie: string) {
   const sessionCookie = cookie
     ?.split("; ")
     ?.find((c: string) => c.startsWith("auth_token"))
@@ -23,8 +23,14 @@ function getUserIdfromCookie(cookie: string) {
     decodeURIComponent(sessionCookie!),
     process.env.COOKIE_SECRET as string
   );
-  const verifiedToken = jwt.verify(signedCookie, process.env.JWT_KEY as string);
-  return (verifiedToken as JwtPayload)?.userId;
+  const verifiedToken = jwt.verify(
+    signedCookie,
+    process.env.JWT_KEY as string
+  ) as JwtPayload;
+  return {
+    userId: verifiedToken?.userId,
+    sessionId: verifiedToken?.sessionId,
+  };
 }
 function _writeUnauthorized(socket: Duplex) {
   socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
@@ -36,8 +42,8 @@ export default (
   userService: UserService
 ) => {
   const wss = new WebSocketServer.Server({ noServer: true, path: "/chat" });
-  //https://cheatcode.co/tutorials/how-to-set-up-a-websocket-server-with-node-js-and-express
-  //https://github.com/websockets/ws/blob/master/doc/ws.md#class-websocket
+  // TODO: Håndterer ikke at samme bruker er logget inn flere steder. Trenger en sessionId ellernoe for å unngå at
+  // socketen overskrives.. Ikke MVP-mat, selv om det burde være ganske straight forward å legge en ekstra ID i token.
   expressServer.on("upgrade", async (request, socket, head) => {
     const cookie = request.headers.cookie;
 
@@ -47,7 +53,7 @@ export default (
       return;
     }
 
-    const userId = getUserIdfromCookie(cookie);
+    const userId = getIdsFromCookie(cookie)?.userId;
     const requestURL = new URL("http://dummyhost" + request.url!);
     const queryParams = new URLSearchParams(requestURL.searchParams);
     const groupId = queryParams.get("groupId");
@@ -72,16 +78,21 @@ export default (
       const requestURL = new URL("http://dummyhost" + connectionRequest.url!);
       const queryParams = new URLSearchParams(requestURL.searchParams);
       const groupId = queryParams.get("groupId");
-      const userId = getUserIdfromCookie(connectionRequest.headers.cookie!);
+      const { userId, sessionId } = getIdsFromCookie(
+        connectionRequest.headers.cookie!
+      );
 
       if (!groupId) throw Error("No groupId!");
       if (!sockets.has(groupId)) {
-        sockets.set(groupId, new Map().set(userId, websocketConnection));
+        sockets.set(groupId, new Map().set(sessionId, websocketConnection));
       } else {
         // Something really fd up going on with the type checking here... So any it is
-        sockets.get(groupId)!.set(userId, websocketConnection as any);
+        sockets.get(groupId)!.set(sessionId, websocketConnection as any);
+        const userFromDb = await chatService.fetchUserById(userId);
         sendMessageToGroup(
-          JSON.stringify({ message: `user with id: ${userId} has connected` })
+          JSON.stringify({
+            server: `${userFromDb?.userName} entered the chat!`,
+          })
         );
       }
 
@@ -106,7 +117,8 @@ export default (
           const data = {
             message: recievedData.message,
             userId: userId,
-            username: res.user.userName,
+            userName: res.user.userName,
+            timestamp: new Date().toISOString(),
           };
           sendMessageToGroup(JSON.stringify(data));
         } catch (e) {
@@ -116,9 +128,13 @@ export default (
           );
         }
       });
+      websocketConnection.on("close", async function () {
+        const userFromDb = await chatService.fetchUserById(userId);
 
-      websocketConnection.on("close", function () {
-        sockets.get(groupId)?.delete(userId);
+        sockets.get(groupId)?.delete(sessionId);
+        sendMessageToGroup(
+          JSON.stringify({ server: `${userFromDb?.userName} left the chat` })
+        );
       });
     }
   );

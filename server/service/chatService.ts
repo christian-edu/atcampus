@@ -13,7 +13,7 @@ export default class ChatService {
   ) {}
 
   public async addMessage(message: string, userId: string, groupId: string) {
-    const user = await this.userRepo.findOneBy({ uuid: userId });
+    const user = await this.fetchUserById(userId);
     const group = await this.groupRepo.findOneBy({ uuid: groupId });
     if (!user || !group)
       throw new HttpException(
@@ -30,6 +30,10 @@ export default class ChatService {
     }
   }
 
+  public async fetchUserById(userId: string) {
+    return await this.userRepo.findOneBy({ uuid: userId });
+  }
+
   public async getMessages(groupId: string, userId: string) {
     const group = await this.groupRepo.findOneBy({ uuid: groupId });
     const groupMembers = await group?.users;
@@ -43,6 +47,9 @@ export default class ChatService {
         group: {
           uuid: groupId,
         },
+      },
+      order: {
+        timestamp: "ASC",
       },
       relations: ["user"],
     });
