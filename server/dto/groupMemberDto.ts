@@ -1,4 +1,4 @@
-export class GroupMemberDto_user {
+export class GroupMemberDtoUser {
   constructor(
     public user_uuid: string,
     public user_name: string,
@@ -6,7 +6,7 @@ export class GroupMemberDto_user {
   ) {}
 }
 
-export class GroupMemberDto_group {
+export class GroupMemberDtoGroup {
   constructor(
     public group_uuid: string,
     public group_name: string,
@@ -14,7 +14,7 @@ export class GroupMemberDto_group {
   ) {}
 }
 
-export class GroupMemberDto_both {
+export class GroupMemberDtoBoth {
   constructor(
     public user_uuid: string,
     public user_name: string,

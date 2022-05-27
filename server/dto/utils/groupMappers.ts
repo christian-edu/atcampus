@@ -4,13 +4,13 @@ import { memberEntityToDto_user } from "./memberMappers";
 import { GroupInDto, GroupOutDto } from "../GroupInOutDto";
 import { UserEntity } from "../../entity/UserEntity";
 import { GroupMemberEntity } from "../../entity/GroupMemberEntity";
-import { GroupMemberDto_user } from "../groupMemberDto";
+import { GroupMemberDtoUser } from "../groupMemberDto";
 import HttpException from "../../util/errorUtils";
 
 export async function groupEntityToDto(
   entity: GroupEntity
 ): Promise<GroupOutDto> {
-  let members: GroupMemberDto_user[];
+  let members: GroupMemberDtoUser[];
   const fetchedUsers = await entity.users
     ?.then((it) => {
       if (!it) throw new HttpException("Users not found", 404);
@@ -18,15 +18,17 @@ export async function groupEntityToDto(
     })
     .catch((ex) => {
       if (ex instanceof HttpException) throw ex;
-      throw new HttpException("Database error occurred", 500);
+      throw new HttpException(
+        "Database error occurred when fetching users",
+        500
+      );
     });
   if (fetchedUsers !== undefined) {
     members = fetchedUsers.map((entity) => {
-      console.log(entity.user.userName);
       return memberEntityToDto_user(entity);
     });
   } else {
-    throw new HttpException("Database error occurred", 500);
+    throw new HttpException("Database error occurred, users undefined", 500);
   }
 
   return new GroupOutDto(

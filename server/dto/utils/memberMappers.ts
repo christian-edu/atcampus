@@ -1,14 +1,14 @@
 import { GroupMemberEntity } from "../../entity/GroupMemberEntity";
 import {
-  GroupMemberDto_both,
-  GroupMemberDto_group,
-  GroupMemberDto_user,
+  GroupMemberDtoBoth,
+  GroupMemberDtoGroup,
+  GroupMemberDtoUser,
 } from "../groupMemberDto";
 
 export function memberEntityToDto_both(
   entity: GroupMemberEntity
-): GroupMemberDto_both {
-  return new GroupMemberDto_both(
+): GroupMemberDtoBoth {
+  return new GroupMemberDtoBoth(
     entity.user.uuid,
     entity.user.userName,
     entity.group.uuid,
@@ -19,8 +19,8 @@ export function memberEntityToDto_both(
 
 export function memberEntityToDto_user(
   entity: GroupMemberEntity
-): GroupMemberDto_user {
-  return new GroupMemberDto_user(
+): GroupMemberDtoUser {
+  return new GroupMemberDtoUser(
     entity.user.uuid,
     entity.user.userName,
     entity.is_admin
@@ -29,8 +29,8 @@ export function memberEntityToDto_user(
 
 export function memberEntityToDto_group(
   entity: GroupMemberEntity
-): GroupMemberDto_group {
-  return new GroupMemberDto_group(
+): GroupMemberDtoGroup {
+  return new GroupMemberDtoGroup(
     entity.group.uuid,
     entity.group.name,
     entity.is_admin

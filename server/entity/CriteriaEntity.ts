@@ -25,9 +25,10 @@ export class CriteriaEntity {
     language = "",
     location = "",
     school = new SchoolEntity(),
-    subjects?: SubjectEntity[]
+    subjects?: SubjectEntity[],
+    uuid = uuidv4()
   ) {
-    this.uuid = uuidv4();
+    this.uuid = uuid;
     this.grade_goal = gradeGoal;
     this.work_frequency = workFrequency;
     this.work_type = workType;
@@ -73,7 +74,10 @@ export class CriteriaEntity {
   @Column()
   location: string;
 
-  @ManyToMany(() => SubjectEntity, { eager: true })
+  @ManyToMany(() => SubjectEntity, {
+    eager: true,
+    cascade: ["update", "remove", "insert"],
+  })
   @JoinTable({ name: "criteria_subjects" })
   @JoinColumn({ name: "subjects" })
   subjects: SubjectEntity[] | undefined;

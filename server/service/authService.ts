@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import IAuthService from "./IAuthService";
 import dotenv from "dotenv";
 import HttpException from "../util/errorUtils";
+import { v4 as uuid } from "uuid";
 
 dotenv.config();
 export default class AuthService implements IAuthService {
@@ -35,8 +36,12 @@ export default class AuthService implements IAuthService {
   }
 
   private static generateToken(user: UserEntity) {
-    return jwt.sign({ userId: user.uuid }, process.env.JWT_KEY as string, {
-      expiresIn: "1h",
-    }); //
+    return jwt.sign(
+      { userId: user.uuid, sessionId: uuid() },
+      process.env.JWT_KEY as string,
+      {
+        expiresIn: "1h",
+      }
+    ); //
   }
 }

@@ -9,6 +9,9 @@ import { SchoolEntity } from "../entity/SchoolEntity";
 import { UserEntity } from "../entity/UserEntity";
 import dotenv from "dotenv";
 
+// npm run typeorm -- migration:run
+// npm run typeorm -- migration:generate migration/navn-på-migration
+
 dotenv.config();
 export const AppDataSource = new DataSource({
   type: "mariadb",
@@ -16,7 +19,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME, // hentes fra process.env
   password: process.env.DB_PASSWORD, // hentes fra process.env
   database: process.env.DB_DATABASE, // hentes fra process.env,
-  synchronize: true,
+  synchronize: false,
   entities: [
     GroupEntity,
     SubjectEntity,
@@ -27,4 +30,6 @@ export const AppDataSource = new DataSource({
     SchoolEntity,
     UserEntity,
   ],
+  migrations: ["migration/*{.js,.ts}"],
+  migrationsTableName: "atcampus_migration_table",
 });
