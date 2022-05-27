@@ -42,7 +42,9 @@ export function ChatComponent({ groupId }) {
 
   function parseMessages(messages) {
     return messages.map((message) => (
-      <p key={messages.indexOf(message)}>{message.message}</p>
+      <p key={messages.indexOf(message)}>
+        {message.username}: {message.message}
+      </p>
     ));
   }
 
