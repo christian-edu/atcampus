@@ -44,11 +44,24 @@ export function ChatComponent({ groupId }) {
   }
 
   function parseMessages(messages) {
-    return messages.map((message) => (
-      <p key={messages.indexOf(message)}>
-        {message.userName || "[SERVER]"}: {message.message}
-      </p>
-    ));
+    return messages.map((message) => {
+      if (message.message) {
+        return (
+          <p key={messages.indexOf(message)}>
+            {message.userName}: {message.message}
+          </p>
+        );
+      } else if (message.server) {
+        return (
+          <p
+            key={messages.indexOf(message)}
+            style={{ backgroundColor: "cyan" }}
+          >
+            {message.server}
+          </p>
+        );
+      }
+    });
   }
 
   return (
