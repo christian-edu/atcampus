@@ -48,6 +48,9 @@ export default class ChatService {
           uuid: groupId,
         },
       },
+      order: {
+        timestamp: "ASC",
+      },
       relations: ["user"],
     });
     if (messages.length === 0) throw new HttpException("No messages", 204);
