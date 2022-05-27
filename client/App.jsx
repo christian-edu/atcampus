@@ -18,15 +18,24 @@ import BackButton from './components/shared/BackButton';
 import Breadcrumbs from './components/shared/Breadcrumbs';
 import {Login} from "./components/Login";
 import {ShowCriteriaPage} from "./components/ShowCriteriaPage";
+import {useLoader} from "./useLoader";
+import {fetchJSON} from "./fetchJSON";
+import {data} from "autoprefixer";
+import React from "react";
 
 
+export const UserInfoContext = React.createContext()
 
 const App = () => {
+
+  const { data: userData } = useLoader(() => fetchJSON('/api/v1/user'));
+
 
 
 
   return (
     <>
+      <UserInfoContext.Provider  value={userData}>
       <BrowserRouter>
         <TopNavBar />
         <main className='bg-dark-6 flex'>
@@ -40,7 +49,7 @@ const App = () => {
               <Routes>
                 <Route path={'/'} element={<GroupLinks />} />
                 <Route path={'/login'} element={<Login/>} />
-                <Route path={'/searchGroup'} element={<SearchGroup />} />
+                <Route path={'/searchGroup'} element={<SearchGroup context={UserInfoContext} />} />
                 <Route
                   path={'/searchGroup/searchGroupResults'}
                   element={<SearchGroupResults />}
@@ -76,6 +85,7 @@ const App = () => {
         </main>
         <BottomNavBar />
       </BrowserRouter>
+      </UserInfoContext.Provider>
     </>
   );
 };
