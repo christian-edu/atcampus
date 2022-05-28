@@ -21,6 +21,7 @@ export function Login() {
 
     if (res.status === 200) {
       navigate('/');
+      window.location.reload(false)
     }
     // Make more error handling, incase there is wrong password etc
   }

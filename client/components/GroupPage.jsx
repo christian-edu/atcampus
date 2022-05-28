@@ -22,7 +22,6 @@ const GroupPage = () => {
 
   const toggleSettings = () => setShowSettings((showSettings) => !showSettings);
 
-  console.log(group);
 
   const visible = group.isPrivate ? 'Privat' : 'Offentlig';
 

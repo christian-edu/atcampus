@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
+import {useCallback, useContext, useEffect, useState} from 'react';
 import GroupCard from './shared/GroupCard';
 import GroupCriteriaPage from './GroupCriteriaPage';
 
 const SearchGroup = () => {
   const [groups, setGroups] = useState([]);
   const [input, setInput] = useState('');
+
+
 
   const getGroups = async () => {
     const res = await fetch('/api/v1/groups');

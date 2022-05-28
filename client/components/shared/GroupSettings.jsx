@@ -8,12 +8,50 @@ import {
   TrashIcon,
 } from '@heroicons/react/solid';
 import { LogoutIcon } from '@heroicons/react/outline';
+import log from "tailwindcss/lib/util/log";
+import {useContext, useState} from "react";
+import {UserInfoContext} from "../../App";
+import React from "react";
 
-const GroupSettings = (props) => {
+
+const GroupSettings = (props ) => {
   // Popup for group settings
 
   const group = props.group;
   const navigate = useNavigate();
+
+  const [groupId, setGroupId] = useState(group.uuid)
+
+  const user = React.useContext(UserInfoContext)
+
+
+  function deleteGroup(){
+
+    console.log("Deleted group")
+    fetch("/api/v1/groups", {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        groupId
+      }),
+    })
+  }
+
+  function leaveGroup(){
+    console.log("Left group")
+    console.log(user.uuid)
+    fetch("/api/v1/groups", {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        groupId, userId: user.uuid
+      }),
+    })
+  }
 
   return (
     <div>
@@ -69,7 +107,7 @@ const GroupSettings = (props) => {
             className='flex flex-row justify-between my-1 py-3 hover:bg-purple-2 px-4'
             onClick={props.onClick}
           >
-            <li className='flex flex-row'>
+            <li className='flex flex-row' onClick={deleteGroup}>
               <TrashIcon className='h-6 w-6 text-white mr-4' />
               Slett gruppe
             </li>
@@ -80,7 +118,7 @@ const GroupSettings = (props) => {
             className='flex flex-row justify-between my-1 py-3 hover:bg-purple-2 px-4'
             onClick={props.onClick}
           >
-            <li className='flex flex-row'>
+            <li className='flex flex-row' onClick={leaveGroup}>
               <LogoutIcon className='h-6 w-6 text-white mr-4' />
               Forlat gruppe
             </li>

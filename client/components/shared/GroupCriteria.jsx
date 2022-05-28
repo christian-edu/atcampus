@@ -42,40 +42,44 @@ export function GroupCriteria({
   }
 
   useEffect(async () => {
-    // Use effect, to wait for all the fields to get their right value, either from chosen in input or if not chosen, gets the old criteria
+    // Use effect, to wait for all the fields to get their right value, either from chosen in input or if not chosen, gets the old criteria, only when patching
 
-    if (
-      language === 'velg' ||
-      gradeGoal === 'velg' ||
-      place === 'velg' ||
-      size === 'velg' ||
-      school === 'velg' ||
-      workFrequency === 'velg' ||
-      workType === 'velg'
-    ) {
-      console.log('Preparing to send data');
-    } else {
-      const res = await fetch(fetchLink, {
-        method: 'PATCH',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          gradeGoal,
-          language,
-          place,
-          size,
-          school,
-          subject,
-          workFrequency,
-          workType,
-          isPrivate,
-          uuid: group.uuid,
-        }),
-      });
+    if(patchGroup){
+      if (
+          language === 'velg' ||
+          gradeGoal === 'velg' ||
+          place === 'velg' ||
+          size === 'velg' ||
+          school === 'velg' ||
+          workFrequency === 'velg' ||
+          workType === 'velg'
+      ) {
+        console.log('Preparing to send data');
+      } else {
+        const res = await fetch(fetchLink, {
+          method: 'PATCH',
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            gradeGoal,
+            language,
+            place,
+            size,
+            school,
+            subject,
+            workFrequency,
+            workType,
+            isPrivate,
+            uuid: group.uuid,
+          }),
+        });
 
-      setGroupResult('No Content');
+        setGroupResult('No Content');
+      }
     }
+
+
   }, [
     gradeGoal,
     language,
@@ -102,12 +106,19 @@ export function GroupCriteria({
       navigate('/searchGroup/searchGroupResults', { state: { groupResult } });
     }
 
-    if (patchGroup && groupResult === 'No Content') {
-      /*navigate('/group/specific', { state: { group } })*/
-    }
-  }, [groupResult]);
+        if(patchGroup && groupResult === "No Content"){
+
+            navigate('/group/specific', { state: { group } })
+        }
+
+
+
+    }, [groupResult])
+
 
   async function searchForGroup() {
+    console.log("UR URL IS")
+    console.log(fetchLink)
     if (patchGroup) {
       // sjekker om brukeren vil oppdatere valget sitt, eller bruke samme verdi som var fra før for kriterier
       if (isPrivate === undefined) {
@@ -157,7 +168,7 @@ export function GroupCriteria({
         setError('Fyll inn alle feltene');
       } else {
         const res = await fetch(fetchLink, {
-          method: 'PATCH',
+          method: 'POST',
           headers: {
             'content-type': 'application/json',
           },
