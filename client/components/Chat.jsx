@@ -1,5 +1,6 @@
-export function Chat(){
+import { ChatComponent } from "../ChatComponent";
 
-
-    return <h2>Chat</h2>
+export function Chat() {
+  const params = new URLSearchParams(window.location.search);
+  return <ChatComponent groupId={params.get("group_id")} />;
 }
