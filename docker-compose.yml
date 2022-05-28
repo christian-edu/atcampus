@@ -1,27 +1,28 @@
 version: "3.9"
 services:
-#  atcampus-db:
-#    container_name: 'atcampus-db'
-#    image: postgres:alpine
-#    environment:
-#      POSTGRES_DB: postgres
-#      POSTGRES_USER: postgres
-#      POSTGRES_PASSWORD: postgres
-#    ports:
-#      - '5432:5432'
-
-  atcampus-app:
-    container_name: 'atcampus-app'
-    env_file:
-      - server/.env
-    build:
-      context: .
+  atcampus-db:
+    container_name: 'atcampus-db'
+    image: mariadb
     environment:
-      USERNAME: ${DB_USERNAME}
-      PASSWORD: ${DB_PASSWORD}
-      HOST: ${DB_HOST}
-      DATABASE: ${DB_DATABASE}
-#    depends_on:
-#      - atcampus-db
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
     ports:
-      - '8080:8080'
+      - '3306:3306'
+#
+#  atcampus-app:
+#    container_name: 'atcampus-app'
+#    env_file:
+#      - server/.env
+#    build:
+#      context: .
+#    environment:
+#      USERNAME: ${DB_USERNAME}
+#      PASSWORD: ${DB_PASSWORD}
+#      HOST: ${DB_HOST}
+#      DATABASE: ${DB_DATABASE}
+##    depends_on:
+##      - atcampus-db
+#    ports:
+#      - '8080:8080'
