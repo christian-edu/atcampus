@@ -60,17 +60,30 @@ export function ChatComponent({ groupId }) {
   }
 
   function parseMessages(messages) {
+    const dateFormat = {
+      month: "numeric",
+      year: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    };
+    const now = new Date().toLocaleDateString("nb-NO", dateFormat);
     return messages.map((message) => {
+      const messageTime = new Date(message.timestamp).toLocaleDateString(
+        "nb-NO",
+        dateFormat
+      );
       if (message.message) {
         return (
           <p key={messages.indexOf(message)} className={"chat-message"}>
-            {message.userName}: {message.message}
+            {`[${messageTime}] `} {message.userName}: {message.message}
           </p>
         );
       } else if (message.server) {
         return (
           <p key={messages.indexOf(message)} className={"server-message"}>
-            {message.server}
+            {`[${now}] `} {message.server}
           </p>
         );
       }
