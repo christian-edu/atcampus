@@ -39,7 +39,7 @@ export class ChatMessageEntity {
   group!: GroupEntity;
 
   @CreateDateColumn({
-    type: "datetime",
+    type: "timestamp with time zone",
     default: () => "NOW()",
   })
   timestamp: Date | undefined;
