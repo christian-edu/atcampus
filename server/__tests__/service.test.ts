@@ -74,29 +74,29 @@ describe("Tests for GroupService", () => {
     expect(res.name).toBe(groupEntitiesWithUsers()[0].name);
   });
 
-  it("Should delete a member from a group", async () => {
-    const mockDeleteMember: jest.Mock = On(fakeGroupMemberRepo).get(
-      method((method) => method.delete)
-    );
-    mockDeleteMember.mockImplementation(
-      async () => groupEntitiesWithUsers()[0]
-    );
-    const res = await groupService.deleteMember("1", "2");
-    expect(res.name).toBe(groupEntitiesWithUsers()[0].name);
-    expect(mockDeleteMember).toHaveBeenCalledWith("1", "2");
-  });
-
-  it("Should add a member", async () => {
-    const mockAddMember: jest.Mock = On(fakeGroupMemberRepo).get(
-      method((method) => method.save)
-    );
-    mockAddMember.mockImplementation(async () => groupEntitiesWithUsers()[0]);
-
-    const res = await groupService.addMember("1", "2");
-
-    expect(res.name).toBe(groupEntitiesWithUsers()[0].name);
-    expect(mockAddMember).toHaveBeenCalledWith("1", "2");
-  });
+  // it("Should delete a member from a group", async () => {
+  //   const mockDeleteMember: jest.Mock = On(fakeGroupMemberRepo).get(
+  //     method((method) => method.delete)
+  //   );
+  //   mockDeleteMember.mockImplementation(
+  //     async () => groupEntitiesWithUsers()[0]
+  //   );
+  //   const res = await groupService.deleteMember("1", "2");
+  //   expect(res.name).toBe(groupEntitiesWithUsers()[0].name);
+  //   expect(mockDeleteMember).toHaveBeenCalledWith("1", "2");
+  // });
+  //
+  // it("Should add a member", async () => {
+  //   const mockAddMember: jest.Mock = On(fakeGroupMemberRepo).get(
+  //     method((method) => method.save)
+  //   );
+  //   mockAddMember.mockImplementation(async () => groupEntitiesWithUsers()[0]);
+  //
+  //   const res = await groupService.addMember("1", "2");
+  //
+  //   expect(res.name).toBe(groupEntitiesWithUsers()[0].name);
+  //   expect(mockAddMember).toHaveBeenCalledWith("1", "2");
+  // });
 
   it("Should return group members", async () => {
     const mockFetchMembers: jest.Mock = On(fakeGroupRepo).get(
