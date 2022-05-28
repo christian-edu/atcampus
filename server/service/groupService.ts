@@ -1,5 +1,5 @@
 import { IGroupService, searchResult } from "./IGroupService";
-import { DeleteResult, Repository } from "typeorm";
+import { DeleteResult, QueryFailedError, Repository } from "typeorm";
 import { GroupEntity } from "../entity/GroupEntity";
 import { SubjectEntity } from "../entity/SubjectEntity";
 import { UserEntity } from "../entity/UserEntity";
@@ -51,7 +51,8 @@ export default class GroupService implements IGroupService {
       .findOneBy({ uuid: adminUuid })
       .catch((ex) => {
         if (ex instanceof HttpException) throw ex;
-        Logger.error("GroupService", ex);
+        Logger.error("group_service", (ex as QueryFailedError).message);
+
         throw new HttpException("Database connection lost", 500);
       });
     let groupEntity: GroupEntity;
@@ -62,7 +63,8 @@ export default class GroupService implements IGroupService {
         groupEntity.criteria.subjects
       ).catch((ex) => {
         if (ex instanceof HttpException) throw ex;
-        Logger.error("GroupService", ex);
+        Logger.error("group_service", (ex as QueryFailedError).message);
+
         throw new HttpException("Database connection lost", 500);
       });
       groupEntity.criteria.school = school;
@@ -86,7 +88,7 @@ export default class GroupService implements IGroupService {
       .then((entity) => groupEntityToDto(entity))
       .catch((ex) => {
         if (ex instanceof HttpException) throw ex;
-        Logger.error("GroupService", ex);
+        Logger.error("group_service", (ex as QueryFailedError).message);
         throw new HttpException("Database connection lost", 500);
       });
   }
@@ -331,7 +333,7 @@ export default class GroupService implements IGroupService {
         return await this.groupMemberRepo.remove(users);
       })
       .then((delRes) => {
-        if (delRes.length > 0) {
+        if (!delRes) {
           throw new HttpException("Deletion of members failed", 500);
         }
         return;
@@ -628,6 +630,10 @@ export default class GroupService implements IGroupService {
     if (subjects) {
       subjects = await this.createOrFetchSubjects(subjects).catch((ex) => {
         if (ex instanceof HttpException) throw ex;
+        Logger.error(
+          "create_or_fetch_sub_school",
+          (ex as QueryFailedError).message
+        );
         throw new HttpException("Database connection lost", 500);
       });
     }

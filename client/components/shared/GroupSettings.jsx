@@ -28,6 +28,7 @@ const GroupSettings = (props ) => {
   function deleteGroup(){
 
     console.log("Deleted group")
+    console.log(groupId)
     fetch("/api/v1/groups", {
       method: 'DELETE',
       headers: {
@@ -42,7 +43,7 @@ const GroupSettings = (props ) => {
   function leaveGroup(){
     console.log("Left group")
     console.log(user.uuid)
-    fetch("/api/v1/groups", {
+    fetch("/api/v1/groups/member", {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json',

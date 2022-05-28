@@ -74,27 +74,27 @@ describe("Tests for GroupService", () => {
     expect(res.name).toBe(groupEntities()[0].name);
   });
 
-  // it("Should delete a member from a group", async () => {
-  //   const mockDeleteMember: jest.Mock = On(fakeGroupMemberRepo).get(
-  //     method((method) => method.delete)
-  //   );
-  //   mockDeleteMember.mockImplementation(async () => groupEntities()[0]);
-  //   const res = await groupService.deleteMember("1", "2");
-  //   expect(res.name).toBe(groupEntities()[0].name);
-  //   expect(mockDeleteMember).toHaveBeenCalledWith("1", "2");
-  // });
+  it("Should delete a member from a group", async () => {
+    const mockDeleteMember: jest.Mock = On(fakeGroupMemberRepo).get(
+      method((method) => method.delete)
+    );
+    mockDeleteMember.mockImplementation(async () => groupEntities()[0]);
+    const res = await groupService.deleteMember("1", "2");
+    expect(res.name).toBe(groupEntities()[0].name);
+    expect(mockDeleteMember).toHaveBeenCalledWith("1", "2");
+  });
 
-  // it("Should add a member", async () => {
-  //   const mockAddMember: jest.Mock = On(fakeGroupMemberRepo).get(
-  //     method((method) => method.save)
-  //   );
-  //   mockAddMember.mockImplementation(async () => groups[0]);
-  //
-  //   const res = await groupService.addMember("1", "2");
-  //
-  //   expect(res.name).toBe(groups[0].name);
-  //   expect(mockAddMember).toHaveBeenCalledWith("1", "2");
-  // });
+  it("Should add a member", async () => {
+    const mockAddMember: jest.Mock = On(fakeGroupMemberRepo).get(
+      method((method) => method.save)
+    );
+    mockAddMember.mockImplementation(async () => groupEntities()[0]);
+
+    const res = await groupService.addMember("1", "2");
+
+    expect(res.name).toBe(groupEntities()[0].name);
+    expect(mockAddMember).toHaveBeenCalledWith("1", "2");
+  });
 
   it("Should return group members", async () => {
     const mockFetchMembers: jest.Mock = On(fakeGroupRepo).get(
@@ -104,7 +104,7 @@ describe("Tests for GroupService", () => {
 
     const res = await groupService.fetchGroupMembers("1");
     expect(res.length > 0).toBe(true);
-    expect(res[0].email).toBe(userEntities[0].email);
+    expect(res[0].email).toBe(userEntities()[0].email);
   });
 
   it("Should update a group", async () => {
