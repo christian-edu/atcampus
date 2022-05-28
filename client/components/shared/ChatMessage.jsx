@@ -22,7 +22,7 @@ const ChatMessage = ({ message }) => {
             {transformDate(message.timestamp)}
           </p>
         </div>
-        <p className='bg-dark-6 rounded-xl p-2 self-start'>{message.message}</p>
+        <p className='bg-dark-6 rounded-xl p-2 '>{message.message}</p>
       </div>
     </div>
   );
