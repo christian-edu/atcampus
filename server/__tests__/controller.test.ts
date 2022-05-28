@@ -14,36 +14,31 @@ import { GroupDto } from "../dto/groupDto";
 import { SearchDTO } from "../dto/searchDTO";
 import { Server } from "http";
 
-const TIMEOUT_VALUE = 10 * 1000;
-
-jest.useRealTimers();
-
 describe("Tests for group root paths in controller", () => {
   let mockGroupService: IGroupService;
   let groupRouter: GroupRouter;
-  let agent: SuperAgentTest;
-  let app;
-  // let server: Server | null;
+  let agent: SuperAgentTest | null;
+  let app: Express | null;
+  let server: Server | null;
 
-  beforeAll((done) => {
+  beforeEach((done) => {
     mockGroupService = createMock<IGroupService>();
     groupRouter = new GroupRouter(mockGroupService, Router());
     app = express();
-    ///server?.listen(done);
+    server = app.listen(done);
     agent = supertest.agent(app);
     app.use(express.json());
     app.use("/api/v1/groups", groupRouter.fetchRoutes());
   });
 
-  // afterEach((done) => {
-  //   server?.close(done);
-  //   server = null;
-  //   app = null;
-  //   agent = null;
-  // });
+  afterEach((done) => {
+    server?.close(done);
+    server = null;
+    app = null;
+    agent = null;
+  });
 
-  it("Should get all groups", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
+  test("Should get all groups", async () => {
     const mockFetchAllGroups: jest.Mock = On(mockGroupService).get(
       method((mock) => mock.fetchAllGroups)
     );
@@ -52,14 +47,12 @@ describe("Tests for group root paths in controller", () => {
     );
     const result = await agent?.get("/api/v1/groups").expect(200);
     expect(mockGroupService.fetchAllGroups).toHaveBeenCalledTimes(1);
-    console.log((JSON.parse(result?.body) as GroupDto[])[0]);
     expect((JSON.parse(result?.body) as GroupDto[])[0].name).toContain(
       "A group"
     );
   });
 
   it("Should respond with error on getting all groups", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockFetchAllGroups: jest.Mock = On(mockGroupService).get(
       method((mock) => mock.fetchAllGroups)
     );
@@ -71,7 +64,6 @@ describe("Tests for group root paths in controller", () => {
   });
 
   it("Should get a group by ID", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockFetchGroupById: jest.Mock = On(mockGroupService).get(
       method((mock) => mock.fetchGroupById)
     );
@@ -86,42 +78,35 @@ describe("Tests for group root paths in controller", () => {
   });
 
   it("Should respond with error on getting group by id", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockFetchGroupById: jest.Mock = On(mockGroupService).get(
       method((mock) => mock.fetchGroupById)
     );
-    mockFetchGroupById.mockImplementation(async (id: string) => {
+    mockFetchGroupById.mockImplementation(async () => {
       throw new HttpException("Error!", 500);
     });
 
-    await agent?.get("/api/v1/groups?group_id=1").expect(500);
+    await agent?.get("/api/v1/groups/?groupId=1").expect(500);
+    expect(mockFetchGroupById).toHaveBeenCalledWith("1");
+    expect(mockFetchGroupById).toHaveBeenCalledTimes(1);
   });
 
   it("Should add a new group", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockAddGroup: jest.Mock = On(mockGroupService).get(
       method((mock) => mock.addGroup)
     );
-    mockAddGroup.mockImplementation(
-      async (group: GroupDto) => groupEntitiesWithUsers()[0]
-    );
+    mockAddGroup.mockImplementation(async () => groupEntitiesWithUsers()[0]);
 
-    if (agent) {
-      const result = await agent
-        .post("/api/v1/groups")
-        .set("content-type", "application/json")
-        .send(groupEntitiesWithUsers()[0])
-        .expect("Content-Type", /json/)
-        .expect(200);
-      expect(mockAddGroup).toHaveBeenCalledTimes(1);
-      expect((result.body as GroupDto).name).toEqual("A group");
-    } else {
-      expect(true).toBe(false);
-    }
+    const result = await agent
+      ?.post("/api/v1/groups")
+      .set("content-type", "application/json")
+      .send(groupEntitiesWithUsers()[0])
+      .expect("Content-Type", /json/)
+      .expect(200);
+    expect(mockAddGroup).toHaveBeenCalledTimes(1);
+    expect((result?.body as GroupDto).name).toEqual("A group");
   });
 
   it("Should respond with error on adding group", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockAddGroup: jest.Mock = On(mockGroupService).get(
       method((mock) => mock.addGroup)
     );
@@ -132,24 +117,22 @@ describe("Tests for group root paths in controller", () => {
   });
 
   it("Should update a group", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockUpdateGroup: jest.Mock = On(mockGroupService).get(
       method((mock) => mock.updateGroup)
     );
     mockUpdateGroup.mockImplementation(async () => groupEntitiesWithUsers()[0]);
-    if (agent)
-      await agent
-        .patch("/api/v1/groups")
-        .set("content-type", "application/json")
-        .send(groupEntitiesWithUsers()[0])
-        .expect("Content-Type", /json/)
-        .expect(200);
+
+    await agent
+      ?.patch("/api/v1/groups")
+      .set("content-type", "application/json")
+      .send(groupEntitiesWithUsers()[0])
+      .expect("Content-Type", /json/)
+      .expect(200);
 
     expect(mockGroupService.updateGroup).toHaveBeenCalledTimes(1);
   });
 
   it("Should respond with error when updating group", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockUpdateGroup: jest.Mock = On(mockGroupService).get(
       method((mock) => mock.updateGroup)
     );
@@ -161,26 +144,23 @@ describe("Tests for group root paths in controller", () => {
   });
 
   it("Should delete a group", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockDeleteGroup: jest.Mock = On(mockGroupService).get(
       method((mock) => mock.deleteGroup)
     );
-    mockDeleteGroup.mockImplementation(async (id: string) => true);
+    mockDeleteGroup.mockImplementation(async () => true);
 
-    if (agent)
-      await agent
-        .delete("/api/v1/groups")
-        .send({ groupId: "1" })
-        .set("content-type", "application/json")
-        .expect("Content-Type", /json/)
-        .expect(200);
+    await agent
+      ?.delete("/api/v1/groups")
+      .send({ groupId: "1" })
+      .set("content-type", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(200);
 
     expect(mockGroupService.deleteGroup).toHaveBeenCalledTimes(1);
     expect(mockGroupService.deleteGroup).toHaveBeenCalledWith("1");
   });
 
   it("Should respond with error when deleting a group", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockDeleteGroup: jest.Mock = On(mockGroupService).get(
       method((mock) => mock.deleteGroup)
     );
@@ -216,7 +196,6 @@ describe("Tests for group/member paths in controller", () => {
   });
 
   it("Should add a new user to a group", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockAddMember: jest.Mock = On(mockGroupService).get(
       method((method) => method.addMember)
     );
@@ -237,7 +216,6 @@ describe("Tests for group/member paths in controller", () => {
   });
 
   it("Should recieve error on adding user", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockAddMember: jest.Mock = On(mockGroupService).get(
       method((method) => method.addMember)
     );
@@ -257,7 +235,6 @@ describe("Tests for group/member paths in controller", () => {
   });
 
   it("Should get the members of a group", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockFetchGroupMembers: jest.Mock = On(mockGroupService).get(
       method((method) => method.fetchGroupMembers)
     );
@@ -276,7 +253,6 @@ describe("Tests for group/member paths in controller", () => {
   });
 
   it("Should recieve error on getting members to group", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockFetchGroupMembers: jest.Mock = On(mockGroupService).get(
       method((method) => method.fetchGroupMembers)
     );
@@ -287,7 +263,6 @@ describe("Tests for group/member paths in controller", () => {
   });
 
   it("Should delete a group member", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockDeleteMemeber: jest.Mock = On(mockGroupService).get(
       method((method) => method.deleteMember)
     );
@@ -301,7 +276,6 @@ describe("Tests for group/member paths in controller", () => {
   });
 
   it("Should recieve error when deleting a group member", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockDeleteMemeber: jest.Mock = On(mockGroupService).get(
       method((method) => method.deleteMember)
     );
@@ -336,7 +310,6 @@ describe("Search route", () => {
     agent = null;
   });
   it("Should return a search result", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const searchDto = new SearchDTO(
       "Norsk",
       "HYBRID",
@@ -362,7 +335,6 @@ describe("Search route", () => {
   });
 
   it("Should recieve error on a search result", async () => {
-    jest.setTimeout(TIMEOUT_VALUE);
     const mockSearchGroup: jest.Mock = On(mockGroupService).get(
       method((method) => method.searchGroup)
     );
