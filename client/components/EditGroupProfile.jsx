@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Breadcrumbs from './shared/Breadcrumbs';
 import Button from './shared/Button';
 import Message from './shared/Message';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export function EditGroupProfile() {
   const [groupName, setGroupName] = useState('');
@@ -83,7 +84,11 @@ export function EditGroupProfile() {
             </Button>
           </div>
         </form>
-        {message && <Message>Endringene ble lagret</Message>}
+        <AnimatePresence>
+          <motion.div>
+            {message && <Message>Endringene ble lagret</Message>}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </>
   );
