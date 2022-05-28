@@ -99,6 +99,8 @@ export function GroupCriteria({
     // DONT WORK
     if (searchGroup && groupResult !== undefined) {
       // since response is 203 no content, it will be undefined
+      console.log("Search results");
+      console.log(groupResult);
 
       // We know we searched for group
       navigate("/searchGroup/searchGroupResults", { state: { groupResult } });
@@ -183,6 +185,20 @@ export function GroupCriteria({
       }
     } else if (searchGroup) {
       // Here we search for the group
+
+      console.log("Search criteria: ");
+      console.log({
+        language,
+        size,
+        gradeGoal,
+        workFrequency,
+        workType,
+        place,
+        school,
+        subject,
+        groupName,
+        isPrivate,
+      });
 
       const res = await fetch(fetchLink, {
         method: "POST",
@@ -401,7 +417,7 @@ export function GroupCriteria({
                 type="radio"
                 name={"metode"}
                 id={"ikkeViktig"}
-                value={"Null"}
+                value={"Hva som helst"}
                 onChange={(e) => setWorkType(e.target.value)}
                 className="form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
               />
