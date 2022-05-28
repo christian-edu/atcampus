@@ -22,7 +22,6 @@ const GroupPage = () => {
 
   const toggleSettings = () => setShowSettings((showSettings) => !showSettings);
 
-
   const visible = group.isPrivate ? 'Privat' : 'Offentlig';
 
   return (
@@ -45,7 +44,7 @@ const GroupPage = () => {
       </div>
       <ul className='grid gap-4 text-md text-dark-1'>
         <li className='border-b-2 border-purple-1 hover:bg-dark-6'>
-          <Link to='/' className='flex gap-2 items-center text-lg py-4'>
+          <Link to='/groups/chat' className='flex gap-2 items-center text-lg py-4'>
             <ChatIcon className='h-6 text-purple-1' />
             Chat
           </Link>

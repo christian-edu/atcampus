@@ -24,6 +24,8 @@ export default class GroupRouter extends ServerRouter {
     });
 
     router.post("/", async (req, res) => {
+      console.log("Created group")
+      console.log(req.body)
       const newGroup = GroupRouter.extractGroupDtoFromRequest(req);
       const admin = req.userId;
       try {

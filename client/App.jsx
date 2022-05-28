@@ -22,6 +22,7 @@ import {useLoader} from "./useLoader";
 import {fetchJSON} from "./fetchJSON";
 import {data} from "autoprefixer";
 import React from "react";
+import {Chat} from "./components/Chat";
 
 
 export const UserInfoContext = React.createContext()
@@ -78,6 +79,7 @@ const App = () => {
                 />
                 <Route path={'/questions'} element={<Questions />} />
                 <Route path={'/profile'} element={<ProfileMenu />} />
+                <Route path={'/groups/chat'} element={<Chat />} />
               </Routes>
             </div>
             <Footer />
