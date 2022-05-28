@@ -19,6 +19,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME, // hentes fra process.env
   password: process.env.DB_PASSWORD, // hentes fra process.env
   database: process.env.DB_DATABASE, // hentes fra process.env,
+  connectTimeout: 999999,
   synchronize: false,
   entities: [
     GroupEntity,
