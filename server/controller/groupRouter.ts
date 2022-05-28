@@ -17,18 +17,17 @@ export default class GroupRouter extends ServerRouter {
     router.get("/", async (req, res, next) => {
       const { groupId } = req?.query;
       if (groupId) {
-        return await this.fetchGroupById(groupId as string, req.userId, res);
-        //return;
+        await this.fetchGroupById(groupId as string, res);
+        return;
       }
       await this.fetchAllGroups(res, service);
     });
 
     router.post("/", async (req, res) => {
       Logger.debug("group_router", "Creating group");
-      console.log("group created")
-      console.log(req.body);
+      //console.log(req.body);
       const newGroup = GroupRouter.extractGroupDtoFromRequest(req);
-      console.log(newGroup);
+      //console.log(newGroup);
       const admin = req.userId;
       try {
         res.json(await service.addGroup(newGroup, admin));
@@ -38,8 +37,6 @@ export default class GroupRouter extends ServerRouter {
     });
 
     router.patch("/", async (req, res) => {
-      console.log("updated group")
-      console.log(req.body)
       const group = GroupRouter.extractGroupDtoFromRequest(req);
       try {
         res.json(await service.updateGroup(group));
@@ -159,9 +156,9 @@ export default class GroupRouter extends ServerRouter {
     return groupDto;
   }
 
-  private async fetchGroupById(groupId: string, userId: string, res: Response) {
+  private async fetchGroupById(groupId: string, res: Response) {
     try {
-      res.json(await this.groupService.fetchGroupById(groupId /*, userId */));
+      return res.json(await this.groupService.fetchGroupById(groupId));
     } catch (e: unknown) {
       this.sendError(res, e);
     }
