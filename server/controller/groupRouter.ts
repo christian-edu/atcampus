@@ -25,6 +25,7 @@ export default class GroupRouter extends ServerRouter {
 
     router.post("/", async (req, res) => {
       Logger.debug("group_router", "Creating group");
+      console.log("group created")
       console.log(req.body);
       const newGroup = GroupRouter.extractGroupDtoFromRequest(req);
       console.log(newGroup);
@@ -37,6 +38,8 @@ export default class GroupRouter extends ServerRouter {
     });
 
     router.patch("/", async (req, res) => {
+      console.log("updated group")
+      console.log(req.body)
       const group = GroupRouter.extractGroupDtoFromRequest(req);
       try {
         res.json(await service.updateGroup(group));

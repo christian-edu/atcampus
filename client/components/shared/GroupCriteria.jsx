@@ -319,10 +319,10 @@ export function GroupCriteria({
                 <option value='velg' disabled>
                   Gruppestørrelse
                 </option>
-                <option value='liten'>Liten (1-4stk)</option>
-                <option value='Medium'>Medium (5-7stk)</option>
-                <option value='Stor'>Stor (8+)</option>
-                <option value='Null'>Ikke viktig</option>
+                <option value='Liten (2-4stk)'>Liten (1-4stk)</option>
+                <option value='Medium (5-7stk)'>Medium (5-7stk)</option>
+                <option value='Stor (8+)'>Stor (8+)</option>
+                <option value='Ikke viktig'>Ikke viktig</option>
               </select>
             </div>
           </div>
@@ -342,7 +342,7 @@ export function GroupCriteria({
                 <option value='C'>C</option>
                 <option value='B'>B</option>
                 <option value='A'>A</option>
-                <option value='Null'>Ikke viktig</option>
+                <option value='Bestått'>Ikke viktig</option>
               </select>
             </div>
             <div>
@@ -355,16 +355,16 @@ export function GroupCriteria({
                 <option value='velg' disabled>
                   Arbeidsfrekvens
                 </option>
-                <option value='W1'>En gang i uka</option>
-                <option value='W2'>To ganger i uka</option>
-                <option value='W3'>Tre ganger i uka</option>
-                <option value='W4'>Fire ganger i uka</option>
-                <option value='W5'>Fem ganger i uka</option>
-                <option value='W6'>Seks ganger i uka</option>
-                <option value='W7'>Syv ganger i uka</option>
-                <option value='M1'>En gang i månden</option>
-                <option value='M2'>To ganger i månden</option>
-                <option value='Null'>Ikke viktig</option>
+                <option value='1 gang i uka'>En gang i uka</option>
+                <option value='2 ganger i uka'>To ganger i uka</option>
+                <option value='3 ganger i uka'>Tre ganger i uka</option>
+                <option value='4 ganger i uka'>Fire ganger i uka</option>
+                <option value='5 ganger i uka'>Fem ganger i uka</option>
+                <option value='6 ganger i uka'>Seks ganger i uka</option>
+                <option value='Hver dag'>Syv ganger i uka</option>
+                <option value='En gang i måneden'>En gang i månden</option>
+                <option value='Annenhver uke'>To ganger i månden</option>
+                <option value='Hva som helst'>Ikke viktig</option>
               </select>
             </div>
           </div>
@@ -375,7 +375,7 @@ export function GroupCriteria({
                 type='radio'
                 name={'metode'}
                 id={'fysisk'}
-                value={'LOCAL'}
+                value={'Fysisk'}
                 onChange={(e) => setWorkType(e.target.value)}
                 className='form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer'
               />
@@ -386,7 +386,7 @@ export function GroupCriteria({
                 type='radio'
                 name={'metode'}
                 id={'digitalt'}
-                value={'REMOTE'}
+                value={'Digitalt'}
                 onChange={(e) => setWorkType(e.target.value)}
                 className='form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer'
               />
@@ -397,7 +397,7 @@ export function GroupCriteria({
                 type='radio'
                 name={'metode'}
                 id={'begge'}
-                value={'HYBRID'}
+                value={'Begge'}
                 onChange={(e) => setWorkType(e.target.value)}
                 className='form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer'
               />
