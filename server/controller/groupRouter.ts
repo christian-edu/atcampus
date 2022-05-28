@@ -24,9 +24,10 @@ export default class GroupRouter extends ServerRouter {
     });
 
     router.post("/", async (req, res) => {
-      console.log("Created group")
-      console.log(req.body)
+      Logger.debug("group_router", "Creating group");
+      console.log(req.body);
       const newGroup = GroupRouter.extractGroupDtoFromRequest(req);
+      console.log(newGroup);
       const admin = req.userId;
       try {
         res.json(await service.addGroup(newGroup, admin));
@@ -140,7 +141,7 @@ export default class GroupRouter extends ServerRouter {
       language,
       size,
       place,
-      subject,
+      subject.map((s: { subject: string }) => s.subject),
       workType,
       school,
       uuid
