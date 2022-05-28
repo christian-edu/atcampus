@@ -1,15 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchJSON } from '../fetchJSON';
 import { useLoader } from '../useLoader';
 import Breadcrumbs from './shared/Breadcrumbs';
-import ChatMessage from './shared/ChatMessage';
-import Image from './shared/Image';
 import Loading from './shared/Loading';
 
 export function GroupChat() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
+
+  // Gjør fetch-kall til api/v1/chat for å hente gamle meldinger.
 
   const params = useParams();
 
@@ -19,18 +19,17 @@ export function GroupChat() {
     loading,
   } = useLoader(() => fetchJSON(`/api/v1/groups/?groupId=${params.id}`));
 
-  // Gjør fetch-kall til api/v1/chat for å hente gamle meldinger.
-
   const url =
     window.location.origin.replace(/^http/, 'ws') +
     `/chat?groupId=${params.id}`;
   console.info(url);
+
   const [ws, setWs] = useState(null);
 
   async function connectSocket() {
-    const msgFromServer = await fetchJSON('/api/v1/chat?group_id=' + params.id);
+    const msgFromServer = await fetchJSON(`/api/v1/chat?group_id=${params.id}`);
     setMessages(msgFromServer);
-    console.info(msgFromServer);
+
     const websocket = await new WebSocket(url);
     setWs(websocket);
 
@@ -41,7 +40,6 @@ export function GroupChat() {
     websocket.onmessage = (event) => {
       try {
         const recievedMessage = JSON.parse(event.data);
-        console.log(recievedMessage);
         setMessages((oldState) => {
           const oldMessages = [...oldState];
           oldMessages.push(recievedMessage);
@@ -54,7 +52,7 @@ export function GroupChat() {
     websocket.onclose = function (e) {
       console.log(
         'Socket is closed. Reconnect will be attempted in 1 second.',
-        e.reason
+        e
       );
       setTimeout(function () {
         connectSocket();
@@ -62,11 +60,7 @@ export function GroupChat() {
     };
 
     websocket.onerror = function (err) {
-      console.error(
-        'Socket encountered error: ',
-        err.message,
-        'Closing socket'
-      );
+      console.error('Socket encountered error: ', err, 'Closing socket');
       websocket.close();
     };
   }
@@ -80,14 +74,33 @@ export function GroupChat() {
   }
 
   function parseMessages(messages) {
-    return messages.map((message, i) => {
-      if (message.message) return <ChatMessage message={message} key={i} />;
-      if (message.server)
+    const dateFormat = {
+      month: 'numeric',
+      year: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+    };
+    const now = new Date().toLocaleDateString('nb-NO', dateFormat);
+    return messages.map((message) => {
+      const messageTime = new Date(message.timestamp).toLocaleDateString(
+        'nb-NO',
+        dateFormat
+      );
+      if (message.message) {
         return (
-          <p key={i} className='py-2 text-purple-1'>
-            {message.server}
+          <p key={messages.indexOf(message)} className={'chat-message'}>
+            {`[${messageTime}] `} {message.userName}: {message.message}
           </p>
         );
+      } else if (message.server) {
+        return (
+          <p key={messages.indexOf(message)} className={'server-message'}>
+            {`[${now}] `} {message.server}
+          </p>
+        );
+      }
     });
   }
 

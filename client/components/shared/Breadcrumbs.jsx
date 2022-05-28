@@ -1,5 +1,5 @@
 import { ChevronRightIcon } from '@heroicons/react/solid';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
 import { useParams } from 'react-router-dom';
 import { routes } from '../../services/routes';
