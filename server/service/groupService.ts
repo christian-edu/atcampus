@@ -333,8 +333,7 @@ export default class GroupService implements IGroupService {
         return await this.groupMemberRepo.remove(users);
       })
       .then((delRes) => {
-        if (delRes.length > 0) {
-          console.log(delRes);
+        if (!delRes) {
           throw new HttpException("Deletion of members failed", 500);
         }
         return;
