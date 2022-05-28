@@ -14,12 +14,13 @@ import dotenv from "dotenv";
 
 dotenv.config();
 export const AppDataSource = new DataSource({
-  type: "mariadb",
+  type: "postgres",
   host: process.env.DB_HOST, // hentes fra process.env
   username: process.env.DB_USERNAME, // hentes fra process.env
   password: process.env.DB_PASSWORD, // hentes fra process.env
   database: process.env.DB_DATABASE, // hentes fra process.env,
-  connectTimeout: 999999,
+  //connectTimeout: 1000000,
+  //acquireTimeout: 1000000,
   synchronize: false,
   entities: [
     GroupEntity,
