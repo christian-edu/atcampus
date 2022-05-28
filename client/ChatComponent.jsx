@@ -15,7 +15,7 @@ export function ChatComponent({ groupId }) {
   async function connectSocket() {
     const msgFromServer = await fetchJSON("/api/v1/chat?group_id=" + groupId);
     setMessages(msgFromServer);
-    console.info(msgFromServer);
+
     const websocket = await new WebSocket(url);
     setWs(websocket);
 
@@ -26,7 +26,6 @@ export function ChatComponent({ groupId }) {
     websocket.onmessage = (event) => {
       try {
         const recievedMessage = JSON.parse(event.data);
-        console.log(recievedMessage);
         setMessages((oldState) => {
           const oldMessages = [...oldState];
           oldMessages.push(recievedMessage);
@@ -39,7 +38,7 @@ export function ChatComponent({ groupId }) {
     websocket.onclose = function (e) {
       console.log(
         "Socket is closed. Reconnect will be attempted in 1 second.",
-        e.reason
+        e
       );
       setTimeout(function () {
         connectSocket();
@@ -47,11 +46,7 @@ export function ChatComponent({ groupId }) {
     };
 
     websocket.onerror = function (err) {
-      console.error(
-        "Socket encountered error: ",
-        err.message,
-        "Closing socket"
-      );
+      console.error("Socket encountered error: ", err, "Closing socket");
       websocket.close();
     };
   }
@@ -68,16 +63,13 @@ export function ChatComponent({ groupId }) {
     return messages.map((message) => {
       if (message.message) {
         return (
-          <p key={messages.indexOf(message)}>
+          <p key={messages.indexOf(message)} className={"chat-message"}>
             {message.userName}: {message.message}
           </p>
         );
       } else if (message.server) {
         return (
-          <p
-            key={messages.indexOf(message)}
-            style={{ backgroundColor: "cyan" }}
-          >
+          <p key={messages.indexOf(message)} className={"server-message"}>
             {message.server}
           </p>
         );
@@ -87,17 +79,29 @@ export function ChatComponent({ groupId }) {
 
   return (
     <div id="chat-container">
-      <div id="chat-messages">{parseMessages(messages)}</div>
-      <div id="chat-input">
+      <div id="chat-messages" className="w-full max-h-[32rem] overflow-scroll">
+        {parseMessages(messages)}
+      </div>
+      <div id="chat-input" className={"flex w-full space-x-10"}>
         <label>
           New message:
           <input
+            className={
+              "flex w-full outline outline-1 outline-dark-3 rounded text-dark-3"
+            }
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
         </label>
-        <button onClick={(e) => handleSendMessage(e)}>Send!</button>
+        <button
+          onClick={(e) => handleSendMessage(e)}
+          className={
+            "flex flex-row gap-1 p-2 outline outline-1 outline-dark-3 rounded text-dark-3 hover:bg-white"
+          }
+        >
+          Send!
+        </button>
       </div>
     </div>
   );
