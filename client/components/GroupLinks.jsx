@@ -9,8 +9,6 @@ import {UserInfoContext} from "../App";
 import React from "react";
 
 
-
-
 const GroupLinks = () => {
   // Should get the data for the group names you are a part of
 
@@ -28,9 +26,6 @@ const GroupLinks = () => {
     if(!user){
         return <Link to={"/login"}>Login</Link>
     }
-
-
-
 
 
   if (loading) return <Loading />;

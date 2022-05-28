@@ -141,7 +141,7 @@ export default class GroupRouter extends ServerRouter {
       language,
       size,
       place,
-      subject.map((s: { subject: string }) => s.subject),
+      subject?.map((s: { subject: string }) => s.subject),
       workType,
       school,
       uuid
