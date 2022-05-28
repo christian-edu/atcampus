@@ -7,7 +7,7 @@ import { GroupCriteria } from "../components/shared/GroupCriteria";
 const groups = [
   {
     name: "Group 8",
-    groupMember: [
+    groupMembers: [
       {
         firstName: "Navn",
         lastName: "navnesen",
