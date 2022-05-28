@@ -1,12 +1,10 @@
-import {useCallback, useContext, useEffect, useState} from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import GroupCard from './shared/GroupCard';
 import GroupCriteriaPage from './GroupCriteriaPage';
 
 const SearchGroup = () => {
   const [groups, setGroups] = useState([]);
   const [input, setInput] = useState('');
-
-
 
   const getGroups = async () => {
     const res = await fetch('/api/v1/groups');
@@ -28,10 +26,7 @@ const SearchGroup = () => {
     <>
       <div className='grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard mb-6 max-w-2xl mx-auto'>
         <div>
-          <h2 className='text-xl font-bold mb-4'>Søk etter gruppenavn</h2>
-          <h4 className='text-dark-3'>
-            Trykk på en gruppe for å sende forespørsel
-          </h4>
+          <h2 className='text-xl font-bold'>Søk etter gruppenavn</h2>
         </div>
         <div>
           <label htmlFor='groupName'>Gruppenavn</label>
@@ -45,10 +40,16 @@ const SearchGroup = () => {
         </div>
         <ul className='grid gap-4'>
           {input && filteredGroups.length === 0 && 'Ingen grupper å vise'}
-          {input &&
-            filteredGroups.map((group) => (
-              <GroupCard key={group.name} group={group} search={true} />
-            ))}
+          {input && filteredGroups.length > 0 && (
+            <>
+              <h4 className='text-dark-3'>
+                Trykk på en gruppe for å sende forespørsel
+              </h4>
+              {filteredGroups.map((group) => (
+                <GroupCard key={group.name} group={group} search={true} />
+              ))}
+            </>
+          )}
         </ul>
       </div>
 

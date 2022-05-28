@@ -67,7 +67,7 @@ const App = () => {
                     element={<ShowCriteriaPage />}
                   />
                   <Route
-                    path={'/groups/specific/editProfile'}
+                    path={'/groups/:id/profile'}
                     element={<EditGroupProfile />}
                   />
                   <Route

@@ -24,8 +24,8 @@ export const routes = (group) => [
     breadcrumb: 'Gruppekriterier',
   },
   {
-    path: '/groups/specific/editProfile',
-    breadcrumb: 'Rediger profil',
+    path: '/groups/:id/profile',
+    breadcrumb: 'Endre gruppeprofil',
   },
   {
     path: '/groups/createGroup',
