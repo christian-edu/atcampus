@@ -25,16 +25,6 @@ const GroupLinks = () => {
   const { data: groupData, error, loading } = useLoader(() => fetchJSON('/api/v1/user/groups'));
 
 
-
-
-    console.log("Main group data ")
-    console.log(groupData)
-
-    console.log("UR SICK USER DATA")
-    console.log(user)
-
-
-
     if(!user){
         return <Link to={"/login"}>Login</Link>
     }
