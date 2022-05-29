@@ -151,6 +151,7 @@ export function GroupCriteria({
       }
     } else if (createGroup) {
       if (
+        !groupName ||
         language === "velg" ||
         size === "velg" ||
         gradeGoal === "velg" ||
