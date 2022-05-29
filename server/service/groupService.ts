@@ -382,10 +382,13 @@ export default class GroupService implements IGroupService {
           // Tar høyde for avrundingsfeil
           if (score > 100) score = 100;
 
+          // Avrunder til nærmeste hele
+          score = Math.round(score);
+
           resultArray.push([groupDtoArray[i], score]);
         }
 
-        resultArray.sort((a, b) => a[1] - b[1]).slice(0, 20);
+        resultArray.sort((a, b) => b[1] - a[1]).slice(0, 20);
 
         const resultObject: searchResult = {};
 
