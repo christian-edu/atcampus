@@ -3,10 +3,8 @@ import Modal from './shared/Modal';
 import GroupSettings from './shared/GroupSettings';
 import { useState } from 'react';
 import {
-  MenuAlt1Icon,
-  UserGroupIcon,
-  ChatIcon,
   CalendarIcon,
+  ChatIcon,
   CogIcon,
 } from '@heroicons/react/solid';
 import Image from './shared/Image';

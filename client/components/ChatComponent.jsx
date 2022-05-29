@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
-import { fetchJSON } from './fetchJSON';
+import { useEffect, useState } from "react";
+import { fetchJSON } from "../fetchJSON";
+import { useLoader } from "../useLoader";
+import Loading from "./shared/Loading";
 
 export function ChatComponent({ groupId }) {
   const [messages, setMessages] = useState([]);
@@ -8,14 +10,10 @@ export function ChatComponent({ groupId }) {
   // Gjør fetch-kall til api/v1/chat for å hente gamle meldinger.
 
   const url =
-    window.location.origin.replace(/^http/, 'ws') + `/chat?groupId=${groupId}`;
-  console.info(url);
+    window.location.origin.replace(/^http/, "ws") + `/chat?groupId=${groupId}`;
   const [ws, setWs] = useState(null);
 
   async function connectSocket() {
-    const msgFromServer = await fetchJSON('/api/v1/chat?group_id=' + groupId);
-    setMessages(msgFromServer);
-
     const websocket = await new WebSocket(url);
     setWs(websocket);
 
@@ -51,7 +49,17 @@ export function ChatComponent({ groupId }) {
     };
   }
 
-  useEffect(() => connectSocket(), []);
+  useEffect(async () => {
+    try {
+      const data = await fetchJSON("/api/v1/chat?group_id=" + groupId);
+      if (data !== {}) setMessages(data);
+      else setMessages([]);
+    } catch (error) {
+      return <div>Error loading messages: {error?.message}</div>;
+    } finally {
+      await connectSocket();
+    }
+  }, []);
 
   function handleSendMessage(event) {
     event.preventDefault();
