@@ -117,24 +117,31 @@ export default class GroupService implements IGroupService {
   async deleteMember(groupId: string, userId: string): Promise<GroupOutDto> {
     return await this.fetchUserAndGroup(userId, groupId)
       .then(async ({ foundUser: user, foundGroup: group }) => {
-        return await this.groupMemberRepo
-          .createQueryBuilder()
-          .delete()
-          .where("user = :userId", { userId: user.uuid })
-          .andWhere("group = :groupId", { groupId: group.uuid })
-          .execute();
+        return await this.groupMemberRepo.findOneBy({
+          user: { uuid: user.uuid },
+          group: { uuid: group.uuid },
+        });
       })
-      .then((response: DeleteResult) => {
-        if (!response.affected || response.affected === 0)
+      .then(async (memberEntity) => {
+        if (!memberEntity) {
           throw new HttpException(
             "Deletion failed. No such user or group",
             404
           );
+        }
+        return await this.groupMemberRepo.remove(memberEntity);
+      })
+      .then((response) => {
+        if (!response)
+          throw new HttpException("Deletion failed. No rows affected", 500);
         return this.groupRepo
           .findOneBy({ uuid: groupId })
           .then(async (group) => {
             if (!group) {
-              throw new HttpException("Database connection lost", 500);
+              throw new HttpException(
+                "Database connection lost, group not retrieved",
+                500
+              );
             }
             return await groupEntityToDto(group);
           })
@@ -148,7 +155,6 @@ export default class GroupService implements IGroupService {
 
   // Testet manuelt, virker som den skal
   async addMember(groupId: string, userId: string): Promise<GroupOutDto> {
-    console.log("adding member");
     return await this.fetchUserAndGroup(userId, groupId).then(
       async ({ foundUser: user, foundGroup: group }) => {
         const newMember = new GroupMemberEntity();
@@ -604,7 +610,6 @@ export default class GroupService implements IGroupService {
       .findOneBy({ uuid: userId })
       .then((foundUser) => {
         if (!foundUser) throw new HttpException("User not found", 404);
-        console.log("user found");
         return foundUser;
       })
       .then((foundUser) => {
@@ -612,7 +617,6 @@ export default class GroupService implements IGroupService {
           .findOneBy({ uuid: groupId })
           .then((foundGroup) => {
             if (!foundGroup) throw new HttpException("Group not found", 404);
-            console.log("group found");
             return { foundUser, foundGroup };
           });
       })
