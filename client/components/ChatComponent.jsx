@@ -14,9 +14,17 @@ export function ChatComponent({ groupId }) {
   const [ws, setWs] = useState(null);
 
   async function connectSocket() {
-    const websocket = await new WebSocket(url);
+    let websocket = await new WebSocket(url);
     setWs(websocket);
-
+    let wsClosed = false;
+    window.onpopstate = () => {
+      if (!wsClosed) {
+        wsClosed = true;
+        websocket.close();
+        setWs(null);
+        websocket = null;
+      }
+    };
     websocket.onopen = (event) => {
       console.info("Connected to web sockets");
     };
@@ -34,13 +42,15 @@ export function ChatComponent({ groupId }) {
       }
     };
     websocket.onclose = function (e) {
-      console.log(
-        "Socket is closed. Reconnect will be attempted in 1 second.",
-        e
-      );
-      setTimeout(function () {
-        connectSocket();
-      }, 1000);
+      if (!wsClosed) {
+        console.log(
+          "Socket is closed. Reconnect will be attempted in 1 second.",
+          e
+        );
+        setTimeout(function () {
+          connectSocket();
+        }, 1000);
+      }
     };
 
     websocket.onerror = function (err) {
