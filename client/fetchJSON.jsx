@@ -1,10 +1,8 @@
-export async function fetchJSON(url){
+export async function fetchJSON(url) {
+  const res = await fetch(url);
 
-    const res = await fetch(url);
-
-    if(!res.ok){
-        throw new Error(`Failed ${res.status}`)
-    }
-
-    return await res.json();
+  if (!res.ok) {
+    throw new Error(`Failed ${res.status}`);
+  }
+  return await res.json();
 }

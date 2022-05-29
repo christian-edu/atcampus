@@ -28,14 +28,14 @@ repo
   .then((repos) => {
     const server = app.listen(process.env.PORT || 8345, async () => {
       Logger.info("Server", "Connected to db ");
-      const schoolEntity = new SchoolEntity("BI");
-      //const schoolRepo = repos.schoolRepo;
-      //console.log(await schoolRepo.save(schoolEntity));
+      // const schoolEntity = new SchoolEntity("Kristiania");
+      // const schoolRepo = repos.schoolRepo;
+      // console.log(await schoolRepo.save(schoolEntity));
       const user = new UserDto(
         "jimbob",
         "jim@bob.no",
         "pirate",
-        "3cf543a7-614b-4ef9-896d-fad8b85e1f9b"
+        "$2b$10$io2NKvQX3TN.ULzd.FxhW.F0rQE57HUbcvl0muVYJgTem3uZzJAZ6"
       );
       const userService = new UserService(
         repos.userRepo,

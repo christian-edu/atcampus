@@ -21,7 +21,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_DATABASE, // hentes fra process.env,
   //connectTimeout: 1000000,
   //acquireTimeout: 1000000,
-  synchronize: false,
+  synchronize: true,
   entities: [
     GroupEntity,
     SubjectEntity,
