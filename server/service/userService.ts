@@ -25,19 +25,19 @@ export default class UserService implements IUserService {
     } catch (e: any) {
       throw Error(e);
     }
-    if (schoolEntity) {
-      const hash = await bcrypt.hash(
-        userDto.password,
-        parseInt(process.env.SALT_ROUNDS!)
-      );
+    // if (schoolEntity) {
+    const hash = await bcrypt.hash(
+      userDto.password,
+      parseInt(process.env.SALT_ROUNDS!)
+    );
 
-      const user = await this._addUser(
-        this.mapUserEntity(userDto, hash, schoolEntity!)
-      );
+    const user = await this._addUser(
+      this.mapUserEntity(userDto, hash, schoolEntity!)
+    );
 
-      if (!user) throw new HttpException("Could not store user", 500);
-      return user as UserOutDto;
-    }
+    if (!user) throw new HttpException("Could not store user", 500);
+    return user as UserOutDto;
+    //}
   }
 
   private async _addUser(user: UserEntity) {
