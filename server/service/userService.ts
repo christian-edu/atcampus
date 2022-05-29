@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { Like, Repository } from "typeorm";
 import { UserEntity } from "../entity/UserEntity";
 import { UserDto } from "../dto/userDto";
 import bcrypt from "bcrypt";
@@ -36,7 +36,7 @@ export default class UserService implements IUserService {
     );
 
     if (!user) throw new HttpException("Could not store user", 500);
-    return user as UserOutDto;
+    return user;
     //}
   }
 
@@ -108,5 +108,26 @@ export default class UserService implements IUserService {
     } catch (e) {
       this.handleException(e);
     }
+  }
+
+  async findUserByEmailOrUserName({
+    userName,
+    email,
+  }: {
+    userName: string;
+    email: string;
+  }): Promise<UserOutDto[]> {
+    let users: UserEntity[];
+    try {
+      users = await this.userRepo.find({
+        where: [{ userName: Like(userName) }, { email: Like(email) }],
+      });
+    } catch (e) {
+      if (queryFailedGuard(e)) {
+        throw new HttpException(e.message, 500);
+      } else throw e;
+    }
+    if (users.length === 0) throw new HttpException("No matching user(s)", 204);
+    return users.map((user) => userEntityToDto(user));
   }
 }

@@ -28,7 +28,17 @@ export default class UserRouter extends ServerRouter {
         this.sendError(res, e);
       }
     });
+    this.router.post("/search", async (req, res) => {
+      const { userName, email } = req?.body;
 
+      try {
+        res.json(
+          await this.userService.findUserByEmailOrUserName({ userName, email })
+        );
+      } catch (e) {
+        this.sendError(res, e);
+      }
+    });
     this.router.get("/groups", async (req, res) => {
       try {
         const groups = await this.userService.fetchGroupsByUserId(req.userId);

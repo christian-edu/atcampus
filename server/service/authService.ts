@@ -22,7 +22,7 @@ export default class AuthService implements IAuthService {
     if (!password) throw new HttpException("Password must be provided!", 400);
 
     const userFromDb = await this.userRepo.findOne({
-      where: { userName },
+      where: [{ userName }, { email }],
     });
     if (!userFromDb)
       throw new HttpException("Details provided did not match any user", 400);
