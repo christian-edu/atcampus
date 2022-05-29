@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fetchJSON } from "../fetchJSON";
 import { useLoader } from "../useLoader";
 import Loading from "./shared/Loading";
@@ -59,6 +59,15 @@ export function ChatComponent({ groupId }) {
       websocket.close();
     };
   }
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   useEffect(async () => {
     try {
@@ -113,6 +122,7 @@ export function ChatComponent({ groupId }) {
     <div id="chat-container">
       <div id="chat-messages" className="w-full max-h-[32rem] overflow-scroll">
         {parseMessages(messages)}
+        <div ref={messagesEndRef} />
       </div>
       <div id="chat-input" className={"flex w-full space-x-10"}>
         <label>
