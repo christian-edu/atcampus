@@ -8,34 +8,24 @@ import { fetchJSON } from "../fetchJSON";
 const SearchUser = () => {
   // Needs work
 
-  const [users, setUsers] = useState([]);
-  const [input, setInput] = useState("");
+  const [user, setUser] = useState([]);
+  const [email, setEmail] = useState("");
+  const [userName, setUsername] = useState("");
+  const [usernameOrEmail, setUsernameOrEmail] = useState("");
 
-  // const fetchGroups = async () => {
-  //   const res = await fetch('/api/v1/groups');
-  //   const data = await res.json();
+  useEffect(() => {}, [user]);
 
-  // };
+  async function search() {
+    const res = await fetch("/api/v1/user/search", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ userName, email }),
+    });
 
-  const { data, error, loading } = useLoader(() =>
-    fetchJSON("/api/v1/user/search")
-  );
-
-  console.log("user search results");
-  console.log(data);
-  const inputHandler = (e) => setInput(e.target.value);
-
-  useEffect(() => {
-    // fetchGroups();
-  }, []);
-
-  useEffect(() => {
-    console.log(users);
-  }, [users]);
-
-  const filteredUsers = users.filter((user) =>
-    user.username.toLowerCase().includes(input.toLowerCase())
-  );
+    setUser(await res.json());
+  }
 
   return (
     <>
@@ -44,26 +34,53 @@ const SearchUser = () => {
           <h2 className="text-xl font-bold">Legg til medlem</h2>
         </div>
         <div>
-          <label htmlFor="userName">Søk etter brukernavn</label>
           <input
-            type="text"
-            id="userName"
-            placeholder="Torleif Jakobsen"
-            className="w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2"
-            onChange={inputHandler}
+            type="radio"
+            name={"emailOrName"}
+            value={"mail"}
+            onChange={(event) => setUsernameOrEmail(event.target.value)}
           />
-        </div>
-        <ul className="grid gap-4">
-          {input && filteredUsers.length === 0 && "Fant ingen brukere"}
-          {input && filteredUsers.map((user, i) => <li>Li</li>)}
-        </ul>
-      </div>
+          <label htmlFor="email">Søk etter epost</label>
+          <input
+            type="radio"
+            name={"emailOrName"}
+            value={"name"}
+            checked={true}
+            onChange={(event) => setUsernameOrEmail(undefined)}
+          />
+          <label htmlFor="userName">Søk etter brukernavn</label>
+          {usernameOrEmail ? (
+            <input
+              type="email"
+              id="email"
+              placeholder="eks. student@kristiania.no"
+              className="w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2"
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          ) : (
+            <input
+              type="text"
+              id="userName"
+              placeholder="eks. Torleif Jakobsen"
+              className="w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2"
+              onChange={(event) => setUsername(event.target.value)}
+            />
+          )}
 
-      <div className="bg-white text-dark-1 p-6 rounded-standard max-w-2xl mx-auto">
-        <div>
-          <h2 className="text-xl font-bold">Søk etter gruppekriterier</h2>
-          <h4>Trykk på en gruppe for å sende forespørsel</h4>
+          <button onClick={search}>Søk</button>
         </div>
+
+        <ul>
+          {user ? (
+            user.map((specificUser) => (
+              <li>
+                {specificUser.username} ({specificUser.email})
+              </li>
+            ))
+          ) : (
+            <h2>Ingen brukere</h2>
+          )}
+        </ul>
       </div>
     </>
   );
