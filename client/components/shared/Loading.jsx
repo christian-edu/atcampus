@@ -14,7 +14,7 @@ const Loading = ({ show = false }) => {
           >
             <svg
               role='status'
-              class='w-10 h-10 mr-2 text-gray-200 animate-spin dark:text-dark-5 fill-purple-1'
+              className='w-10 h-10 mr-2 text-gray-200 animate-spin dark:text-dark-5 fill-purple-1'
               viewBox='0 0 100 101'
               fill='none'
               xmlns='http://www.w3.org/2000/svg'

@@ -1,13 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchJSON } from '../fetchJSON';
 import { useLoader } from '../useLoader';
 import Breadcrumbs from './shared/Breadcrumbs';
-import Loading from './shared/Loading';
+import ChatMessage from './shared/ChatMessage';
+import { motion } from 'framer-motion';
 
 export function GroupChat() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
+
+  const bottomOfChat = useRef(null);
 
   // Gjør fetch-kall til api/v1/chat for å hente gamle meldinger.
 
@@ -74,48 +77,45 @@ export function GroupChat() {
   }
 
   function parseMessages(messages) {
-    const dateFormat = {
-      month: 'numeric',
-      year: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-    };
-    const now = new Date().toLocaleDateString('nb-NO', dateFormat);
-    return messages.map((message) => {
-      const messageTime = new Date(message.timestamp).toLocaleDateString(
-        'nb-NO',
-        dateFormat
-      );
+    return messages.map((message, i) => {
       if (message.message) {
-        return (
-          <p key={messages.indexOf(message)} className={'chat-message'}>
-            {`[${messageTime}] `} {message.userName}: {message.message}
-          </p>
-        );
+        return <ChatMessage key={i} message={message} />;
       } else if (message.server) {
         return (
-          <p key={messages.indexOf(message)} className={'server-message'}>
-            {`[${now}] `} {message.server}
-          </p>
+          <motion.p
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            key={i}
+            className='text-purple-1'
+          >
+            {message.server}
+          </motion.p>
         );
       }
     });
   }
 
-  if (loading) return <Loading />;
+  useEffect(() => {
+    if (!loading) {
+      bottomOfChat.current.scrollIntoView({
+        // behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start',
+      });
+    }
+  }, [messages]);
 
   return (
     <>
       <Breadcrumbs />
       <div className='bg-white border-1 border-purple-1 rounded p-6'>
         <h2 className='font-bold text-xl mb-4'>Chat</h2>
-        <div className='border-b-2 border-dark-5 py-4 mb-4'>
+        <div className='border-b-2 shadow-sm py-4 mb-4'>
           {messages.length === 0 && 'Ingen meldinger'}
           {messages.length > 0 && (
             <div className='h-[300px] overflow-scroll flex flex-col gap-4'>
               {parseMessages(messages)}
+              <div ref={bottomOfChat} className='h-1'></div>
             </div>
           )}
         </div>

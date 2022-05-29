@@ -12,7 +12,7 @@ export function useLoader(loadingFn) {
     } catch (error) {
       setError(error);
     } finally {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+    //   await new Promise((resolve) => setTimeout(resolve, 500));
       setLoading(false);
     }
   }

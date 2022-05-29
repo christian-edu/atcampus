@@ -6,6 +6,8 @@ import {
   CalendarIcon,
   ChatIcon,
   CogIcon,
+  MenuAlt1Icon,
+  UserGroupIcon,
 } from '@heroicons/react/solid';
 import Image from './shared/Image';
 import { useLoader } from '../useLoader';
@@ -30,8 +32,8 @@ const GroupPage = () => {
 
   return (
     <>
-      <Loading show={loading} />
-      {<Breadcrumbs />}
+      {/* <Loading show={loading} /> */}
+      <Breadcrumbs />
       <div className='bg-white p-6 max-w-xl mx-auto rounded-standard'>
         <div className='flex flex-row gap-4'>
           <Image className='h-16' group />
