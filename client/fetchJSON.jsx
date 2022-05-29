@@ -4,5 +4,6 @@ export async function fetchJSON(url) {
   if (!res.ok) {
     throw new Error(`Failed ${res.status}`);
   }
+  if (res.status === 204) return null;
   return await res.json();
 }
