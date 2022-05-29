@@ -1,15 +1,15 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid';
 import { useState } from 'react';
 import { leftNavBarMenu } from '../../services/menus';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Modal from './Modal';
 import ProfileMenu from './ProfileMenu';
 
 const LeftNavBar = () => {
   const [open, setOpen] = useState(true);
-
-  // State for showing profile menu
   const [modalIsVisible, setModalIsVisible] = useState(false);
+
+  const navigate = useNavigate();
 
   // Toggle showing profile menu
   const toggleProfileMenu = () =>
@@ -35,6 +35,7 @@ const LeftNavBar = () => {
           <img
             src='https://svgshare.com/i/hDh.svg'
             alt=''
+            onClick={() => navigate('/')}
             className={`cursor-pointer duration-700 h-10 w-10 ${
               open && 'rotate-[90deg]'
             }`}

@@ -19,15 +19,20 @@ import { Login } from './components/Login';
 import { ShowCriteriaPage } from './components/ShowCriteriaPage';
 import { useLoader } from './useLoader';
 import { fetchJSON } from './fetchJSON';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { GroupChat } from './components/GroupChat';
+import { UserGroupsContext } from './store/UserGroupsContext';
 
 export const UserInfoContext = React.createContext();
 
 const App = () => {
   const { data: userData } = useLoader(() => fetchJSON('/api/v1/user'));
 
-  console.log(userData);
+  const { fetchData } = useContext(UserGroupsContext);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -42,18 +47,18 @@ const App = () => {
                   <BackButton />
                 </div>
                 <Routes>
-                  <Route path={'/login'} element={<Login />} />
-                  <Route path={'/'} element={<GroupLinks />} />
+                  <Route path='/login' element={<Login />} />
+                  <Route path='/' element={<GroupLinks />} />
                   <Route
-                    path={'/searchGroup'}
+                    path='/searchGroup'
                     element={<SearchGroup context={UserInfoContext} />}
                   />
                   <Route
-                    path={'/searchGroup/searchGroupResults'}
+                    path='/searchGroup/searchGroupResults'
                     element={<SearchGroupResults />}
                   />
                   <Route
-                    path={'/createGroup'}
+                    path='/createGroup'
                     element={<GroupCriteriaPage createdGroup={true} />}
                   />
                   <Route path='/groups/:id' element={<GroupPage />} />
@@ -63,23 +68,23 @@ const App = () => {
                   />
                   <Route path='/groups/:id/chat' element={<GroupChat />} />
                   <Route
-                    path={'/groups/specific/groupCriteria'}
+                    path='/groups/specific/groupCriteria'
                     element={<ShowCriteriaPage />}
                   />
                   <Route
-                    path={'/groups/:id/profile'}
+                    path='/groups/:id/profile'
                     element={<EditGroupProfile />}
                   />
                   <Route
-                    path={'/group/members/searchUser'}
+                    path='/group/members/searchUser'
                     element={<SearchUser />}
                   />
                   <Route
-                    path={'/group/members/searchUser/searchUserResults'}
+                    path='/group/members/searchUser/searchUserResults'
                     element={<SearchUserResults />}
                   />
-                  <Route path={'/questions'} element={<Questions />} />
-                  <Route path={'/profile'} element={<ProfileMenu />} />
+                  <Route path='/questions' element={<Questions />} />
+                  <Route path='/profile' element={<ProfileMenu />} />
                 </Routes>
               </div>
               <Footer />

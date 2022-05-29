@@ -1,47 +1,50 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { UserGroupsContext } from '../store/UserGroupsContext';
 import Breadcrumbs from './shared/Breadcrumbs';
 import Button from './shared/Button';
 import Message from './shared/Message';
-import { motion, AnimatePresence } from 'framer-motion';
 
 export function EditGroupProfile() {
   const [groupName, setGroupName] = useState('');
   const [rules, setRules] = useState('');
   const [file, setFile] = useState('');
   const [message, setMessage] = useState(null);
+  const [error, setError] = useState(null);
+
+  const { getGroupById, fetchData } = useContext(UserGroupsContext);
 
   const params = useParams();
   const navigate = useNavigate();
 
-  const fetchData = async () => {
-    const res = await fetch(`/api/v1/groups/?groupId=${params.id}`);
-    const data = await res.json();
-    console.log(data);
-    setGroupName(data.name);
-    setRules(data.rules);
-  };
+  const group = getGroupById(params.id);
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    setGroupName(group?.name);
+    setRules(group?.rules);
+  }, [group]);
 
   async function handleSubmit(e) {
     e.preventDefault();
-
-    const res = await fetch('/api/v1/groups', {
-      method: 'PATCH',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({ groupName, file, rules, uuid: params.id }),
-    });
-
-    setMessage('Endringer lagret');
-
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    setMessage(null);
+    try {
+      const res = await fetch('/api/v1/groups', {
+        method: 'PATCH',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ groupName, file, rules, uuid: params.id }),
+      });
+      if (!res.ok) throw new Error('Det oppsto en feil');
+      await fetchData();
+      setMessage('Endringer lagret');
+    } catch (err) {
+      setMessage(err.message);
+      setError(err.message);
+    } finally {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setMessage(null);
+      setError(null);
+    }
 
     // navigate(`/groups/${params.id}`);
   }
@@ -57,7 +60,7 @@ export function EditGroupProfile() {
             <input
               type='text'
               className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'
-              value={groupName}
+              defaultValue={groupName}
               onChange={(e) => setGroupName(e.target.value)}
             />
           </div>
@@ -65,7 +68,7 @@ export function EditGroupProfile() {
             <label className='text-dark-3 mb-2'>Gruppebilde</label>
             <input
               type='file'
-              value={file}
+              defaultValue={file}
               onChange={(e) => setFile(e.target.value)}
             />
           </div>
@@ -74,7 +77,7 @@ export function EditGroupProfile() {
             <div>
               <textarea
                 placeholder={'eks. Alltid være tidsnok'}
-                value={rules}
+                defaultValue={rules}
                 className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'
                 onChange={(e) => setRules(e.target.value)}
               ></textarea>
@@ -86,7 +89,9 @@ export function EditGroupProfile() {
             </Button>
           </div>
         </form>
-        <Message show={message}>Endringene ble lagret</Message>
+        <Message mode={error ? 'error' : 'success'} show={message}>
+          {message}
+        </Message>
       </div>
     </>
   );

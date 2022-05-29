@@ -1,26 +1,16 @@
 import { ChevronRightIcon } from '@heroicons/react/solid';
 import { Link, useParams } from 'react-router-dom';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
-import { useParams } from 'react-router-dom';
 import { routes } from '../../services/routes';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { UserGroupsContext } from '../../store/UserGroupsContext';
 
 const Breadcrumbs = () => {
-  const [group, setGroup] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { getGroupById } = useContext(UserGroupsContext);
 
   const params = useParams();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const rest = await fetch(`/api/v1/groups/?groupId=${params.id}`);
-      const data = await rest.json();
-      setGroup(data);
-    };
-
-    fetchData();
-  }, []);
+  const group = getGroupById(params.id);
 
   const breadcrumbs = useBreadcrumbs(routes(group?.name));
 

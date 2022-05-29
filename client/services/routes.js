@@ -9,7 +9,7 @@ export const routes = (group) => [
   },
   {
     path: '/groups/:id',
-    breadcrumb: group
+    breadcrumb: group,
   },
   {
     path: '/groups/specific/members',

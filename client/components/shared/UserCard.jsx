@@ -36,21 +36,17 @@ const UserCard = ({ user, edit, search, match }) => {
       <Modal show={modalIsVisible && match} onClick={toggleModal}>
         <MatchRequest onClick={toggleModal} user={user} />
       </Modal>
-      <li
+      <div
         className='bg-white flex items-center p-4 gap-4 rounded-standard border border-purple-4 cursor-pointer'
         onClick={toggleModal}
       >
         <Image className='h-10' />
-        <h2 className='font-bold text-lg text-dark-1'>{user.username}</h2>
+        <h2 className='font-bold text-lg text-dark-1'>{user.user_name}</h2>
         <button className='ml-auto'>
-          {/* Render dots icon if props edit is set to true, else render plus icons */}
-          {edit ? (
-            <DotsHorizontalIcon className={classes} />
-          ) : (
-            <PlusIcon className={classes} />
-          )}
+          {edit && <DotsHorizontalIcon className={classes} />}
+          {!edit && <PlusIcon className={classes} />}
         </button>
-      </li>
+      </div>
     </>
   );
 };
