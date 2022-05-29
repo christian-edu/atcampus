@@ -13,6 +13,7 @@ import Image from './shared/Image';
 import { useLoader } from '../useLoader';
 import { fetchJSON } from '../fetchJSON';
 import Breadcrumbs from './shared/Breadcrumbs';
+import Loading from './shared/Loading';
 
 const GroupPage = () => {
   const params = useParams();
@@ -31,7 +32,8 @@ const GroupPage = () => {
 
   return (
     <>
-      <Breadcrumbs />
+      <Loading show={loading} />
+      {<Breadcrumbs />}
       <div className='bg-white p-6 max-w-xl mx-auto rounded-standard'>
         <div className='flex flex-row gap-4'>
           <Image className='h-16' group />

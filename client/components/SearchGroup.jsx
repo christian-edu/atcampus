@@ -39,44 +39,44 @@ const SearchGroup = () => {
             onChange={inputHandler}
           />
         </div>
-        <ul className='grid gap-4'>
-          <AnimatePresence>
-            {input && filteredGroups.length === 0 && (
-              <motion.p
-                key='text-empty'
+
+        {input && filteredGroups.length === 0 && (
+          <motion.p
+            key='text-empty'
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className='text-dark-3'
+          >
+            Ingen grupper å vise
+          </motion.p>
+        )}
+
+        {input && filteredGroups.length > 0 && (
+          <ul className='grid gap-4'>
+            <AnimatePresence>
+              <motion.h4
+                key='text-search'
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 className='text-dark-3'
               >
-                Ingen grupper å vise
-              </motion.p>
-            )}
-            {input && filteredGroups.length > 0 && (
-              <>
-                <motion.h4
-                  key='text-search'
+                Trykk på en gruppe for å sende forespørsel
+              </motion.h4>
+              {filteredGroups.map((group) => (
+                <motion.li
+                  key={group.uuid}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className='text-dark-3'
                 >
-                  Trykk på en gruppe for å sende forespørsel
-                </motion.h4>
-                {filteredGroups.map((group) => (
-                  <motion.li
-                    key={group.uuid}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                  >
-                    <GroupCard group={group} search={true} />
-                  </motion.li>
-                ))}
-              </>
-            )}
-          </AnimatePresence>
-        </ul>
+                  <GroupCard group={group} search={true} />
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </ul>
+        )}
       </div>
 
       <div className='grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard mb-6 max-w-2xl mx-auto'>
