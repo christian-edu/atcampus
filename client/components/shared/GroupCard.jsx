@@ -36,18 +36,12 @@ const GroupCard = ({ group, onClick, match, search }) => {
 
   return (
     <>
-      {/* render search modal window if search is set to true */}
-      {modalIsVisible && search && (
-        <Modal onClick={clickHandler}>
-          <SearchRequest onClick={clickHandler} group={group} />
-        </Modal>
-      )}
-      {/* render match modal window if match is set to true */}
-      {modalIsVisible && match && (
-        <Modal onClick={clickHandler}>
-          <MatchRequest onClick={clickHandler} group={group} />
-        </Modal>
-      )}
+      <Modal show={modalIsVisible && search} onClick={clickHandler}>
+        <SearchRequest onClick={clickHandler} group={group} />
+      </Modal>
+      <Modal show={modalIsVisible && match} onClick={clickHandler}>
+        <MatchRequest onClick={clickHandler} group={group} />
+      </Modal>
 
       <div
         className='bg-white flex items-center gap-2 relative p-6 rounded-standard border border-purple-4 cursor-pointer hover:drop-shadow-xl duration-300'

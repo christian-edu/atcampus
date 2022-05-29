@@ -45,7 +45,10 @@ const MatchRequest = ({ group, user, onClick }) => {
           : 'Ønsker du å invitere til gruppen?'}
       </p>
       <div className='flex flex-row gap-6'>
-        <button className='bg-dark-2 text-white p-2 rounded hover:bg-dark-3' onClick={onClick}>
+        <button
+          className='bg-dark-2 text-white p-2 rounded hover:bg-dark-3'
+          onClick={onClick}
+        >
           <XIcon className='h-6 w-6' />
         </button>
         <button className='bg-gradient-left text-white p-2 rounded hover:bg-purple-2'>

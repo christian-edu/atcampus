@@ -3,22 +3,26 @@ import { Link, useParams } from 'react-router-dom';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
 import { useParams } from 'react-router-dom';
 import { routes } from '../../services/routes';
-import { useLoader } from '../../useLoader';
-import { fetchJSON } from '../../fetchJSON';
-import Loading from './Loading';
+import { useEffect, useState } from 'react';
 
 const Breadcrumbs = () => {
+  const [group, setGroup] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const params = useParams();
 
-  const {
-    data: group,
-    error,
-    loading,
-  } = useLoader(() => fetchJSON(`/api/v1/groups/?groupId=${params.id}`));
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const rest = await fetch(`/api/v1/groups/?groupId=${params.id}`);
+      const data = await rest.json();
+      setGroup(data);
+    };
+
+    fetchData();
+  }, []);
 
   const breadcrumbs = useBreadcrumbs(routes(group?.name));
-
-  if (loading) return <Loading />;
 
   return (
     <ul className='flex'>

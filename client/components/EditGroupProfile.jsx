@@ -39,9 +39,11 @@ export function EditGroupProfile() {
 
     setMessage('Endringer lagret');
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    navigate(`/groups/${params.id}`);
+    setMessage(null);
+
+    // navigate(`/groups/${params.id}`);
   }
 
   return (
@@ -84,11 +86,7 @@ export function EditGroupProfile() {
             </Button>
           </div>
         </form>
-        <AnimatePresence>
-          <motion.div>
-            {message && <Message>Endringene ble lagret</Message>}
-          </motion.div>
-        </AnimatePresence>
+        <Message show={message}>Endringene ble lagret</Message>
       </div>
     </>
   );

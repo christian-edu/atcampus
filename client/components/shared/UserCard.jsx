@@ -27,25 +27,15 @@ const UserCard = ({ user, edit, search, match }) => {
 
   return (
     <>
-      {/* Render edit modal if props edit is set to true
-      Here we want to only show this if the user is admin of the group*/}
-      {modalIsVisible && edit && (
-        <Modal onClick={toggleModal}>
-          <GroupUserSettings user={user} />
-        </Modal>
-      )}
-      {/* Render search modal if props search is set to true */}
-      {modalIsVisible && search && (
-        <Modal onClick={toggleModal}>
-          <SearchRequest onClick={toggleModal} user={user} />
-        </Modal>
-      )}
-      {/* Render match modal if props search is set to true */}
-      {modalIsVisible && match && (
-        <Modal onClick={toggleModal}>
-          <MatchRequest onClick={toggleModal} user={user} />
-        </Modal>
-      )}
+      <Modal show={modalIsVisible && edit} onClick={toggleModal}>
+        <GroupUserSettings user={user} />
+      </Modal>
+      <Modal show={modalIsVisible && search} onClick={toggleModal}>
+        <SearchRequest onClick={toggleModal} user={user} />
+      </Modal>
+      <Modal show={modalIsVisible && match} onClick={toggleModal}>
+        <MatchRequest onClick={toggleModal} user={user} />
+      </Modal>
       <li
         className='bg-white flex items-center p-4 gap-4 rounded-standard border border-purple-4 cursor-pointer'
         onClick={toggleModal}

@@ -1,7 +1,7 @@
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Modal from './shared/Modal';
 import GroupSettings from './shared/GroupSettings';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   MenuAlt1Icon,
   UserGroupIcon,
@@ -12,7 +12,6 @@ import {
 import Image from './shared/Image';
 import { useLoader } from '../useLoader';
 import { fetchJSON } from '../fetchJSON';
-import Loading from './shared/Loading';
 import Breadcrumbs from './shared/Breadcrumbs';
 
 const GroupPage = () => {
@@ -24,16 +23,11 @@ const GroupPage = () => {
     loading,
   } = useLoader(() => fetchJSON(`/api/v1/groups/?groupId=${params.id}`));
 
-  const navigate = useNavigate();
-  // const group = location.state.group;
-
   const [showSettings, setShowSettings] = useState(false);
 
   const toggleSettings = () => setShowSettings((showSettings) => !showSettings);
 
   const visible = group?.isPrivate ? 'Privat' : 'Offentlig';
-
-  if (loading) return <Loading />;
 
   return (
     <>
@@ -42,17 +36,15 @@ const GroupPage = () => {
         <div className='flex flex-row gap-4'>
           <Image className='h-16' group />
           <div>
-            <h2 className='text-dark-1 text-xl font-bold'>{group.name}</h2>
+            <h2 className='text-dark-1 text-xl font-bold'>{group?.name}</h2>
             <h4 className='font-bold text-dark-3 mb-8'>({visible})</h4>
           </div>
-          {showSettings && (
-            <Modal onClick={toggleSettings}>
-              <GroupSettings onClick={toggleSettings} group={group} />
-            </Modal>
-          )}
+          <Modal show={showSettings} onClick={toggleSettings}>
+            <GroupSettings onClick={toggleSettings} group={group} />
+          </Modal>
           <CogIcon
             onClick={toggleSettings}
-            className='text-dark-1 h-6 w-6 cursor-pointer ml-auto'
+            className='text-dark-1 h-6 w-6 cursor-pointer ml-auto hover:rotate-[10deg] hover:text-purple-1 duration-1000'
           />
         </div>
         <ul className='grid gap-4 text-md text-dark-1'>

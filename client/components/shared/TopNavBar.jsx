@@ -12,14 +12,9 @@ const TopNavBar = () => {
 
   return (
     <>
-      {showNavBar ? (
-        <Modal onClick={toggleNavBarHandler}>
-          {' '}
-          <TopNavBarMenu onClick={toggleNavBarHandler} />{' '}
-        </Modal>
-      ) : (
-        <h2></h2>
-      )}
+      <Modal show={showNavBar} onClick={toggleNavBarHandler}>
+        <TopNavBarMenu onClick={toggleNavBarHandler} />
+      </Modal>
 
       <div className='flex flex-row py-4 px-4 bg-purple-5 items-center justify-between lg:hidden'>
         <BackButton />

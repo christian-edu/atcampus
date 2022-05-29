@@ -17,12 +17,9 @@ const LeftNavBar = () => {
 
   return (
     <div>
-      {/* Render modal */}
-      {modalIsVisible && (
-        <Modal onClick={toggleProfileMenu}>
-          <ProfileMenu onClick={toggleProfileMenu} />
-        </Modal>
-      )}
+      <Modal show={modalIsVisible} onClick={toggleProfileMenu}>
+        <ProfileMenu onClick={toggleProfileMenu} />
+      </Modal>
       <div
         className={`${
           open ? 'w-72' : 'w-20'

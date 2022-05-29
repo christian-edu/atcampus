@@ -1,20 +1,21 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import GroupCard from './shared/GroupCard';
 import GroupCriteriaPage from './GroupCriteriaPage';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const SearchGroup = () => {
   const [groups, setGroups] = useState([]);
   const [input, setInput] = useState('');
 
-  const getGroups = async () => {
-    const res = await fetch('/api/v1/groups');
-    const data = await res.json();
-    setGroups(data);
-  };
-
   const inputHandler = (e) => setInput(e.target.value);
 
   useEffect(() => {
+    const getGroups = async () => {
+      const res = await fetch('/api/v1/groups');
+      const data = await res.json();
+      setGroups(data);
+    };
+
     getGroups();
   }, []);
 
@@ -39,17 +40,42 @@ const SearchGroup = () => {
           />
         </div>
         <ul className='grid gap-4'>
-          {input && filteredGroups.length === 0 && 'Ingen grupper å vise'}
-          {input && filteredGroups.length > 0 && (
-            <>
-              <h4 className='text-dark-3'>
-                Trykk på en gruppe for å sende forespørsel
-              </h4>
-              {filteredGroups.map((group) => (
-                <GroupCard key={group.name} group={group} search={true} />
-              ))}
-            </>
-          )}
+          <AnimatePresence>
+            {input && filteredGroups.length === 0 && (
+              <motion.p
+                key='text-empty'
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className='text-dark-3'
+              >
+                Ingen grupper å vise
+              </motion.p>
+            )}
+            {input && filteredGroups.length > 0 && (
+              <>
+                <motion.h4
+                  key='text-search'
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className='text-dark-3'
+                >
+                  Trykk på en gruppe for å sende forespørsel
+                </motion.h4>
+                {filteredGroups.map((group) => (
+                  <motion.li
+                    key={group.uuid}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                  >
+                    <GroupCard group={group} search={true} />
+                  </motion.li>
+                ))}
+              </>
+            )}
+          </AnimatePresence>
         </ul>
       </div>
 
