@@ -1,16 +1,15 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Modal from "./shared/Modal";
 import GroupSettings from "./shared/GroupSettings";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
+  CalendarIcon,
+  ChatIcon,
+  CogIcon,
   MenuAlt1Icon,
   UserGroupIcon,
-  ChatIcon,
-  CalendarIcon,
-  CogIcon,
 } from "@heroicons/react/solid";
 import Image from "./shared/Image";
-import { ChatComponent } from "../ChatComponent";
 
 const GroupPage = () => {
   const location = useLocation();
