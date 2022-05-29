@@ -12,9 +12,6 @@ const SearchGroupResults = () => {
     result.push([i, groupResult[i]]);
   }
 
-  console.log("in search results");
-  console.log(result[0][1].group);
-
   return (
     <div className="bg-white p-6 rounded-standard">
       <h2 className="font-bold text-xl mb-8">Søkeresultater</h2>
