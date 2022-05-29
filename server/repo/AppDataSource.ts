@@ -11,7 +11,7 @@ import dotenv from "dotenv";
 
 // npm run typeorm -- migration:run
 // npm run typeorm -- migration:generate migration/navn-på-migration
-
+//
 dotenv.config();
 export const AppDataSource = new DataSource({
   type: "postgres",
