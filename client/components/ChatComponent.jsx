@@ -120,7 +120,7 @@ export function ChatComponent({ groupId }) {
 
   return (
     <div id="chat-container">
-      <div id="chat-messages" className="w-full max-h-[32rem] overflow-scroll">
+      <div id="chat-messages" className="w-full max-h-[20rem] overflow-scroll">
         {parseMessages(messages)}
         <div ref={messagesEndRef} />
       </div>
