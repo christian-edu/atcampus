@@ -44,6 +44,7 @@ export function ChatComponent({ groupId }) {
     };
 
     websocket.onerror = function (err) {
+      // TODO: Må legge inn en sjekk her for om man har blitt logget ut
       console.error("Socket encountered error: ", err, "Closing socket");
       websocket.close();
     };
@@ -52,7 +53,7 @@ export function ChatComponent({ groupId }) {
   useEffect(async () => {
     try {
       const data = await fetchJSON("/api/v1/chat?group_id=" + groupId);
-      if (data !== {}) setMessages(data);
+      if (data !== null) setMessages(data);
       else setMessages([]);
     } catch (error) {
       return <div>Error loading messages: {error?.message}</div>;
