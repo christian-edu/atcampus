@@ -77,10 +77,6 @@ const App = () => {
                     path='/groups/:id/members/search'
                     element={<SearchUser />}
                   />
-                  {/* <Route
-                    path='/group/members/searchUser/searchUserResults'
-                    element={<SearchUserResults />}
-                  /> */}
                   <Route path='/questions' element={<Questions />} />
                   <Route path='/profile' element={<ProfileMenu />} />
                 </Routes>
