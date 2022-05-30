@@ -6,10 +6,13 @@ import { WorkType } from "../entity/enums/WorkType";
 import { SubjectEntity } from "../entity/SubjectEntity";
 import { SchoolEntity } from "../entity/SchoolEntity";
 import { GroupEntity } from "../entity/GroupEntity";
-import { GroupInDto } from "../dto/GroupInOutDto";
+import { GroupInDto, GroupOutDto } from "../dto/GroupInOutDto";
 import { CriteriaDto } from "../dto/criteriaDto";
 import { MaxSize } from "../entity/enums/MaxSize";
 import { GroupMemberEntity } from "../entity/GroupMemberEntity";
+import { UserOutDto } from "../dto/UserInOutDto";
+import { criteriaEntityToDto } from "../dto/utils/criteriaMappers";
+import { GroupMemberDtoUser } from "../dto/groupMemberDto";
 
 export const userEntitiesWithoutGroups = () => {
   const jimbob = new UserEntity("jimbob", "jim@bob.com", "password");
@@ -19,6 +22,26 @@ export const userEntitiesWithoutGroups = () => {
 
   return [jimbob, joebob];
 };
+
+export const userDTOs = [
+  new UserOutDto("1", "jimbob", "jim@bob.com"),
+  new UserOutDto("2", "joebob", "joe@bob.com"),
+];
+
+export const criteriaDtos = [
+  new CriteriaDto(GradeGoal.A, WorkFrequency.W1, "Norsk", MaxSize.ANY),
+];
+
+export const groupDTOs = [
+  new GroupOutDto(
+    "1",
+    false,
+    "A group",
+    criteriaDtos[0],
+    [new GroupMemberDtoUser("1", "jimbob", true)],
+    "Anarchy"
+  ),
+];
 
 export const userEntitiesWithGroups = () => {
   const users = userEntitiesWithoutGroups();
@@ -70,9 +93,6 @@ export const groupEntitiesWithUsers = () => {
   return [group1];
 };
 
-export const criteriaDtos = [
-  new CriteriaDto(GradeGoal.A, WorkFrequency.W1, "Norsk", MaxSize.ANY),
-];
 export const groupInDtos = [
   new GroupInDto(false, "A group", criteriaDtos[0], "No rules", "1"),
 ];

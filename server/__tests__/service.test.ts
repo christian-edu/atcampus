@@ -3,6 +3,7 @@ import { method, On } from "ts-auto-mock/extension";
 import {
   groupEntitiesWithUsers,
   groupInDtos,
+  groupMemberEntities,
   userEntitiesWithGroups,
 } from "../__mocks__/mockData";
 import { DeleteResult, Repository } from "typeorm";
@@ -16,6 +17,11 @@ import { GroupMemberEntity } from "../entity/GroupMemberEntity";
 import { SubjectEntity } from "../entity/SubjectEntity";
 import { CriteriaEntity } from "../entity/CriteriaEntity";
 import GroupService from "../service/groupService";
+import { CriteriaDto } from "../dto/criteriaDto";
+import { GradeGoal } from "../entity/enums/GradeGoal";
+import { WorkFrequency } from "../entity/enums/WorkFrequency";
+import { MaxSize } from "../entity/enums/MaxSize";
+import { WorkType } from "../entity/enums/WorkType";
 
 describe("Tests for GroupService", () => {
   let fakeGroupRepo: Repository<GroupEntity>;
@@ -74,29 +80,58 @@ describe("Tests for GroupService", () => {
     expect(res.name).toBe(groupEntitiesWithUsers()[0].name);
   });
 
-  // it("Should delete a member from a group", async () => {
-  //   const mockDeleteMember: jest.Mock = On(fakeGroupMemberRepo).get(
-  //     method((method) => method.delete)
-  //   );
-  //   mockDeleteMember.mockImplementation(
-  //     async () => groupEntitiesWithUsers()[0]
-  //   );
-  //   const res = await groupService.deleteMember("1", "2");
-  //   expect(res.name).toBe(groupEntitiesWithUsers()[0].name);
-  //   expect(mockDeleteMember).toHaveBeenCalledWith("1", "2");
-  // });
-  //
-  // it("Should add a member", async () => {
-  //   const mockAddMember: jest.Mock = On(fakeGroupMemberRepo).get(
-  //     method((method) => method.save)
-  //   );
-  //   mockAddMember.mockImplementation(async () => groupEntitiesWithUsers()[0]);
-  //
-  //   const res = await groupService.addMember("1", "2");
-  //
-  //   expect(res.name).toBe(groupEntitiesWithUsers()[0].name);
-  //   expect(mockAddMember).toHaveBeenCalledWith("1", "2");
-  // });
+  it("Should delete a member from a group", async () => {
+    const mockDeleteMember: jest.Mock = On(fakeGroupMemberRepo).get(
+      method((method) => method.remove)
+    );
+    mockDeleteMember.mockImplementation(async () => groupMemberEntities());
+
+    const mockFindMember: jest.Mock = On(fakeGroupMemberRepo).get(
+      method((repo) => repo.findOneBy)
+    );
+    mockFindMember.mockImplementation(async () => groupMemberEntities()[1]);
+
+    const mockGetUser: jest.Mock = On(fakeUserRepo).get(
+      method((repo) => repo.findOneBy)
+    );
+    mockGetUser.mockImplementation(async () => userEntitiesWithGroups()[1]);
+
+    const mockGetGroup: jest.Mock = On(fakeGroupRepo).get(
+      method((repo) => repo.findOneBy)
+    );
+    mockGetGroup.mockImplementation(async () => groupEntitiesWithUsers()[0]);
+
+    const res = await groupService.deleteMember("1", "2");
+    expect(res.name).toBe(groupEntitiesWithUsers()[0].name);
+  });
+
+  it("Should add a member", async () => {
+    const mockAddMember: jest.Mock = On(fakeGroupMemberRepo).get(
+      method((method) => method.save)
+    );
+    mockAddMember.mockImplementation(async () => {
+      const memberEntity = new GroupMemberEntity();
+      memberEntity.group = groupEntitiesWithUsers()[0];
+      memberEntity.user = userEntitiesWithGroups()[1];
+      memberEntity.uuid = "2";
+      memberEntity.is_admin = false;
+      return memberEntity;
+    });
+
+    const mockGetUser: jest.Mock = On(fakeUserRepo).get(
+      method((repo) => repo.findOneBy)
+    );
+    mockGetUser.mockImplementation(async () => userEntitiesWithGroups()[1]);
+
+    const mockGetGroup: jest.Mock = On(fakeGroupRepo).get(
+      method((repo) => repo.findOneBy)
+    );
+    mockGetGroup.mockImplementation(async () => groupEntitiesWithUsers()[0]);
+
+    const res = await groupService.addMember("1", "2");
+
+    expect(res.name).toBe(groupEntitiesWithUsers()[0].name);
+  });
 
   it("Should return group members", async () => {
     const mockFetchMembers: jest.Mock = On(fakeGroupRepo).get(
@@ -147,26 +182,26 @@ describe("Tests for GroupService", () => {
     expect(res).toBe(true);
   });
 
-  // it("Should search for a group", async () => {
-  //   const searchDto = new CriteriaDto(
-  //     GradeGoal.A,
-  //     WorkFrequency.W1,
-  //     "Norsk",
-  //     MaxSize.LARGE,
-  //     "Oslo",
-  //     ["PG2351"],
-  //     WorkType.HYBRID,
-  //     "HK"
-  //   );
-  //
-  //   const mockSearch: jest.Mock = On(fakeGroupRepo).get(
-  //     method((method) => method.searchGroup)
-  //   );
-  //   mockSearch.mockImplementation(async () => groups);
-  //
-  //   const res = await groupService.searchGroup(searchDto);
-  //   expect(Object.keys(res).length > 0).toBe(true);
-  // });
+  it("Should search for a group", async () => {
+    const searchDto = new CriteriaDto(
+      GradeGoal.A,
+      WorkFrequency.W1,
+      "Norsk",
+      MaxSize.LARGE,
+      "Oslo",
+      ["PG2351"],
+      WorkType.HYBRID,
+      "HK"
+    );
+
+    const mockSearch: jest.Mock = On(fakeGroupRepo).get(
+      method((method) => method.findBy)
+    );
+    mockSearch.mockImplementation(async () => groupEntitiesWithUsers());
+
+    const res = await groupService.searchGroup(searchDto);
+    expect(Object.keys(res).length > 0).toBe(true);
+  });
 });
 
 describe("Tests for user service", () => {
