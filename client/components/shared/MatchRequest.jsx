@@ -22,6 +22,7 @@ const MatchRequest = ({ group, user, onClick }) => {
     Metode: criteria.workType,
     Arbeidsfrekvens: criteria.workFrequency,
   };
+  
   async function joinGroup() {
     const res = await fetch('/api/v1/groups/member', {
       method: 'POST',

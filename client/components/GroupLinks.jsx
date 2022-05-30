@@ -1,28 +1,18 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { fetchJSON } from '../fetchJSON';
-import { useLoader } from '../useLoader';
 import Loading from './shared/Loading';
 import GroupCard from './shared/GroupCard';
 import Button from './shared/Button';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { UserInfoContext } from '../App';
 import React from 'react';
 import { UserGroupsContext } from '../store/UserGroupsContext';
 
 const GroupLinks = () => {
-  // Should get the data for the group names you are a part of
-
   const navigate = useNavigate();
 
-  const user = React.useContext(UserInfoContext);
+  const user = useContext(UserInfoContext);
 
   const { groups, loading } = useContext(UserGroupsContext);
-
-  // const {
-  //   data: groupData,
-  //   error,
-  //   loading,
-  // } = useLoader(() => fetchJSON('/api/v1/user/groups'));
 
   if (!user) {
     return <Link to={'/login'}>Login</Link>;
