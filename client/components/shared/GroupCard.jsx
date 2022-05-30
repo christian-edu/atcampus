@@ -12,7 +12,7 @@ const GroupCard = ({ group, onClick, match, search, score }) => {
   // Group Card component
 
   if (score === 0) {
-    score = "ingen ";
+    score = "0";
   }
   // classes for private icon
   const privateIconClasses = "h-4 absolute top-4 right-4 text-dark-3";

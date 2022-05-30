@@ -4,17 +4,16 @@ import { GroupCriteria } from "./shared/GroupCriteria";
 import UserCard from "./shared/UserCard";
 import { useLoader } from "../useLoader";
 import { fetchJSON } from "../fetchJSON";
+import { useParams } from "react-router-dom";
+import { useContext } from "../dist/index.d498c491";
+import { UserGroupsContext } from "../store/UserGroupsContext";
 
-const SearchUser = () => {
-  // Needs work
-
+export const SearchUser = () => {
   const [user, setUser] = useState([]);
   const [email, setEmail] = useState("");
   const [userName, setUsername] = useState("");
   const [showEmail, setShowEmail] = useState(false);
   const [error, setError] = useState();
-
-  useEffect(() => {}, [user]);
 
   async function search() {
     setUser([]);
@@ -52,6 +51,12 @@ const SearchUser = () => {
       setShowEmail(false);
       setEmail("");
     }
+  }
+
+  function invite(member) {
+    console.log("invited member");
+    console.log(member);
+    // Goes back to the group page
   }
 
   return (
@@ -106,6 +111,9 @@ const SearchUser = () => {
             user.map((specificUser) => (
               <li key={specificUser.username}>
                 {specificUser.username} ({specificUser.email})
+                <button onClick={() => invite(specificUser.uuid)}>
+                  Inviter
+                </button>
               </li>
             ))
           ) : (

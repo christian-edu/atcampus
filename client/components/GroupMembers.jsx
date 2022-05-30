@@ -1,11 +1,11 @@
-import UserCard from './shared/UserCard';
-import Button from './shared/Button';
-import { useParams } from 'react-router-dom';
-import Breadcrumbs from './shared/Breadcrumbs';
-import { useContext } from 'react';
-import { UserGroupsContext } from '../store/UserGroupsContext';
-import { motion } from 'framer-motion';
-import { UserInfoContext } from '../App';
+import UserCard from "./shared/UserCard";
+import Button from "./shared/Button";
+import { useNavigate, useParams } from "react-router-dom";
+import Breadcrumbs from "./shared/Breadcrumbs";
+import { useContext } from "react";
+import { UserGroupsContext } from "../store/UserGroupsContext";
+import { motion } from "framer-motion";
+import { UserInfoContext } from "../App";
 
 const GroupMembers = () => {
   const params = useParams();
@@ -16,6 +16,8 @@ const GroupMembers = () => {
 
   const user = useContext(UserInfoContext);
 
+  const navigate = useNavigate();
+
   const isAdmin = group?.groupMembers.find(
     (m) => m.user_uuid === user.uuid
   )?.isAdmin;
@@ -23,9 +25,9 @@ const GroupMembers = () => {
   return (
     <>
       <Breadcrumbs />
-      <div className='bg-white p-6 rounded max-w-xl mx-auto text-dark-1'>
-        <h2 className='font-bold text-xl mb-8'>Medlemmer</h2>
-        <ul className='grid grid-cols-1 gap-4 mb-8'>
+      <div className="bg-white p-6 rounded max-w-xl mx-auto text-dark-1">
+        <h2 className="font-bold text-xl mb-8">Medlemmer</h2>
+        <ul className="grid grid-cols-1 gap-4 mb-8">
           {group?.groupMembers.map((member) => (
             <motion.li
               key={member.user_uuid}
@@ -36,10 +38,11 @@ const GroupMembers = () => {
             </motion.li>
           ))}
         </ul>
-        <div className='grid grid-cols-1 md:grid-cols-3'>
+        <div className="grid grid-cols-1 md:grid-cols-3">
           <Button
-            to='/groups/specific/members/searchUser'
-            className='md:col-start-2'
+            to="/groups/specific/members/searchUser"
+            className="md:col-start-2"
+            onClick={() => navigate("/")}
           >
             + Legg til medlem
           </Button>
