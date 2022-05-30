@@ -1,5 +1,5 @@
 import { IGroupService, searchResult } from "./IGroupService";
-import { QueryFailedError, Repository } from "typeorm";
+import { Like, QueryFailedError, Repository } from "typeorm";
 import { GroupEntity } from "../entity/GroupEntity";
 import { SubjectEntity } from "../entity/SubjectEntity";
 import { UserEntity } from "../entity/UserEntity";
@@ -35,7 +35,10 @@ export default class GroupService implements IGroupService {
   ) {}
 
   // Testet manuelt, virker som den skal
-  async fetchAllGroups(): Promise<GroupOutDto[]> {
+  async fetchAllGroups(groupName?: string): Promise<GroupOutDto[]> {
+    if (groupName) {
+      return await this.findGroupByName(groupName);
+    }
     return await this.groupRepo
       .findBy({ isPrivate: false })
       .then(async (array) => {
@@ -374,9 +377,12 @@ export default class GroupService implements IGroupService {
   }
 
   // Testet manuelt, virker som den skal
-  async searchGroup(searchDto: CriteriaDto): Promise<searchResult> {
+  async searchGroup(
+    searchDto: CriteriaDto,
+    groupName?: string
+  ): Promise<searchResult> {
     if (!searchDto) throw new HttpException("No searchDto provided", 400);
-    return await this.fetchAllGroups()
+    return await this.fetchAllGroups(groupName)
       .then((groupDtoArray) => {
         const resultArray: any[] = [];
 
@@ -732,5 +738,22 @@ export default class GroupService implements IGroupService {
       }
       throw new HttpException("Something went wrong", 500);
     }
+  }
+
+  private async findGroupByName(groupName: string): Promise<GroupOutDto[]> {
+    let groups: GroupEntity[];
+    try {
+      groups = await this.groupRepo.findBy({
+        name: Like(`%${groupName}%`),
+        isPrivate: false,
+      });
+    } catch (e) {
+      if (queryFailedGuard(e)) {
+        throw new HttpException(e.message, 500);
+      } else throw e;
+    }
+    if (groups.length === 0)
+      throw new HttpException("No matching group(s)", 204);
+    return Promise.all(groups.map((group) => groupEntityToDto(group)));
   }
 }

@@ -111,6 +111,10 @@ export default class GroupRouter extends ServerRouter {
       const searchDto = extractSearchDtoFromRequest(req);
       Logger.info("SEARCH", "In correct router");
       try {
+        if (req.body.groupName) {
+          res.json(await service.searchGroup(searchDto, req.body.groupName));
+          return;
+        }
         res.json(await service.searchGroup(searchDto));
       } catch (e: unknown) {
         this.sendError(res, e);

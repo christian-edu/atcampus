@@ -9,7 +9,7 @@ export type searchResult = {
   };
 };
 export interface IGroupService {
-  fetchAllGroups(): Promise<GroupOutDto[]>;
+  fetchAllGroups(groupName?: string): Promise<GroupOutDto[]>;
 
   addGroup(group: GroupInDto, adminUuid: string): Promise<GroupOutDto>;
 
@@ -25,5 +25,8 @@ export interface IGroupService {
 
   deleteGroup(group: string): Promise<boolean>;
 
-  searchGroup(searchDto: CriteriaDto): Promise<GroupOutDto[] | searchResult>;
+  searchGroup(
+    searchDto: CriteriaDto,
+    groupName?: string
+  ): Promise<GroupOutDto[] | searchResult>;
 }
