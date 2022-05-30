@@ -99,8 +99,6 @@ export function GroupCriteria({
     // DONT WORK
     if (searchGroup && groupResult !== undefined) {
       // since response is 203 no content, it will be undefined
-      console.log("Search results");
-      console.log(groupResult);
 
       // We know we searched for group
       navigate("/searchGroup/searchGroupResults", { state: { groupResult } });
@@ -112,8 +110,6 @@ export function GroupCriteria({
   }, [groupResult]);
 
   async function searchForGroup() {
-    console.log("UR URL IS");
-    console.log(fetchLink);
     if (patchGroup) {
       // sjekker om brukeren vil oppdatere valget sitt, eller bruke samme verdi som var fra før for kriterier
       if (isPrivate === undefined) {
@@ -186,21 +182,8 @@ export function GroupCriteria({
       }
     } else if (searchGroup) {
       // Here we search for the group
-
-      console.log("Search criteria: ");
-      console.log({
-        language,
-        size,
-        gradeGoal,
-        workFrequency,
-        workType,
-        place,
-        school,
-        subject,
-        groupName,
-        isPrivate,
-      });
-
+      console.log("searched for group named");
+      console.log(groupName);
       const res = await fetch(fetchLink, {
         method: "POST",
         headers: {

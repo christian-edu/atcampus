@@ -11,9 +11,6 @@ import React from "react";
 const GroupCard = ({ group, onClick, match, search, score }) => {
   // Group Card component
 
-  console.log("score");
-  console.log(score);
-
   if (score === 0) {
     score = "ingen ";
   }
