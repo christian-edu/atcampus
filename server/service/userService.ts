@@ -120,10 +120,7 @@ export default class UserService implements IUserService {
     let users: UserEntity[];
     try {
       users = await this.userRepo.find({
-        where: [
-          { userName: Like(`%${userName}%`) },
-          { email: Like(`%${email}%`) },
-        ],
+        where: [{ userName: Like(`%${userName}%`) }, { email: email }],
       });
     } catch (e) {
       if (queryFailedGuard(e)) {
