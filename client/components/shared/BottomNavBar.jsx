@@ -16,12 +16,9 @@ const BottomNavBar = () => {
 
   return (
     <div>
-      {/* Render modal */}
-      {modalIsVisible && (
-        <Modal onClick={toggleProfileMenu}>
-          <ProfileMenu onClick={toggleProfileMenu} />
-        </Modal>
-      )}
+      <Modal show={modalIsVisible} onClick={toggleProfileMenu}>
+        <ProfileMenu onClick={toggleProfileMenu} />
+      </Modal>
       <div className='flex justify-between px-6 pt-4 pb-6 sm:justify-center sm:gap-20 fixed inset-x-0 bottom-0 bg-purple-5 outline outline-1 outline-dark-5 text-sm font-semibold text-dark-1 lg:hidden'>
         {bottomNavBarMenu.map(({ title, path, Icon }) => {
           if (title === 'Profil')

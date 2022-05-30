@@ -1,16 +1,18 @@
 import { ChevronRightIcon } from '@heroicons/react/solid';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
 import { routes } from '../../services/routes';
+import { useContext, useEffect, useState } from 'react';
+import { UserGroupsContext } from '../../store/UserGroupsContext';
 
 const Breadcrumbs = () => {
-  // Component for breadcrumbs
-  // WIP
+  const { getGroupById } = useContext(UserGroupsContext);
 
-  const location = useLocation();
+  const params = useParams();
 
-  console.log(location.state);
-  const breadcrumbs = useBreadcrumbs(routes(location));
+  const group = getGroupById(params.id);
+
+  const breadcrumbs = useBreadcrumbs(routes(group?.name));
 
   return (
     <ul className='flex'>

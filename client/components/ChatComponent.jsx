@@ -5,7 +5,7 @@ import Loading from "./shared/Loading";
 
 export function ChatComponent({ groupId }) {
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
   // Gjør fetch-kall til api/v1/chat for å hente gamle meldinger.
 
@@ -26,7 +26,7 @@ export function ChatComponent({ groupId }) {
       }
     };
     websocket.onopen = (event) => {
-      console.info("Connected to web sockets");
+      console.info('Connected to web sockets');
     };
 
     websocket.onmessage = (event) => {
@@ -84,33 +84,33 @@ export function ChatComponent({ groupId }) {
   function handleSendMessage(event) {
     event.preventDefault();
     ws.send(JSON.stringify({ message }));
-    setMessage("");
+    setMessage('');
   }
 
   function parseMessages(messages) {
     const dateFormat = {
-      month: "numeric",
-      year: "numeric",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
+      month: 'numeric',
+      year: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
     };
-    const now = new Date().toLocaleDateString("nb-NO", dateFormat);
+    const now = new Date().toLocaleDateString('nb-NO', dateFormat);
     return messages.map((message) => {
       const messageTime = new Date(message.timestamp).toLocaleDateString(
-        "nb-NO",
+        'nb-NO',
         dateFormat
       );
       if (message.message) {
         return (
-          <p key={messages.indexOf(message)} className={"chat-message"}>
+          <p key={messages.indexOf(message)} className={'chat-message'}>
             {`[${messageTime}] `} {message.userName}: {message.message}
           </p>
         );
       } else if (message.server) {
         return (
-          <p key={messages.indexOf(message)} className={"server-message"}>
+          <p key={messages.indexOf(message)} className={'server-message'}>
             {`[${now}] `} {message.server}
           </p>
         );
@@ -124,14 +124,14 @@ export function ChatComponent({ groupId }) {
         {parseMessages(messages)}
         <div ref={messagesEndRef} />
       </div>
-      <div id="chat-input" className={"flex w-full space-x-10"}>
+      <div id='chat-input' className={'flex w-full space-x-10'}>
         <label>
           New message:
           <input
             className={
-              "flex w-full outline outline-1 outline-dark-3 rounded text-dark-3"
+              'flex w-full outline outline-1 outline-dark-3 rounded text-dark-3'
             }
-            type="text"
+            type='text'
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
@@ -139,7 +139,7 @@ export function ChatComponent({ groupId }) {
         <button
           onClick={(e) => handleSendMessage(e)}
           className={
-            "flex flex-row gap-1 p-2 outline outline-1 outline-dark-3 rounded text-dark-3 hover:bg-white"
+            'flex flex-row gap-1 p-2 outline outline-1 outline-dark-3 rounded text-dark-3 hover:bg-white'
           }
         >
           Send!

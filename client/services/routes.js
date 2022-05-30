@@ -1,4 +1,4 @@
-export const routes = (location) => [
+export const routes = (group) => [
   {
     path: '/',
     breadcrumb: 'Grupper',
@@ -8,12 +8,16 @@ export const routes = (location) => [
     breadcrumb: null,
   },
   {
-    path: '/groups/specific',
-    breadcrumb: location.state?.group?.name,
+    path: '/groups/:id',
+    breadcrumb: group,
   },
   {
-    path: '/groups/specific/members',
+    path: '/groups/:id/members',
     breadcrumb: 'Medlemmer',
+  },
+  {
+    path: '/groups/:id/profile',
+    breadcrumb: 'Endre gruppeprofil',
   },
   {
     path: '/groups/specific/members/searchUser',
@@ -22,10 +26,6 @@ export const routes = (location) => [
   {
     path: '/groups/specific/groupCriteria',
     breadcrumb: 'Gruppekriterier',
-  },
-  {
-    path: '/groups/specific/editProfile',
-    breadcrumb: 'Rediger profil',
   },
   {
     path: '/groups/createGroup',

@@ -4,6 +4,8 @@ import Image from "./Image";
 const SearchRequest = ({ group, user, onClick }) => {
   // Popup that shows when clicking on a user or group while searching for user or group by name
 
+  console.log(user);
+
   return (
     <div className="flex flex-col items-center bg-white p-8 rounded text-center shadow-xl">
       <Image group className="h-20 mb-4 -mt-16" />
