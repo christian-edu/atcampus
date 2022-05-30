@@ -35,7 +35,7 @@ export function EditGroupProfile() {
         body: JSON.stringify({ groupName, file, rules, uuid: params.id }),
       });
       if (!res.ok) throw new Error('Det oppsto en feil');
-      await fetchData();
+      fetchData();
       setMessage('Endringer lagret');
     } catch (err) {
       setMessage(err.message);

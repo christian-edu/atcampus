@@ -5,6 +5,7 @@ import Breadcrumbs from './shared/Breadcrumbs';
 import { useContext } from 'react';
 import { UserGroupsContext } from '../store/UserGroupsContext';
 import { motion } from 'framer-motion';
+import { UserInfoContext } from '../App';
 
 const GroupMembers = () => {
   const params = useParams();

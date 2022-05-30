@@ -12,8 +12,12 @@ export const routes = (group) => [
     breadcrumb: group,
   },
   {
-    path: '/groups/specific/members',
+    path: '/groups/:id/members',
     breadcrumb: 'Medlemmer',
+  },
+  {
+    path: '/groups/:id/profile',
+    breadcrumb: 'Endre gruppeprofil',
   },
   {
     path: '/groups/specific/members/searchUser',
@@ -22,10 +26,6 @@ export const routes = (group) => [
   {
     path: '/groups/specific/groupCriteria',
     breadcrumb: 'Gruppekriterier',
-  },
-  {
-    path: '/groups/:id/profile',
-    breadcrumb: 'Endre gruppeprofil',
   },
   {
     path: '/groups/createGroup',
