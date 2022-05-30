@@ -17,7 +17,11 @@ const SearchGroupResults = () => {
       <h2 className="font-bold text-xl mb-8">Søkeresultater</h2>
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {result.map((group) => (
-          <GroupCard match={true} group={group[1].group} />
+          <GroupCard
+            match={true}
+            group={group[1].group}
+            score={group[1].score}
+          />
         ))}
       </ul>
     </div>
