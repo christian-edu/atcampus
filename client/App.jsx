@@ -50,8 +50,8 @@ const App = () => {
                   <Route path='/login' element={<Login />} />
                   <Route path='/' element={<GroupLinks />} />
                   <Route
-                    path='/searchGroup'
-                    element={<SearchGroup context={UserInfoContext} />}
+                    path={"/searchGroup"}
+                    element={<GroupCriteriaPage lookingForGroup={true} />}
                   />
                   <Route
                     path='/searchGroup/searchGroupResults'
