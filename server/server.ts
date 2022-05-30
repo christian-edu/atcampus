@@ -3,7 +3,6 @@ import { AddressInfo } from "net";
 import dotenv from "dotenv";
 import { UserDto } from "./dto/userDto";
 import UserService from "./service/userService";
-import { SchoolEntity } from "./entity/SchoolEntity";
 import { repositories } from "./repo/repositories";
 import GroupService from "./service/groupService";
 import GroupRouter from "./controller/groupRouter";
@@ -17,7 +16,6 @@ import AuthService from "./service/authService";
 import UserRouter from "./controller/userRouter";
 import Logger from "./util/logger";
 import ChatRouter from "./controller/chatRouter";
-import exp from "constants";
 
 dotenv.config();
 const app = express();
@@ -51,7 +49,8 @@ repo
         repos.schoolRepo,
         repos.subjectRepo,
         repos.userRepo,
-        repos.criteriaRepo
+        repos.criteriaRepo,
+        repos.chatMessageRepo
       );
       const groupRoutes = new GroupRouter(groupService, express.Router());
       const authRouter = new AuthRouter(

@@ -1,5 +1,5 @@
 import { IGroupService, searchResult } from "./IGroupService";
-import { DeleteResult, QueryFailedError, Repository } from "typeorm";
+import { QueryFailedError, Repository } from "typeorm";
 import { GroupEntity } from "../entity/GroupEntity";
 import { SubjectEntity } from "../entity/SubjectEntity";
 import { UserEntity } from "../entity/UserEntity";
@@ -21,6 +21,7 @@ import HttpException, { queryFailedGuard } from "../util/errorUtils";
 import { CriteriaEntity } from "../entity/CriteriaEntity";
 import { GradeGoal } from "../entity/enums/GradeGoal";
 import Logger from "../util/logger";
+import { ChatMessageEntity } from "../entity/ChatMessageEntity";
 
 export default class GroupService implements IGroupService {
   constructor(
@@ -29,7 +30,8 @@ export default class GroupService implements IGroupService {
     private schoolRepo: Repository<SchoolEntity>,
     private subjectRepo: Repository<SubjectEntity>,
     private userRepo: Repository<UserEntity>,
-    private criteriaRepo: Repository<CriteriaEntity>
+    private criteriaRepo: Repository<CriteriaEntity>,
+    private chatMessageRepo: Repository<ChatMessageEntity>
   ) {}
 
   // Testet manuelt, virker som den skal
@@ -330,6 +332,18 @@ export default class GroupService implements IGroupService {
         return group;
       })
       .then(async (group) => {
+        await this.chatMessageRepo
+          .delete({
+            group: { uuid: group.uuid },
+          })
+          .then((delRes) => {
+            if (!delRes)
+              Logger.info("Chat Message Repo", "No chat messages to delete");
+            Logger.info(
+              "Chat Message Repo",
+              `${delRes.affected} message(s) deleted`
+            );
+          });
         const users = await group.users;
         if (!users)
           throw new HttpException(

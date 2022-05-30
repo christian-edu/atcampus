@@ -22,6 +22,7 @@ import { GradeGoal } from "../entity/enums/GradeGoal";
 import { WorkFrequency } from "../entity/enums/WorkFrequency";
 import { MaxSize } from "../entity/enums/MaxSize";
 import { WorkType } from "../entity/enums/WorkType";
+import { ChatMessageEntity } from "../entity/ChatMessageEntity";
 
 describe("Tests for GroupService", () => {
   let fakeGroupRepo: Repository<GroupEntity>;
@@ -30,6 +31,7 @@ describe("Tests for GroupService", () => {
   let fakeSubjectRepo: Repository<SubjectEntity>;
   let fakeUserRepo: Repository<UserEntity>;
   let fakeCriteriaRepo: Repository<CriteriaEntity>;
+  let fakeChatMessageRepo: Repository<ChatMessageEntity>;
   let groupService: GroupService;
 
   // jest.mock("../dto/utils/groupMappers");
@@ -40,13 +42,15 @@ describe("Tests for GroupService", () => {
     fakeSubjectRepo = createMock<Repository<SubjectEntity>>();
     fakeUserRepo = createMock<Repository<UserEntity>>();
     fakeCriteriaRepo = createMock<Repository<CriteriaEntity>>();
+    fakeChatMessageRepo = createMock<Repository<ChatMessageEntity>>();
     groupService = new GroupService(
       fakeGroupRepo,
       fakeGroupMemberRepo,
       fakeSchoolRepo,
       fakeSubjectRepo,
       fakeUserRepo,
-      fakeCriteriaRepo
+      fakeCriteriaRepo,
+      fakeChatMessageRepo
     );
   });
 
@@ -166,6 +170,9 @@ describe("Tests for GroupService", () => {
     const mockFindGroup: jest.Mock = On(fakeGroupRepo).get(
       method((repo) => repo.findOneBy)
     );
+    const mockDeleteChatMessages: jest.Mock = On(fakeChatMessageRepo).get(
+      method((repo) => repo.delete)
+    );
     mockDeleteGroup.mockImplementation(async () => {
       const result = new DeleteResult();
       result.affected = 1;
@@ -176,6 +183,11 @@ describe("Tests for GroupService", () => {
     });
     mockFindGroup.mockImplementation(async () => {
       return { users: ["x", "y"] };
+    });
+    mockDeleteChatMessages.mockImplementation(async () => {
+      const result = new DeleteResult();
+      result.affected = 1;
+      return result;
     });
 
     const res = await groupService.deleteGroup("1");
