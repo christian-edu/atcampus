@@ -1,6 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import GroupLinks from './components/GroupLinks';
-import SearchGroup from './components/SearchGroup';
 import GroupMembers from './components/GroupMembers';
 import Questions from './components/Questions';
 import ProfileMenu from './components/shared/ProfileMenu';
@@ -22,6 +21,7 @@ import { fetchJSON } from './fetchJSON';
 import React, { useContext, useEffect } from 'react';
 import { GroupChat } from './components/GroupChat';
 import { UserGroupsContext } from './store/UserGroupsContext';
+import { SearchUser } from './components/SearchUser';
 
 export const UserInfoContext = React.createContext();
 
@@ -50,7 +50,7 @@ const App = () => {
                   <Route path='/login' element={<Login />} />
                   <Route path='/' element={<GroupLinks />} />
                   <Route
-                    path={"/searchGroup"}
+                    path={'/searchGroup'}
                     element={<GroupCriteriaPage lookingForGroup={true} />}
                   />
                   <Route
