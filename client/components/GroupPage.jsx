@@ -32,8 +32,8 @@ const GroupPage = () => {
       <Breadcrumbs />
       <div className='bg-white p-6 max-w-xl mx-auto rounded-standard'>
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0}}
+          animate={{ opacity: 1}}
         >
           <div className='flex flex-row gap-4'>
             <Image className='h-16' group />
