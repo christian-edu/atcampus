@@ -13,7 +13,11 @@ const GroupMembers = () => {
 
   const group = getGroupById(params.id);
 
-  console.log(group);
+  const user = useContext(UserInfoContext);
+
+  const isAdmin = group?.groupMembers.find(
+    (m) => m.user_uuid === user.uuid
+  )?.isAdmin;
 
   return (
     <>
@@ -27,7 +31,7 @@ const GroupMembers = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
             >
-              <UserCard edit={true} user={member} />
+              <UserCard edit={isAdmin} user={member} />
             </motion.li>
           ))}
         </ul>

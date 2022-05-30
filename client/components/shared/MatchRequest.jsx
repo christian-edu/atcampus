@@ -4,22 +4,18 @@ import Image from './Image';
 const MatchRequest = ({ group, user, onClick }) => {
   // Popup som vises når man søker etter gruppe basert på kriterer
 
-  console.log('In the match request');
-
   const { criteria } = group || user;
 
   const criterias = {
     Skolenavn: criteria.school,
     Sted: criteria.location,
     Språk: criteria.language,
-    Fag: criteria.subject.join(', '),
+    Fag: criteria.subjects.join(', '),
     Gruppestørrelse: criteria.maxSize,
     Karaktermål: criteria.gradeGoal,
     Metode: criteria.workType,
     Arbeidsfrekvens: criteria.workFrequency,
   };
-
-  console.log(criterias);
 
   return (
     <div className='flex flex-col items-center bg-white text-dark-1 p-8 rounded text-center shadow-xl'>

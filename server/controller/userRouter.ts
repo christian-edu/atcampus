@@ -2,9 +2,10 @@ import UserService from "../service/userService";
 import { IRouter } from "express";
 import { ServerRouter } from "./serverRouter";
 import { UserDto } from "../dto/userDto";
+import { IUserService } from "../service/IUserService";
 
 export default class UserRouter extends ServerRouter {
-  constructor(private userService: UserService, private router: IRouter) {
+  constructor(private userService: IUserService, private router: IRouter) {
     super();
   }
 
@@ -28,7 +29,17 @@ export default class UserRouter extends ServerRouter {
         this.sendError(res, e);
       }
     });
+    this.router.post("/search", async (req, res) => {
+      const { userName, email } = req?.body;
 
+      try {
+        res.json(
+          await this.userService.findUserByEmailOrUserName({ userName, email })
+        );
+      } catch (e) {
+        this.sendError(res, e);
+      }
+    });
     this.router.get("/groups", async (req, res) => {
       try {
         const groups = await this.userService.fetchGroupsByUserId(req.userId);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fetchJSON } from "../fetchJSON";
 import { useLoader } from "../useLoader";
 import Loading from "./shared/Loading";
@@ -14,9 +14,17 @@ export function ChatComponent({ groupId }) {
   const [ws, setWs] = useState(null);
 
   async function connectSocket() {
-    const websocket = await new WebSocket(url);
+    let websocket = await new WebSocket(url);
     setWs(websocket);
-
+    let wsClosed = false;
+    window.onpopstate = () => {
+      if (!wsClosed) {
+        wsClosed = true;
+        websocket.close();
+        setWs(null);
+        websocket = null;
+      }
+    };
     websocket.onopen = (event) => {
       console.info('Connected to web sockets');
     };
@@ -34,25 +42,37 @@ export function ChatComponent({ groupId }) {
       }
     };
     websocket.onclose = function (e) {
-      console.log(
-        'Socket is closed. Reconnect will be attempted in 1 second.',
-        e
-      );
-      setTimeout(function () {
-        connectSocket();
-      }, 1000);
+      if (!wsClosed) {
+        console.log(
+          "Socket is closed. Reconnect will be attempted in 1 second.",
+          e
+        );
+        setTimeout(function () {
+          connectSocket();
+        }, 1000);
+      }
     };
 
     websocket.onerror = function (err) {
-      console.error('Socket encountered error: ', err, 'Closing socket');
+      // TODO: Må legge inn en sjekk her for om man har blitt logget ut
+      console.error("Socket encountered error: ", err, "Closing socket");
       websocket.close();
     };
   }
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   useEffect(async () => {
     try {
       const data = await fetchJSON("/api/v1/chat?group_id=" + groupId);
-      if (data !== {}) setMessages(data);
+      if (data !== null) setMessages(data);
       else setMessages([]);
     } catch (error) {
       return <div>Error loading messages: {error?.message}</div>;
@@ -99,9 +119,10 @@ export function ChatComponent({ groupId }) {
   }
 
   return (
-    <div id='chat-container'>
-      <div id='chat-messages' className='w-full max-h-[32rem] overflow-scroll'>
+    <div id="chat-container">
+      <div id="chat-messages" className="w-full max-h-[20rem] overflow-scroll">
         {parseMessages(messages)}
+        <div ref={messagesEndRef} />
       </div>
       <div id='chat-input' className={'flex w-full space-x-10'}>
         <label>

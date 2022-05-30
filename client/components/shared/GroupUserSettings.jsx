@@ -12,12 +12,12 @@ const GroupUserSettings = ({ user }) => {
     console.log('Admin roles given to ' + user.user_name);
     //Send a request to make the user admin
   }
-
+  console.log(user);
   // Popup som vises når man trykker på et gruppemedlem
 
   return (
     <div className='flex flex-col items-center bg-white text-dark-1 p-8 rounded text-center shadow-xl'>
-      <Image user className='h-20 mb-4 -mt-16' />
+      <Image group className='h-20 mb-4 -mt-16' />
       <h2 className='font-bold text-lg w-full border-b-2 pb-4 border-purple-1 mb-5'>
         {user.user_name}
       </h2>

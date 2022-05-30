@@ -151,13 +151,14 @@ export function GroupCriteria({
       }
     } else if (createGroup) {
       if (
-        language === 'velg' ||
-        size === 'velg' ||
-        gradeGoal === 'velg' ||
-        workFrequency === 'velg' ||
-        workType === 'velg' ||
-        place === 'velg' ||
-        school === 'velg' ||
+        !groupName ||
+        language === "velg" ||
+        size === "velg" ||
+        gradeGoal === "velg" ||
+        workFrequency === "velg" ||
+        workType === "velg" ||
+        place === "velg" ||
+        school === "velg" ||
         subject[0].subject.length === 0
       ) {
         setError('Fyll inn alle feltene');
