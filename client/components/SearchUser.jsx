@@ -53,7 +53,7 @@ const SearchUser = () => {
 
   return (
     <>
-    <Breadcrumbs />
+      <Breadcrumbs />
       <div className='grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard max-w-2xl mx-auto mb-6'>
         <div>
           <h2 className='text-xl font-bold'>Legg til medlem</h2>
