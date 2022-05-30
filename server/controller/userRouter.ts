@@ -2,9 +2,10 @@ import UserService from "../service/userService";
 import { IRouter } from "express";
 import { ServerRouter } from "./serverRouter";
 import { UserDto } from "../dto/userDto";
+import { IUserService } from "../service/IUserService";
 
 export default class UserRouter extends ServerRouter {
-  constructor(private userService: UserService, private router: IRouter) {
+  constructor(private userService: IUserService, private router: IRouter) {
     super();
   }
 

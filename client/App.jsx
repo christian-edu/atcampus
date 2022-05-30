@@ -1,6 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import GroupLinks from "./components/GroupLinks";
-import SearchGroup from "./components/SearchGroup";
 import GroupMembers from "./components/GroupMembers";
 import Questions from "./components/Questions";
 import ProfileMenu from "./components/shared/ProfileMenu";
@@ -50,7 +49,7 @@ const App = () => {
                   <Route path={"/login"} element={<Login />} />
                   <Route
                     path={"/searchGroup"}
-                    element={<SearchGroup context={UserInfoContext} />}
+                    element={<GroupCriteriaPage lookingForGroup={true} />}
                   />
                   <Route
                     path={"/searchGroup/searchGroupResults"}
