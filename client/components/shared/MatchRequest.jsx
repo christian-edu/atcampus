@@ -1,8 +1,8 @@
-import { XIcon, CheckIcon } from "@heroicons/react/solid";
-import Image from "./Image";
-import React from "react";
-import { UserInfoContext } from "../../App";
-import { useNavigate } from "react-router-dom";
+import { XIcon, CheckIcon } from '@heroicons/react/solid';
+import Image from './Image';
+import React from 'react';
+import { UserInfoContext } from '../../App';
+import { useNavigate } from 'react-router-dom';
 
 const MatchRequest = ({ group, user, onClick }) => {
   // Popup som vises når man søker etter gruppe basert på kriterer
@@ -23,17 +23,17 @@ const MatchRequest = ({ group, user, onClick }) => {
     Arbeidsfrekvens: criteria.workFrequency,
   };
   async function joinGroup() {
-    const res = await fetch("/api/v1/groups/member", {
-      method: "POST",
+    const res = await fetch('/api/v1/groups/member', {
+      method: 'POST',
       headers: {
-        "content-type": "application/json",
+        'content-type': 'application/json',
       },
       body: JSON.stringify({
         userId: userInfo.uuid,
         groupId: group.uuid,
       }),
     });
-    navigate("/");
+    navigate('/');
   }
 
   return (
@@ -67,10 +67,10 @@ const MatchRequest = ({ group, user, onClick }) => {
           <XIcon className='h-6 w-6' />
         </button>
         <button
-          className="bg-gradient-left text-white p-2 rounded hover:bg-purple-2"
+          className='bg-gradient-left text-white p-2 rounded hover:bg-purple-2'
           onClick={joinGroup}
         >
-          <CheckIcon className="h-6 w-6" />
+          <CheckIcon className='h-6 w-6' />
         </button>
       </div>
     </div>

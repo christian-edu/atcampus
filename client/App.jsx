@@ -7,9 +7,7 @@ import Footer from './components/shared/Footer';
 import TopNavBar from './components/shared/TopNavBar';
 import BottomNavBar from './components/shared/BottomNavBar';
 import GroupPage from './components/GroupPage';
-import SearchUser from './components/SearchUser';
 import SearchGroupResults from './components/SearchGroupResults';
-import SearchUserResults from './components/SearchUserResults';
 import GroupCriteriaPage from './components/GroupCriteriaPage';
 import LeftNavBar from './components/shared/LeftNavBar';
 import { EditGroupProfile } from './components/EditGroupProfile';
@@ -21,7 +19,7 @@ import { fetchJSON } from './fetchJSON';
 import React, { useContext, useEffect } from 'react';
 import { GroupChat } from './components/GroupChat';
 import { UserGroupsContext } from './store/UserGroupsContext';
-import { SearchUser } from './components/SearchUser';
+import SearchUser from './components/SearchUser';
 
 export const UserInfoContext = React.createContext();
 
@@ -76,13 +74,13 @@ const App = () => {
                     element={<EditGroupProfile />}
                   />
                   <Route
-                    path='/group/members/searchUser'
+                    path='/groups/:id/members/search'
                     element={<SearchUser />}
                   />
-                  <Route
+                  {/* <Route
                     path='/group/members/searchUser/searchUserResults'
                     element={<SearchUserResults />}
-                  />
+                  /> */}
                   <Route path='/questions' element={<Questions />} />
                   <Route path='/profile' element={<ProfileMenu />} />
                 </Routes>

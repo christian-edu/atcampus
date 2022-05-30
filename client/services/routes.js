@@ -20,7 +20,7 @@ export const routes = (group) => [
     breadcrumb: 'Endre gruppeprofil',
   },
   {
-    path: '/groups/specific/members/searchUser',
+    path: '/groups/:id/members/search',
     breadcrumb: 'Legg til medlem',
   },
   {

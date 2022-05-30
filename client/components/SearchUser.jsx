@@ -1,16 +1,15 @@
-import { useCallback, useEffect, useState } from "react";
-import Button from "./shared/Button";
-import { GroupCriteria } from "./shared/GroupCriteria";
-import UserCard from "./shared/UserCard";
-import { useLoader } from "../useLoader";
-import { fetchJSON } from "../fetchJSON";
+import { useCallback, useEffect, useState } from 'react';
+import Button from './shared/Button';
+import { GroupCriteria } from './shared/GroupCriteria';
+import UserCard from './shared/UserCard';
+import Breadcrumbs from './shared/Breadcrumbs';
 
 const SearchUser = () => {
   // Needs work
 
   const [user, setUser] = useState([]);
-  const [email, setEmail] = useState("");
-  const [userName, setUsername] = useState("");
+  const [email, setEmail] = useState('');
+  const [userName, setUsername] = useState('');
   const [showEmail, setShowEmail] = useState(false);
   const [error, setError] = useState();
 
@@ -19,10 +18,10 @@ const SearchUser = () => {
   async function search() {
     setUser([]);
     setError(undefined);
-    const res = await fetch("/api/v1/user/search", {
-      method: "POST",
+    const res = await fetch('/api/v1/user/search', {
+      method: 'POST',
       headers: {
-        "content-type": "application/json",
+        'content-type': 'application/json',
       },
       body: JSON.stringify({ userName, email }),
     });
@@ -30,10 +29,8 @@ const SearchUser = () => {
     if (res.status === 200) {
       setUser(await res.json());
     } else if (res.status === 204) {
-      setError("Ingen brukere funnet");
+      setError('Ingen brukere funnet');
     }
-
-    /*setUser(await res.json());*/
   }
 
   function setInput(e, email) {
@@ -47,53 +44,54 @@ const SearchUser = () => {
   function showEmailField(showIt) {
     if (showIt) {
       setShowEmail(true);
-      setUsername("");
+      setUsername('');
     } else {
       setShowEmail(false);
-      setEmail("");
+      setEmail('');
     }
   }
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard max-w-2xl mx-auto mb-6">
+    <Breadcrumbs />
+      <div className='grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard max-w-2xl mx-auto mb-6'>
         <div>
-          <h2 className="text-xl font-bold">Legg til medlem</h2>
+          <h2 className='text-xl font-bold'>Legg til medlem</h2>
         </div>
         <div>
           <div>
             <input
-              type="radio"
-              name={"emailOrName"}
-              value={"mail"}
+              type='radio'
+              name={'emailOrName'}
+              value={'mail'}
               onClick={(event) => showEmailField(true)}
             />
-            <label htmlFor="email">Søk etter epost</label>
+            <label htmlFor='email'>Søk etter epost</label>
           </div>
           <div>
             <input
-              type="radio"
-              name={"emailOrName"}
-              value={"name"}
+              type='radio'
+              name={'emailOrName'}
+              value={'name'}
               defaultChecked
               onClick={(event) => showEmailField(false)}
             />
-            <label htmlFor="userName">Søk etter brukernavn</label>
+            <label htmlFor='userName'>Søk etter brukernavn</label>
           </div>
           {showEmail ? (
             <input
-              type="email"
-              id="email"
-              placeholder="eks. student@kristiania.no"
-              className="w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2"
+              type='email'
+              id='email'
+              placeholder='eks. student@kristiania.no'
+              className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'
               onChange={(event) => setInput(event, true)}
             />
           ) : (
             <input
-              type="text"
-              id="userName"
-              placeholder="eks. Torleif Jakobsen"
-              className="w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2"
+              type='text'
+              id='userName'
+              placeholder='eks. Torleif Jakobsen'
+              className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'
               onChange={(event) => setInput(event, false)}
             />
           )}
