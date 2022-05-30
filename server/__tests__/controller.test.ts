@@ -1,6 +1,6 @@
 import GroupRouter from "../controller/groupRouter";
 import supertest, { SuperAgentTest } from "supertest";
-import express, { Express, Router } from "express";
+import express, { Express, NextFunction, Router } from "express";
 import {
   groupEntitiesWithUsers,
   userEntitiesWithGroups,
@@ -15,6 +15,9 @@ import { GroupDto } from "../dto/groupDto";
 import { SearchDTO } from "../dto/searchDTO";
 import { Server } from "http";
 import { UserOutDto } from "../dto/UserInOutDto";
+import { IUserService } from "../service/IUserService";
+import UserRouter from "../controller/userRouter";
+import { UserDto } from "../dto/userDto";
 
 describe("Tests for group root paths in controller", () => {
   let mockGroupService: IGroupService;
@@ -350,5 +353,46 @@ describe("Search route", () => {
       ?.post(`/api/v1/groups/search`)
       .send(JSON.stringify(searchDto))
       .expect(500);
+  });
+});
+
+describe("Tests for user", () => {
+  let mockUserService: IUserService;
+  let userRouter: UserRouter | null;
+  let agent: SuperAgentTest | null;
+  let app: Express | null;
+  let server: Server | null;
+  beforeEach((done) => {
+    mockUserService = createMock<IUserService>();
+    userRouter = new UserRouter(mockUserService, Router());
+    app = express();
+    server = app.listen(done);
+    agent = supertest.agent(app);
+    app.use(express.json());
+    app.use((req: any, res: any, next: any) => {
+      // @ts-ignore
+      req?.userId = 1;
+      next();
+    });
+    app.use("/api/v1/user", userRouter.fetchRoutes());
+  });
+
+  afterEach(() => {
+    server?.close();
+    userRouter = null;
+    app = null;
+    server = null;
+    agent = null;
+  });
+
+  it("Should return a user", async () => {
+    const fakeGetUser: jest.Mock = On(mockUserService).get(
+      method((method) => method.findUserById)
+    );
+    fakeGetUser.mockImplementation(
+      async () => new UserOutDto("1", "user", "user@user")
+    );
+    await agent?.get("/api/v1/user").expect(200);
+    expect(fakeGetUser).toHaveBeenCalledWith(1);
   });
 });
