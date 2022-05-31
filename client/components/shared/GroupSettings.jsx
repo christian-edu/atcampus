@@ -3,23 +3,15 @@ import {
   ChevronRightIcon,
   UserAddIcon,
   PencilAltIcon,
-  KeyIcon,
   ClipboardListIcon,
   TrashIcon,
 } from '@heroicons/react/solid';
 import { LogoutIcon } from '@heroicons/react/outline';
-import log from 'tailwindcss/lib/util/log';
-import { useContext, useState } from 'react';
 import { UserInfoContext } from '../../App';
 import React from 'react';
 
-const GroupSettings = (props) => {
-  // Popup for group settings
-
-  const group = props.group;
+const GroupSettings = ({ group, onClick }) => {
   const navigate = useNavigate();
-
-  const [groupId, setGroupId] = useState(group.uuid);
 
   const user = React.useContext(UserInfoContext);
 
@@ -30,7 +22,7 @@ const GroupSettings = (props) => {
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        groupId,
+        groupId: group.uuid,
       }),
     });
   }
@@ -44,7 +36,7 @@ const GroupSettings = (props) => {
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        groupId,
+        groupId: group.uuid,
         userId: user.uuid,
       }),
     });
@@ -54,7 +46,7 @@ const GroupSettings = (props) => {
     <div>
       <div className='flex justify-end'>
         <button
-          onClick={props.onClick}
+          onClick={onClick}
           className='text-white px-4 py-2 mb-3 mr-3 outline outline-white text-center bg-purple-1 rounded-full hover:bg-purple-2'
         >
           X
@@ -64,9 +56,9 @@ const GroupSettings = (props) => {
       <div className='grid grid-cols-1 bg-gradient-left w-screen text-white max-w-2xl mx-auto rounded-standard'>
         <ul className='divide-y divide-purple-4'>
           <Link
-            to='/members/search'
+            to={`/groups/${group.uuid}/members/search`}
             className='flex flex-row justify-between my-1 py-3 hover:bg-purple-2 px-4'
-            onClick={props.onClick}
+            onClick={onClick}
           >
             <li className='flex flex-row'>
               <UserAddIcon className='h-6 w-6 text-white mr-4' />
@@ -77,7 +69,7 @@ const GroupSettings = (props) => {
           <Link
             to='profile'
             className='flex flex-row justify-between my-1 py-3 hover:bg-purple-2 px-4'
-            onClick={props.onClick}
+            onClick={onClick}
           >
             <li className='flex flex-row'>
               <PencilAltIcon className='h-6 w-6 text-white mr-4' />
@@ -89,7 +81,7 @@ const GroupSettings = (props) => {
           <Link
             to='/groups/specific/groupCriteria'
             className='flex flex-row justify-between my-1 py-3 hover:bg-purple-2 px-4'
-            onClick={props.onClick}
+            onClick={onClick}
             state={{ group: group }}
           >
             <li className='flex flex-row'>
@@ -101,7 +93,7 @@ const GroupSettings = (props) => {
           <Link
             to='/'
             className='flex flex-row justify-between my-1 py-3 hover:bg-purple-2 px-4'
-            onClick={props.onClick}
+            onClick={onClick}
           >
             <li className='flex flex-row' onClick={deleteGroup}>
               <TrashIcon className='h-6 w-6 text-white mr-4' />
@@ -112,7 +104,7 @@ const GroupSettings = (props) => {
           <Link
             to='/'
             className='flex flex-row justify-between my-1 py-3 hover:bg-purple-2 px-4'
-            onClick={props.onClick}
+            onClick={onClick}
           >
             <li className='flex flex-row' onClick={leaveGroup}>
               <LogoutIcon className='h-6 w-6 text-white mr-4' />

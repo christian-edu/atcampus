@@ -16,11 +16,11 @@ const GroupLinks = () => {
 
   const { groups, loading } = useContext(UserGroupsContext);
 
+  if (loading) return <Loading className='h-screen w-screen bg-dark-6' />;
+
   if (!user) {
     return <Link to={'/login'}>Login</Link>;
   }
-
-  if (loading) return <Loading className='h-screen w-screen bg-dark-6' />;
 
   // if (error) {
   //   return (

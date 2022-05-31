@@ -1,0 +1,118 @@
+@startuml
+
+abstract class ServerRouter {
++ sendError()
++ {abstract} fetchRoutes()
+}
+
+class GroupRouter {
+- groupService
+- router
+- {static} extractGroupDtoFromRequest()
+- fetchGroupById()
+- fetchAllGroups()
+}
+
+ServerRouter <|-- GroupRouter
+
+interface IGroupService {
++ fetchAllGroups()
++ addGroup()
++ fetchGroupById()
++ deleteMember()
++ addMember()
++ fetchGroupMembers()
++ updateGroup()
++ deleteGroup()
++ searchGroup()
+}
+
+GroupRouter o.. IGroupService
+
+class GroupService {
+- groupRepo
+- groupMemberRepo
+- schoolRepo
+- subjectRepo
+- userRepo
+- criteriaRepo
+- chatMessageRepo
+- createOrFetchSubjects()
+- fetchUserAndGroup()
+- createOrFetchSubjectAndSchool()
+- createOrFetchSchool()
+- _saveGroupCriteria()
+- _saveGroupMemberEntity()
+- _saveGroupEntity()
+- _getGroupById()
+- findGroupByName()
+}
+
+IGroupService <|-- GroupService
+
+class AuthRouter {
+- authService
+- router
+}
+
+ServerRouter <|-- AuthRouter
+
+interface IAuthService {
++ authenticateUser()
+}
+
+AuthRouter o.. IAuthService
+
+class AuthService {
+- userRepo
++ {static} generateToken()
+}
+
+IAuthService <|-- AuthService
+
+class UserRouter {
+- userService
+- router
+}
+
+ServerRouter <|-- UserRouter
+
+interface IUserService {
++ addUser()
++ findUserById()
++ fetchGroupsByUserId()
++ findUserByEmailOrUserName()
+}
+
+UserRouter o.. IUserService
+
+class UserService {
+- userRepo
+- schoolRepo
+- groupRepo
+- _addUser()
+- mapUserToEntity()
+- _fetchGroupsByUserId()
+}
+
+IUserService <|-- UserService
+
+class ChatRouter {
+- chatService
+- router
+}
+
+ServerRouter <|-- ChatRouter
+
+class ChatService {
+- chatRepo
+- userRepo
+- groupRepo
++ addMessage()
++ fetchUserById()
++ getMessages()
+}
+
+ChatRouter o.. ChatService
+
+@enduml

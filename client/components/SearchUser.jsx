@@ -1,7 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from './shared/Button';
-import { GroupCriteria } from './shared/GroupCriteria';
-import UserCard from './shared/UserCard';
 import Breadcrumbs from './shared/Breadcrumbs';
 
 const SearchUser = () => {

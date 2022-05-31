@@ -45,7 +45,9 @@ const UserCard = ({ user, edit, search, match }) => {
         onClick={toggleModal}
       >
         <Image className='h-10' />
-        <h2 className='font-bold text-lg text-dark-1'>{user.user_name}</h2>
+        <h2 className='font-bold text-lg text-dark-1'>
+          {user.username || user.user_name}
+        </h2>
         <button className='ml-auto'>
           {edit && <DotsHorizontalIcon className={classes} />}
           {(search || match) && <PlusIcon className={classes} />}
