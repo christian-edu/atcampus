@@ -31,7 +31,7 @@ const GroupLinks = () => {
           Opprett gruppe
         </Button>
         <Button to="/searchGroup" className="lg:col-start-3">
-          Søk etter gruppe
+          Søk etter grupper
         </Button>
       </div>
 

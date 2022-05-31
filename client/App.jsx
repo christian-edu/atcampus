@@ -9,7 +9,7 @@ import BottomNavBar from "./components/shared/BottomNavBar";
 import GroupPage from "./components/GroupPage";
 import SearchUser from "./components/SearchUser";
 import SearchGroupResults from "./components/SearchGroupResults";
-import SearchUserResults from "./components/SearchUserResults";
+/*import SearchUserResults from "./components/SearchUserResults";*/
 import GroupCriteriaPage from "./components/GroupCriteriaPage";
 import LeftNavBar from "./components/shared/LeftNavBar";
 import { EditGroupProfile } from "./components/EditGroupProfile";
@@ -79,10 +79,10 @@ const App = () => {
                     path="/groups/specific/members/searchUser"
                     element={<SearchUser />}
                   />
-                  <Route
+                  {/*<Route
                     path="/groups/members/searchUser/searchUserResults"
                     element={<SearchUserResults />}
-                  />
+                  />*/}
                   <Route path="/questions" element={<Questions />} />
                   <Route path="/profile" element={<ProfileMenu />} />
                 </Routes>

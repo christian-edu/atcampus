@@ -40,9 +40,13 @@ const GroupMembers = () => {
         </ul>
         <div className="grid grid-cols-1 md:grid-cols-3">
           <Button
-            to="/groups/specific/members/searchUser"
+            /*to="/groups/specific/members/searchUser"*/
             className="md:col-start-2"
-            onClick={() => navigate("/")}
+            onClick={() =>
+              navigate("/groups/specific/members/searchUser", {
+                state: { group: group },
+              })
+            }
           >
             + Legg til medlem
           </Button>

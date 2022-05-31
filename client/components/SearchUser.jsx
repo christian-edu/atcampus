@@ -4,7 +4,7 @@ import { GroupCriteria } from "./shared/GroupCriteria";
 import UserCard from "./shared/UserCard";
 import { useLoader } from "../useLoader";
 import { fetchJSON } from "../fetchJSON";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useContext } from "../dist/index.d498c491";
 import { UserGroupsContext } from "../store/UserGroupsContext";
 
@@ -15,6 +15,11 @@ export const SearchUser = () => {
   const [showEmail, setShowEmail] = useState(false);
   const [error, setError] = useState();
 
+  const location = useLocation();
+  const { group } = location.state;
+
+  console.log("HERE IS UR GROUP FOR MEMBER PAGE");
+  console.log(group.uuid);
   async function search() {
     setUser([]);
     setError(undefined);
@@ -56,6 +61,8 @@ export const SearchUser = () => {
   function invite(member) {
     console.log("invited member");
     console.log(member);
+    console.log("now belongs to ");
+    console.log(group);
     // Goes back to the group page
   }
 
