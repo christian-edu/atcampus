@@ -11,11 +11,12 @@ const GroupCriteriaPage = ({ createdGroup, lookingForGroup, editGroup }) => {
 
   if (lookingForGroup) {
     return (
-      <div>
-        <h2>Søk etter gruppenavn</h2>
+      <div className="bg-white p-6 grid gap-4 rounded-standard max-w-2xl mx-auto text-dark-1">
+        <h2 className="text-xl font-bold">Søk etter gruppenavn</h2>
+        <label htmlFor='groupname' className='text-dark-1 mt-2'>Gruppenavn:</label>
         <input
           type="text"
-          className="w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2"
+          className="w-full p-2 border border-purple-3 rounded-standard bg-dark-6"
           value={groupname}
           onChange={(e) => setGroupName(e.target.value)}
         />
@@ -60,7 +61,7 @@ const GroupCriteriaPage = ({ createdGroup, lookingForGroup, editGroup }) => {
     const { group } = location.state;
 
     return (
-      <div className="bg-white p-6 text-dark-1 max-w-xl mx-auto rounded-standard">
+      <div className="bg-white text-dark-1 mx-auto rounded-standard">
         <GroupCriteria
           title={"Endre kriterier på gruppen din"}
           buttonText={"Endre kriterier"}

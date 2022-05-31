@@ -96,7 +96,7 @@ const SearchUser = () => {
             />
           )}
 
-          <button onClick={search}>Søk</button>
+          <Button onClick={search}>Søk bruker</Button>
         </div>
 
         <ul>
