@@ -3,6 +3,7 @@ import { createContext, useState } from 'react';
 export const UserGroupsContext = createContext({
   groups: [],
   loading: false,
+  error: false,
   group: {},
   fetchData: () => {},
   getGroupById: () => {},
@@ -11,14 +12,21 @@ export const UserGroupsContext = createContext({
 export function UserGroupsContextProvider({ children }) {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const fetchData = async () => {
-    setLoading(true);
-    const res = await fetch('/api/v1/user/groups');
-    const data = await res.json();
-    console.log(data);
-    setGroups(data);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const res = await fetch('/api/v1/user/groups');
+      const data = await res.json();
+      if (!res.ok)
+        throw new Error('Det oppsto en feil med å hente gruppene dine');
+      setGroups(data);
+    } catch (err) {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getGroupById = (uuid) => groups?.find((group) => group.uuid === uuid);
@@ -28,6 +36,7 @@ export function UserGroupsContextProvider({ children }) {
     loading,
     fetchData,
     getGroupById,
+    error,
   };
 
   return (

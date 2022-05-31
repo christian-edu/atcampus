@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from './Button';
+import { UserGroupsContext } from '../../store/UserGroupsContext';
 
 export function GroupCriteria({
   title,
@@ -27,6 +28,8 @@ export function GroupCriteria({
   const [isPrivate, setIsPrivate] = useState();
 
   const navigate = useNavigate();
+
+  const { fetchData } = useContext(UserGroupsContext);
 
   function addSubjectField() {
     const newField = { subject: '' };
@@ -93,7 +96,8 @@ export function GroupCriteria({
   useEffect(() => {
     if (groupResult !== undefined && createGroup) {
       const group = groupResult;
-      navigate('/group/specific', { state: { group } });
+      navigate(`/groups/${groupResult.uuid}`);
+      fetchData();
     }
 
     // DONT WORK
@@ -148,13 +152,13 @@ export function GroupCriteria({
     } else if (createGroup) {
       if (
         !groupName ||
-        language === "velg" ||
-        size === "velg" ||
-        gradeGoal === "velg" ||
-        workFrequency === "velg" ||
-        workType === "velg" ||
-        place === "velg" ||
-        school === "velg" ||
+        language === 'velg' ||
+        size === 'velg' ||
+        gradeGoal === 'velg' ||
+        workFrequency === 'velg' ||
+        workType === 'velg' ||
+        place === 'velg' ||
+        school === 'velg' ||
         subject[0].subject.length === 0
       ) {
         setError('Fyll inn alle feltene');
@@ -182,7 +186,7 @@ export function GroupCriteria({
       }
     } else if (searchGroup) {
       // Here we search for the group
-      console.log("searched for group named");
+      console.log('searched for group named');
       console.log(groupName);
       const res = await fetch(fetchLink, {
         method: 'POST',
