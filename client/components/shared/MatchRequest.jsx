@@ -37,7 +37,7 @@ const MatchRequest = ({ group, user, onClick }) => {
   }
 
   return (
-    <div className='flex flex-col items-center bg-white text-dark-1 p-8 rounded text-center shadow-xl'>
+    <div className='flex flex-col items-center bg-white text-dark-1 p-8 rounded-standard text-center shadow-xl'>
       <Image group className='h-20 mb-4 -mt-16' />
       <h2 className='font-bold text-xl w-full border-b-2 pb-4 border-purple-1'>
         {group?.name || user}

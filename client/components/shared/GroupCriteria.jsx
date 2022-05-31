@@ -209,8 +209,8 @@ export function GroupCriteria({
   }
 
   return (
-    <div className='text-dark-1'>
-      <div>
+    <div className="bg-white text-dark-1 rounded-standard">
+
         <h2 className='text-xl font-bold mb-4'>{title}</h2>
         <h4 className='text-dark-3'>Velg kriterier</h4>
         <div className='flex flex-col gap-3'>
@@ -249,7 +249,7 @@ export function GroupCriteria({
             )}
           </div>
           <div>
-            <h4 className='text-dark-1'>Sted:</h4>
+            <label htmlFor='place' className='text-dark-1'>Sted:</label>
             <input
               type='text'
               placeholder={"Eks. 'Oslo'"}
@@ -258,7 +258,7 @@ export function GroupCriteria({
             />
           </div>
           <div>
-            <h4 className='text-dark-1'>Skole:</h4>
+            <label htmlFor='school' className='text-dark-1'>Skole:</label>
             <input
               type='text'
               placeholder={"Eks. 'Høyskolen Kristiania'"}
@@ -267,7 +267,7 @@ export function GroupCriteria({
             />
           </div>
           <div>
-            <h4 className='text-dark-1'>Emner:</h4>
+            <label htmlFor='subjects' className='text-dark-1'>Emner:</label>
 
             {subject.map((subInput, index) => (
               <div key={index}>
@@ -418,7 +418,6 @@ export function GroupCriteria({
             </Button>
           </div>
         </div>
-      </div>
       {error ? <h2>{error}</h2> : <></>}
     </div>
   );
