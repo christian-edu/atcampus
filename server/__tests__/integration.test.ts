@@ -1,4 +1,3 @@
-import { IGroupService } from "../service/IGroupService";
 import express, { Router } from "express";
 import GroupRouter from "../controller/groupRouter";
 import supertest, { SuperAgentTest } from "supertest";
@@ -11,8 +10,7 @@ import { SchoolEntity } from "../entity/SchoolEntity";
 import { SubjectEntity } from "../entity/SubjectEntity";
 import { UserEntity } from "../entity/UserEntity";
 import { CriteriaEntity } from "../entity/CriteriaEntity";
-
-const app = express();
+import { ChatMessageEntity } from "../entity/ChatMessageEntity";
 
 describe("Partial integration test for controller & service", () => {
   let groupRouter: GroupRouter;
@@ -22,6 +20,7 @@ describe("Partial integration test for controller & service", () => {
   let fakeSubjectRepo: Repository<SubjectEntity>;
   let fakeUserRepo: Repository<UserEntity>;
   let fakeCriteriaRepo: Repository<CriteriaEntity>;
+  let fakeChatMessageRepo: Repository<ChatMessageEntity>;
   let groupService: GroupService;
   let agent: SuperAgentTest;
   let app;
@@ -33,13 +32,15 @@ describe("Partial integration test for controller & service", () => {
     fakeSubjectRepo = createMock<Repository<SubjectEntity>>();
     fakeUserRepo = createMock<Repository<UserEntity>>();
     fakeCriteriaRepo = createMock<Repository<CriteriaEntity>>();
+    fakeChatMessageRepo = createMock<Repository<ChatMessageEntity>>();
     groupService = new GroupService(
       fakeGroupRepo,
       fakeGroupMemberRepo,
       fakeSchoolRepo,
       fakeSubjectRepo,
       fakeUserRepo,
-      fakeCriteriaRepo
+      fakeCriteriaRepo,
+      fakeChatMessageRepo
     );
     groupRouter = new GroupRouter(groupService, Router());
     app = express();
@@ -52,7 +53,7 @@ describe("Partial integration test for controller & service", () => {
       .get("/api/v1/groups/member")
       .expect(400)
       .expect("group_id request parameter must be specified")
-      .end((err) => {
+      .end(() => {
         done();
       });
   });
