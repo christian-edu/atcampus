@@ -3,6 +3,7 @@ import Image from './Image';
 import React from 'react';
 import { UserInfoContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
+import { groupCriterias } from '../../services/criterias';
 
 const MatchRequest = ({ group, user, onClick }) => {
   // Popup som vises når man søker etter gruppe basert på kriterer
@@ -12,16 +13,7 @@ const MatchRequest = ({ group, user, onClick }) => {
   const userInfo = React.useContext(UserInfoContext);
   const navigate = useNavigate();
 
-  const criterias = {
-    Skolenavn: criteria.school,
-    Sted: criteria.location,
-    Språk: criteria.language,
-    Fag: criteria.subjects.join(', '),
-    Gruppestørrelse: criteria.maxSize,
-    Karaktermål: criteria.gradeGoal,
-    Metode: criteria.workType,
-    Arbeidsfrekvens: criteria.workFrequency,
-  };
+  const criterias = groupCriterias(criteria);
 
   async function joinGroup() {
     const res = await fetch('/api/v1/groups/member', {
