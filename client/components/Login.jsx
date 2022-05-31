@@ -21,7 +21,7 @@ export function Login() {
 
     if (res.status === 200) {
       navigate('/');
-      window.location.reload(false)
+      window.location.reload(false);
     }
     // Make more error handling, incase there is wrong password etc
   }
@@ -56,7 +56,7 @@ export function Login() {
         <div className='grid grid-cols-1 md:grid-cols-3'>
           <Button type='submit' className='md:col-start-2'>Logg inn</Button>
         </div>
-        {/* <pre>{JSON.stringify({ username, password })}</pre> */}
+        <Button type='submit'>Log inn</Button>
       </form>
     </div>
   );
