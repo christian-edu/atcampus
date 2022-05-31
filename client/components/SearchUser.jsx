@@ -4,31 +4,30 @@ import { GroupCriteria } from "./shared/GroupCriteria";
 import UserCard from "./shared/UserCard";
 import { useLoader } from "../useLoader";
 import { fetchJSON } from "../fetchJSON";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useContext } from "../dist/index.d498c491";
 import { UserGroupsContext } from "../store/UserGroupsContext";
-import Button from './shared/Button';
-import Breadcrumbs from './shared/Breadcrumbs';
+import Button from "./shared/Button";
+import Breadcrumbs from "./shared/Breadcrumbs";
 
 export const SearchUser = () => {
   const [user, setUser] = useState([]);
-  const [email, setEmail] = useState('');
-  const [userName, setUsername] = useState('');
+  const [email, setEmail] = useState("");
+  const [userName, setUsername] = useState("");
   const [showEmail, setShowEmail] = useState(false);
   const [error, setError] = useState();
+  const navigate = useNavigate();
 
   const location = useLocation();
   const { group } = location.state;
 
-  console.log("HERE IS UR GROUP FOR MEMBER PAGE");
-  console.log(group.uuid);
   async function search() {
     setUser([]);
     setError(undefined);
-    const res = await fetch('/api/v1/user/search', {
-      method: 'POST',
+    const res = await fetch("/api/v1/user/search", {
+      method: "POST",
       headers: {
-        'content-type': 'application/json',
+        "content-type": "application/json",
       },
       body: JSON.stringify({ userName, email }),
     });
@@ -36,7 +35,7 @@ export const SearchUser = () => {
     if (res.status === 200) {
       setUser(await res.json());
     } else if (res.status === 204) {
-      setError('Ingen brukere funnet');
+      setError("Ingen brukere funnet");
     }
   }
 
@@ -51,72 +50,80 @@ export const SearchUser = () => {
   function showEmailField(showIt) {
     if (showIt) {
       setShowEmail(true);
-      setUsername('');
+      setUsername("");
     } else {
       setShowEmail(false);
-      setEmail('');
+      setEmail("");
     }
   }
 
-  function invite(member) {
+  async function invite(member) {
     console.log("invited member");
-    console.log(member);
-    console.log("now belongs to ");
-    console.log(group);
+
+    const res = await fetch("/api/v1/groups/member", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ userId: member, groupId: group.uuid }),
+    });
+
     // Goes back to the group page
+    navigate("/");
   }
 
   return (
     <>
       <Breadcrumbs />
-      <div className='grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard max-w-2xl mx-auto mb-6'>
+      <div className="grid grid-cols-1 gap-4 bg-white text-dark-1 p-6 rounded-standard max-w-2xl mx-auto mb-6">
         <div>
-          <h2 className='text-xl font-bold'>Legg til medlem</h2>
+          <h2 className="text-xl font-bold">Legg til medlem</h2>
         </div>
         <div>
           <div>
             <input
-              type='radio'
-              name={'emailOrName'}
-              value={'mail'}
+              type="radio"
+              name={"emailOrName"}
+              value={"mail"}
               onClick={(event) => showEmailField(true)}
-              className='form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer'
+              className="form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
             />
-            <label htmlFor='email'>Søk etter epost</label>
+            <label htmlFor="email">Søk etter epost</label>
           </div>
           <div>
             <input
-              type='radio'
-              name={'emailOrName'}
-              value={'name'}
+              type="radio"
+              name={"emailOrName"}
+              value={"name"}
               defaultChecked
               onClick={(event) => showEmailField(false)}
-              className='form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer'
+              className="form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
             />
-            <label htmlFor='userName'>Søk etter brukernavn</label>
+            <label htmlFor="userName">Søk etter brukernavn</label>
           </div>
           {showEmail ? (
             <input
-              type='email'
-              id='email'
-              placeholder='Eks. student@kristiania.no'
-              className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2 mb-8'
+              type="email"
+              id="email"
+              placeholder="Eks. student@kristiania.no"
+              className="w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2 mb-8"
               onChange={(event) => setInput(event, true)}
             />
           ) : (
             <input
-              type='text'
-              id='userName'
-              placeholder='Eks. Torleif Jakobsen'
-              className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2 mb-8'
+              type="text"
+              id="userName"
+              placeholder="Eks. Torleif Jakobsen"
+              className="w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2 mb-8"
               onChange={(event) => setInput(event, false)}
             />
           )}
 
-        <div className='grid grid-cols-1 md:grid-cols-3'>
-          <Button onClick={search} className='md:col-start-2'>Søk bruker</Button>
-        </div>
-
+          <div className="grid grid-cols-1 md:grid-cols-3">
+            <Button onClick={search} className="md:col-start-2">
+              Søk bruker
+            </Button>
+          </div>
         </div>
 
         <ul>
