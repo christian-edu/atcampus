@@ -1,0 +1,110 @@
+@startuml
+
+class ChatMessageEntity {
++ uuid
++ message
++ user
++ group
++ timestamp
+}
+
+class GroupEntity {
++ uuid
++ name
++ rules
++ isPrivate
++ criteria
++ users
+}
+
+ChatMessageEntity *-- GroupEntity
+
+class UserEntity {
++ uuid
++ userName
++ email
++ password
++ firstName
++ lastName
++ groups
+}
+
+ChatMessageEntity *-- UserEntity
+
+class GroupMemberEntity {
++ uuid
++ is_admin
++ user
++ group
+}
+
+GroupEntity *--* GroupMemberEntity
+UserEntity *--* GroupMemberEntity
+
+class CriteriaEntity {
++ grade_goal
++ work_frequency
++ work_type
++ max_size
++ language
++ location
++ subjects
++ school
+}
+
+GroupEntity *-- CriteriaEntity
+
+class SubjectEntity {
++ uuid
++ name
+}
+
+class SchoolEntity {
++ uuid
++ name
+}
+
+CriteriaEntity *-- SubjectEntity
+CriteriaEntity *-- SchoolEntity
+
+enum GradeGoal {
+A
+B
+C
+D
+PASS
+}
+
+enum MaxSize {
+SMALL
+MEDIUM
+LARGE
+ANY
+}
+
+enum WorkFrequency {
+M1
+M2
+W1
+W2
+W3
+W4
+W5
+W6
+W7
+ANY
+}
+
+enum WorkType {
+LOCAL
+REMOTE
+HYBRID
+ANY
+}
+
+CriteriaEntity *-- GradeGoal
+CriteriaEntity *-- WorkFrequency
+CriteriaEntity *-- WorkType
+CriteriaEntity *-- MaxSize
+
+@enduml

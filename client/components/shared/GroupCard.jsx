@@ -7,6 +7,7 @@ import { UserGroupIcon, LockClosedIcon } from "@heroicons/react/solid";
 import { LockOpenIcon } from "@heroicons/react/outline";
 import Image from "./Image";
 import React from "react";
+import { motion } from 'framer-motion';
 
 const GroupCard = ({ group, onClick, match, search, score }) => {
   // Group Card component
@@ -47,7 +48,7 @@ const GroupCard = ({ group, onClick, match, search, score }) => {
       </Modal>
 
       <div
-        className="bg-white flex items-center gap-2 relative p-6 rounded-standard border border-purple-4 cursor-pointer hover:drop-shadow-xl duration-300"
+        className="bg-white flex items-center gap-2 relative p-6 my-3 rounded-standard border border-purple-4 cursor-pointer hover:drop-shadow-xl duration-300"
         onClick={clickHandler}
       >
         <Image group className="h-14" />
@@ -58,7 +59,18 @@ const GroupCard = ({ group, onClick, match, search, score }) => {
 
             <p className="text-md">Medlemmer: {groupMembers.length}</p>
           </div>
-          {score ? <h2>{score}% match</h2> : <></>}
+          
+            {score ? 
+            <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", duration: 0.8, delay: 0.4}}
+            className="bg-purple-1 text-sm text-white px-2 py-1 text-center rounded-full w-24 whitespace-nowrap mt-3 -mb-10 mx-auto drop-shadow-[0_5px_15px_rgba(127,124,202,0.75)]">
+            <p><span className="font-bold">{score}%</span> match</p> 
+            </motion.div>
+            : <></>}
+          
+          
         </div>
         {/* Render plus icon if search or match is true */}
         {(search || match) && (

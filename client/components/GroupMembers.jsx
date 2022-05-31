@@ -31,8 +31,8 @@ const GroupMembers = () => {
           {group?.groupMembers.map((member) => (
             <motion.li
               key={member.user_uuid}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0}}
+              animate={{ opacity: 1}}
             >
               <UserCard edit={isAdmin} user={member} />
             </motion.li>

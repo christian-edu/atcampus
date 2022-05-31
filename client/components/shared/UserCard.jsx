@@ -18,6 +18,8 @@ const UserCard = ({ user, edit, search, match }) => {
   // classes for icons
   const classes = `h-6 w-6 text-purple-1`;
 
+  console.log(user);
+
   // state for modal window
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
@@ -37,14 +39,18 @@ const UserCard = ({ user, edit, search, match }) => {
         <MatchRequest onClick={toggleModal} user={user} />
       </Modal>
       <div
-        className='bg-white flex items-center p-4 gap-4 rounded-standard border border-purple-4 cursor-pointer'
+        className={`bg-white flex items-center p-4 gap-4 rounded-standard border border-purple-4 ${
+          edit || search || match ? 'cursor-pointer' : ''
+        }`}
         onClick={toggleModal}
       >
         <Image className='h-10' />
-        <h2 className='font-bold text-lg text-dark-1'>{user.user_name}</h2>
+        <h2 className='font-bold text-lg text-dark-1'>
+          {user.username || user.user_name}
+        </h2>
         <button className='ml-auto'>
           {edit && <DotsHorizontalIcon className={classes} />}
-          {!edit && <PlusIcon className={classes} />}
+          {(search || match) && <PlusIcon className={classes} />}
         </button>
       </div>
     </>

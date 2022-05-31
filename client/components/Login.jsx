@@ -21,7 +21,7 @@ export function Login() {
 
     if (res.status === 200) {
       navigate('/');
-      window.location.reload(false)
+      window.location.reload(false);
     }
     // Make more error handling, incase there is wrong password etc
   }
@@ -51,9 +51,11 @@ export function Login() {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
+          <a href="" className='text-dark-3 text-sm'>Glemt passord?</a>
         </div>
-        <Button type='submit'>Log inn</Button>
-        {/* <pre>{JSON.stringify({ username, password })}</pre> */}
+        <div className='grid grid-cols-1 lg:grid-cols-3'>
+          <Button type='submit' className='lg:col-start-2'>Logg inn</Button>
+        </div>
       </form>
     </div>
   );
