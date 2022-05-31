@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
 import Button from './shared/Button';
 import Breadcrumbs from './shared/Breadcrumbs';
+import UserCard from './shared/UserCard';
 
 const SearchUser = () => {
   // Needs work
-
-  const [user, setUser] = useState([]);
+  const [users, setUsers] = useState([]);
   const [email, setEmail] = useState('');
   const [userName, setUsername] = useState('');
   const [showEmail, setShowEmail] = useState(false);
   const [error, setError] = useState();
 
-  useEffect(() => {}, [user]);
+  useEffect(() => {}, [users]);
 
   async function search() {
-    setUser([]);
+    setUsers([]);
     setError(undefined);
     const res = await fetch('/api/v1/user/search', {
       method: 'POST',
@@ -25,7 +25,7 @@ const SearchUser = () => {
     });
 
     if (res.status === 200) {
-      setUser(await res.json());
+      setUsers(await res.json());
     } else if (res.status === 204) {
       setError('Ingen brukere funnet');
     }
@@ -96,23 +96,19 @@ const SearchUser = () => {
             />
           )}
 
-        <div className='grid grid-cols-1 md:grid-cols-3'>
-          <Button onClick={search} className='md:col-start-2'>Søk bruker</Button>
-        </div>
-          
+          <div className='grid grid-cols-1 md:grid-cols-3'>
+            <Button onClick={search} className='md:col-start-2'>
+              Søk bruker
+            </Button>
+          </div>
         </div>
 
-        <ul>
-          {user ? (
-            user.map((specificUser) => (
-              <li key={specificUser.username}>
-                {specificUser.username} ({specificUser.email})
-              </li>
-            ))
-          ) : (
-            <h2>Ingen brukere</h2>
-          )}
-          {error ? <h2>{error}</h2> : <></>}
+        <ul className='grid gap-4'>
+          {!users && <p>Ingen brukere funnet</p>}
+          {users.map((user) => (
+            <UserCard key={user.uuid} user={user} search />
+          ))}
+          {error && <h2>{error}</h2>}
         </ul>
       </div>
     </>
