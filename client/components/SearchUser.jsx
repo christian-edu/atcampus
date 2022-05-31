@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import Button from './shared/Button';
-import { GroupCriteria } from './shared/GroupCriteria';
+import { GroupCriteria } from './other/GroupCriteria';
 import UserCard from './shared/UserCard';
 import Breadcrumbs from './shared/Breadcrumbs';
 
