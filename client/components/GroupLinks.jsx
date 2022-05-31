@@ -63,7 +63,7 @@ const GroupLinks = () => {
         transition={{ delay: 0.2}}
         >
         <h2 className='text-dark-1 text-xl font-bold mb-4'>Mine grupper</h2>
-        <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
+        <div className='grid gap-x-4 sm:grid-cols-2 xl:grid-cols-3'>
           {/*Only return this id groupdata is nbot undefined*/}
           {groups.map((group) => (
             <GroupCard
