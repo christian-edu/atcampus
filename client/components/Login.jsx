@@ -51,6 +51,10 @@ export function Login() {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
+          <a href="" className='text-dark-3 text-sm'>Glemt passord?</a>
+        </div>
+        <div className='grid grid-cols-1 md:grid-cols-3'>
+          <Button type='submit' className='md:col-start-2'>Logg inn</Button>
         </div>
         <Button type='submit'>Log inn</Button>
       </form>

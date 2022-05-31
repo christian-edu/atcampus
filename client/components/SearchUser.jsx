@@ -1,7 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from './shared/Button';
-import { GroupCriteria } from './shared/GroupCriteria';
-import UserCard from './shared/UserCard';
 import Breadcrumbs from './shared/Breadcrumbs';
 
 const SearchUser = () => {
@@ -96,7 +94,7 @@ const SearchUser = () => {
             />
           )}
 
-          <button onClick={search}>Søk</button>
+          <Button onClick={search}>Søk bruker</Button>
         </div>
 
         <ul>
