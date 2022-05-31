@@ -15,7 +15,7 @@ const Breadcrumbs = () => {
   const breadcrumbs = useBreadcrumbs(routes(group?.name));
 
   return (
-    <ul className='flex'>
+    <ul className='flex text-dark-3'>
       {breadcrumbs.map(({ key, breadcrumb }, i) => {
         if (i === breadcrumbs.length - 1)
           return <li key={key}>{breadcrumb}</li>;

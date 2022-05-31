@@ -1,6 +1,7 @@
 import { GroupCriteria } from "./shared/GroupCriteria";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { motion } from 'framer-motion';
 
 const GroupCriteriaPage = ({ createdGroup, lookingForGroup, editGroup }) => {
   // Side for å sette opp gruppekriterier når du oppretter gruppe eller går på gruppeinnstillinger og velger gruppekriterier
@@ -11,7 +12,11 @@ const GroupCriteriaPage = ({ createdGroup, lookingForGroup, editGroup }) => {
 
   if (lookingForGroup) {
     return (
-      <div className="bg-white p-6 grid gap-4 rounded-standard max-w-2xl mx-auto text-dark-1">
+      <motion.div
+      initial={{ opacity: 0}}
+      animate={{ opacity: 1}}
+      className="bg-white p-6 grid gap-4 rounded-standard max-w-2xl mx-auto text-dark-1"
+      >
         <h2 className="text-xl font-bold">Søk etter gruppenavn</h2>
         <label htmlFor='groupname' className='text-dark-1 mt-2'>Gruppenavn:</label>
         <input
@@ -27,13 +32,17 @@ const GroupCriteriaPage = ({ createdGroup, lookingForGroup, editGroup }) => {
           searchGroup={true}
           groupName={groupname}
         />
-      </div>
+      </motion.div>
     );
   }
 
   if (createdGroup) {
     return (
-      <div className="bg-white p-6 grid gap-4 rounded-standard max-w-2xl mx-auto text-dark-1">
+      <motion.div
+      initial={{ opacity: 0}}
+      animate={{ opacity: 1}}
+      className="bg-white p-6 grid gap-4 rounded-standard max-w-2xl mx-auto text-dark-1"
+      >
         <h2 className="text-xl font-bold">Opprett gruppe</h2>
         <form>
           <label>Gruppenavn:</label>
@@ -53,7 +62,7 @@ const GroupCriteriaPage = ({ createdGroup, lookingForGroup, editGroup }) => {
           groupName={groupname}
           createGroup={true}
         />
-      </div>
+      </motion.div>
     );
   }
 

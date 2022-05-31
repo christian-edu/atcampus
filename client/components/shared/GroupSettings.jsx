@@ -64,7 +64,7 @@ const GroupSettings = (props) => {
       <div className='grid grid-cols-1 bg-gradient-left w-screen text-white max-w-2xl mx-auto rounded-standard'>
         <ul className='divide-y divide-purple-4'>
           <Link
-            to='/groups/specific/members/searchUser'
+            to='/members/search'
             className='flex flex-row justify-between my-1 py-3 hover:bg-purple-2 px-4'
             onClick={props.onClick}
           >

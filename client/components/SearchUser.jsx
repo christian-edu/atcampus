@@ -65,6 +65,7 @@ const SearchUser = () => {
               name={'emailOrName'}
               value={'mail'}
               onClick={(event) => showEmailField(true)}
+              className='form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer'
             />
             <label htmlFor='email'>Søk etter epost</label>
           </div>
@@ -75,6 +76,7 @@ const SearchUser = () => {
               value={'name'}
               defaultChecked
               onClick={(event) => showEmailField(false)}
+              className='form-check-input appearance-none rounded-full h-4 w-4 border border-dark-4 bg-white checked:bg-purple-1 checked:border-dark-1 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer'
             />
             <label htmlFor='userName'>Søk etter brukernavn</label>
           </div>
@@ -82,21 +84,24 @@ const SearchUser = () => {
             <input
               type='email'
               id='email'
-              placeholder='eks. student@kristiania.no'
-              className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'
+              placeholder='Eks. student@kristiania.no'
+              className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2 mb-8'
               onChange={(event) => setInput(event, true)}
             />
           ) : (
             <input
               type='text'
               id='userName'
-              placeholder='eks. Torleif Jakobsen'
-              className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2'
+              placeholder='Eks. Torleif Jakobsen'
+              className='w-full p-2 border border-purple-3 rounded-standard bg-dark-6 mt-2 mb-8'
               onChange={(event) => setInput(event, false)}
             />
           )}
 
-          <Button onClick={search}>Søk bruker</Button>
+        <div className='grid grid-cols-1 md:grid-cols-3'>
+          <Button onClick={search} className='md:col-start-2'>Søk bruker</Button>
+        </div>
+          
         </div>
 
         <ul>
