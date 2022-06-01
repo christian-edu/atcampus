@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import Button from './shared/Button';
 import Breadcrumbs from './shared/Breadcrumbs';
 import UserCard from './shared/UserCard';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { UserGroupsContext } from '../store/UserGroupsContext';
 
 const SearchUser = () => {
   // Needs work
@@ -10,8 +12,13 @@ const SearchUser = () => {
   const [userName, setUsername] = useState('');
   const [showEmail, setShowEmail] = useState(false);
   const [error, setError] = useState();
+  const navigate = useNavigate();
 
-  useEffect(() => {}, [users]);
+  const params = useParams();
+
+  const { getGroupById } = useContext(UserGroupsContext);
+
+  const group = getGroupById(params.id);
 
   async function search() {
     setUsers([]);
@@ -106,7 +113,7 @@ const SearchUser = () => {
         <ul className='grid gap-4'>
           {!users && <p>Ingen brukere funnet</p>}
           {users.map((user) => (
-            <UserCard key={user.uuid} user={user} search />
+            <UserCard key={user.uuid} user={user} userGroup={group} search />
           ))}
           {error && <h2>{error}</h2>}
         </ul>

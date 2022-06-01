@@ -1,6 +1,6 @@
 import UserCard from './shared/UserCard';
 import Button from './shared/Button';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Breadcrumbs from './shared/Breadcrumbs';
 import { useContext } from 'react';
 import { UserGroupsContext } from '../store/UserGroupsContext';
@@ -16,6 +16,8 @@ const GroupMembers = () => {
 
   const user = useContext(UserInfoContext);
 
+  const navigate = useNavigate();
+
   const isAdmin = group?.groupMembers.find(
     (m) => m.user_uuid === user.uuid
   )?.isAdmin;
@@ -29,8 +31,8 @@ const GroupMembers = () => {
           {group?.groupMembers.map((member) => (
             <motion.li
               key={member.user_uuid}
-              initial={{ opacity: 0}}
-              animate={{ opacity: 1}}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
             >
               <UserCard edit={isAdmin} user={member} />
             </motion.li>
