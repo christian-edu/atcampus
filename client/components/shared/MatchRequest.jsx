@@ -1,9 +1,10 @@
 import { XIcon, CheckIcon } from '@heroicons/react/solid';
 import Image from './Image';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { UserInfoContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import { groupCriterias } from '../../services/criterias';
+import { UserGroupsContext } from '../../store/UserGroupsContext';
 
 const MatchRequest = ({ group, user, onClick }) => {
   // Popup som vises når man søker etter gruppe basert på kriterer
@@ -12,6 +13,8 @@ const MatchRequest = ({ group, user, onClick }) => {
 
   const userInfo = React.useContext(UserInfoContext);
   const navigate = useNavigate();
+
+  const { fetchData } = useContext(UserGroupsContext);
 
   const criterias = groupCriterias(criteria);
 
@@ -26,6 +29,7 @@ const MatchRequest = ({ group, user, onClick }) => {
         groupId: group.uuid,
       }),
     });
+    fetchData();
     navigate('/');
   }
 

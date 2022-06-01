@@ -210,6 +210,7 @@ export function GroupCriteria({
 
       // runs rest in useEffect when data is returned
       setGroupResult(await res.json());
+      
     }
   }
 
