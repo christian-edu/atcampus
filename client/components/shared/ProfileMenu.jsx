@@ -14,12 +14,13 @@ const ProfileMenu = ({ onClick }) => {
 
   const navigate = useNavigate();
 
-  function logOut() {
-    fetch('/api/v1/logout', {
+  async function logOut() {
+    await fetch('/api/v1/logout', {
       method: 'DELETE',
     });
 
-    window.location.reload(false);
+    navigate('/');
+    onClick();
   }
 
   return (

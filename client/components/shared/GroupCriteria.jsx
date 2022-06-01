@@ -109,7 +109,8 @@ export function GroupCriteria({
     }
 
     if (patchGroup && groupResult === 'No Content') {
-      navigate('/group/specific', { state: { group } });
+      console.log(":(");
+      // navigate('/group/specific', { state: { group } });
     }
   }, [groupResult]);
 
@@ -209,6 +210,7 @@ export function GroupCriteria({
 
       // runs rest in useEffect when data is returned
       setGroupResult(await res.json());
+      
     }
   }
 

@@ -4,8 +4,9 @@ import HttpException from "../util/errorUtils";
 import { UserEntity } from "../entity/UserEntity";
 import { GroupEntity } from "../entity/GroupEntity";
 import Logger from "../util/logger";
+import { IChatService } from "./IChatService";
 
-export default class ChatService {
+export default class ChatService implements IChatService {
   constructor(
     private chatRepo: Repository<ChatMessageEntity>,
     private userRepo: Repository<UserEntity>,
