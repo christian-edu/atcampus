@@ -158,10 +158,19 @@ export default class GroupService implements IGroupService {
       });
   }
 
-  // Testet manuelt, virker som den skal
   async addMember(groupId: string, userId: string): Promise<GroupOutDto> {
     return await this.fetchUserAndGroup(userId, groupId).then(
       async ({ foundUser: user, foundGroup: group }) => {
+        const usersInGroup = await group.users;
+        if (!usersInGroup) {
+          throw new HttpException("DBError, Member retrieval failed", 500);
+        }
+        usersInGroup.forEach((userInGroup) => {
+          if (userInGroup.user.uuid === user.uuid) {
+            throw new HttpException("User already exists in group", 400);
+          }
+        });
+
         const newMember = new GroupMemberEntity();
         newMember.user = user;
         newMember.group = group;
