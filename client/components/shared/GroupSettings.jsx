@@ -13,13 +13,13 @@ import { UserGroupsContext } from '../../store/UserGroupsContext';
 
 const GroupSettings = ({ group, onClick }) => {
   const navigate = useNavigate();
+
   const { fetchData } = useContext(UserGroupsContext);
 
   const user = React.useContext(UserInfoContext);
 
   async function deleteGroup() {
-    console.log(group.uuid);
-    fetch('/api/v1/groups', {
+    await fetch('/api/v1/groups', {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json',
@@ -33,9 +33,7 @@ const GroupSettings = ({ group, onClick }) => {
   }
 
   async function leaveGroup() {
-    console.log('Left group');
-    console.log(user.uuid);
-    fetch('/api/v1/groups/member', {
+    await fetch('/api/v1/groups/member', {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json',
@@ -65,7 +63,6 @@ const GroupSettings = ({ group, onClick }) => {
           <Link
             to={`/groups/${group.uuid}/members/search`}
             className='flex flex-row justify-between my-1 py-3 hover:bg-purple-2 px-4'
-
           >
             <li className='flex flex-row'>
               <UserAddIcon className='h-6 w-6 text-white mr-4' />

@@ -19,7 +19,7 @@ const ProfileMenu = ({ onClick }) => {
       method: 'DELETE',
     });
 
-    navigate('/');
+    navigate('/login');
     onClick();
   }
 
