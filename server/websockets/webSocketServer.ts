@@ -23,10 +23,15 @@ function getIdsFromCookie(cookie: string) {
     decodeURIComponent(sessionCookie!),
     process.env.COOKIE_SECRET as string
   );
-  const verifiedToken = jwt.verify(
-    signedCookie,
-    process.env.JWT_KEY as string
-  ) as JwtPayload;
+  let verifiedToken;
+  try {
+    verifiedToken = jwt.verify(
+      signedCookie,
+      process.env.JWT_KEY as string
+    ) as JwtPayload;
+  } catch (e: any) {
+    Logger.error("websocket_service", e);
+  }
   return {
     userId: verifiedToken?.userId,
     sessionId: verifiedToken?.sessionId,
@@ -42,8 +47,6 @@ export default (
   userService: UserService
 ) => {
   const wss = new WebSocketServer.Server({ noServer: true, path: "/chat" });
-  // TODO: Håndterer ikke at samme bruker er logget inn flere steder. Trenger en sessionId ellernoe for å unngå at
-  // socketen overskrives.. Ikke MVP-mat, selv om det burde være ganske straight forward å legge en ekstra ID i token.
   expressServer.on("upgrade", async (request, socket, head) => {
     const cookie = request.headers.cookie;
 
@@ -81,7 +84,10 @@ export default (
       const { userId, sessionId } = getIdsFromCookie(
         connectionRequest.headers.cookie!
       );
-
+      if (!userId || !sessionId) {
+        websocketConnection.send({ server: "unauthorized" });
+        return;
+      }
       if (!groupId) throw Error("No groupId!");
       if (!sockets.has(groupId)) {
         sockets.set(groupId, new Map().set(sessionId, websocketConnection));
