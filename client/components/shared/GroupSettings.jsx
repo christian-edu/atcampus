@@ -8,14 +8,17 @@ import {
 } from '@heroicons/react/solid';
 import { LogoutIcon } from '@heroicons/react/outline';
 import { UserInfoContext } from '../../App';
-import React from 'react';
+import React, { useContext } from 'react';
+import { UserGroupsContext } from '../../store/UserGroupsContext';
 
 const GroupSettings = ({ group, onClick }) => {
   const navigate = useNavigate();
+  const { fetchData } = useContext(UserGroupsContext);
 
   const user = React.useContext(UserInfoContext);
 
-  function deleteGroup() {
+  async function deleteGroup() {
+    console.log(group.uuid);
     fetch('/api/v1/groups', {
       method: 'DELETE',
       headers: {
@@ -25,9 +28,11 @@ const GroupSettings = ({ group, onClick }) => {
         groupId: group.uuid,
       }),
     });
+    fetchData();
+    onClick();
   }
 
-  function leaveGroup() {
+  async function leaveGroup() {
     console.log('Left group');
     console.log(user.uuid);
     fetch('/api/v1/groups/member', {
@@ -40,6 +45,8 @@ const GroupSettings = ({ group, onClick }) => {
         userId: user.uuid,
       }),
     });
+    fetchData();
+    onClick();
   }
 
   return (
@@ -93,9 +100,9 @@ const GroupSettings = ({ group, onClick }) => {
           <Link
             to='/'
             className='flex flex-row justify-between my-1 py-3 hover:bg-purple-2 px-4'
-            onClick={onClick}
+            onClick={deleteGroup}
           >
-            <li className='flex flex-row' onClick={deleteGroup}>
+            <li className='flex flex-row'>
               <TrashIcon className='h-6 w-6 text-white mr-4' />
               Slett gruppe
             </li>
@@ -104,9 +111,9 @@ const GroupSettings = ({ group, onClick }) => {
           <Link
             to='/'
             className='flex flex-row justify-between my-1 py-3 hover:bg-purple-2 px-4'
-            onClick={onClick}
+            onClick={leaveGroup}
           >
-            <li className='flex flex-row' onClick={leaveGroup}>
+            <li className='flex flex-row'>
               <LogoutIcon className='h-6 w-6 text-white mr-4' />
               Forlat gruppe
             </li>

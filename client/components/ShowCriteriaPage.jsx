@@ -29,13 +29,13 @@ export function ShowCriteriaPage() {
       {!editCriteria && (
         <>
           <h2 className='font-bold text-xl'>Gruppekriterier</h2>
-          <ul className='flex flex-col gap-3 mt-6 mb-4'>
+          <ul className='flex flex-col gap-4 mt-6 mb-4'>
             {Object.entries(criterias).map((criteria) => (
               <li
                 key={criteria[0]}
-                className='text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'
+                className='text-sm text-dark-1 px-1 outline outline-1 outline-purple-3 outline-offset-4 rounded'
               >
-                <span className='font-bold'>{criteria[0]}: </span>
+                <span className='font-bold text-dark-3'>{criteria[0]}: </span>
                 {criteria[1]}
               </li>
             ))}

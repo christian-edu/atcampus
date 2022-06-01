@@ -111,8 +111,12 @@ export function GroupChat() {
   return (
     <>
       <Breadcrumbs />
-      <div className='bg-white border-1 border-purple-1 rounded p-6'>
-        <h2 className='font-bold text-xl mb-4'>Chat</h2>
+      <motion.div
+      initial={{ opacity: 0}}
+      animate={{ opacity: 1}}
+      className='bg-white border-1 text-dark-1 border-purple-1 rounded-standard p-6'
+      >
+        <h2 className='font-bold text-xl mb-4'>Gruppechat</h2>
         <div className='border-b-2 relative shadow-sm py-4 mb-4'>
           {loading && <Loading className='bg-white h-full w-full' />}
           {messages.length === 0 && 'Ingen meldinger'}
@@ -132,7 +136,7 @@ export function GroupChat() {
             onChange={(e) => setMessage(e.target.value)}
           />
         </form>
-      </div>
+      </motion.div>
     </>
   );
 }

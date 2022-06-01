@@ -51,12 +51,12 @@ const ChatMessage = ({ message }) => {
       animate={{ opacity: 1, x: 0 }}
       className='pt-4 flex gap-4'
     >
-      <div className='h-12 w-12 flex-shrink-0'>
+      <div className='h-8 w-8 flex-shrink-0'>
         <Image />
       </div>
       <div className='flex flex-col gap-2'>
         <div className='flex items-center gap-2'>
-          <h3 className='font-bold'>{message.userName}</h3>
+          <h3 className='font-bold text-dark-2'>{message.userName}</h3>
           <p className='text-dark-3 text-xs'>
             {transformDate(message.timestamp)}
           </p>
