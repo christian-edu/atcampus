@@ -23,10 +23,15 @@ function getIdsFromCookie(cookie: string) {
     decodeURIComponent(sessionCookie!),
     process.env.COOKIE_SECRET as string
   );
-  const verifiedToken = jwt.verify(
-    signedCookie,
-    process.env.JWT_KEY as string
-  ) as JwtPayload;
+  let verifiedToken;
+  try {
+    verifiedToken = jwt.verify(
+      signedCookie,
+      process.env.JWT_KEY as string
+    ) as JwtPayload;
+  } catch (e: any) {
+    Logger.error("websocket_service", e);
+  }
   return {
     userId: verifiedToken?.userId,
     sessionId: verifiedToken?.sessionId,
