@@ -60,10 +60,12 @@ const GroupSettings = ({ group, onClick }) => {
           <Link
             to={`/groups/${group.uuid}/members/search`}
             className='flex flex-row justify-between my-1 py-3 hover:bg-purple-2 px-4'
-            onClick={onClick}
+
           >
             <li className='flex flex-row'>
               <UserAddIcon className='h-6 w-6 text-white mr-4' />
+              {/*navigate("/groups/specific/members/searchUser", {
+              state: { group: group },*/}
               Inviter medlemmer
             </li>
             <ChevronRightIcon className='h-6 w-6 text-white' />
