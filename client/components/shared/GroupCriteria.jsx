@@ -1,7 +1,7 @@
-import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Button from './Button';
-import { UserGroupsContext } from '../../store/UserGroupsContext';
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Button from "./Button";
+import { UserGroupsContext } from "../../store/UserGroupsContext";
 
 export function GroupCriteria({
   title,
@@ -108,9 +108,8 @@ export function GroupCriteria({
       navigate('/searchGroup/searchGroupResults', { state: { groupResult } });
     }
 
-    if (patchGroup && groupResult === 'No Content') {
-      console.log(":(");
-      // navigate('/group/specific', { state: { group } });
+    if (patchGroup && groupResult === "No Content") {
+      navigate("/group/specific", { state: { group } });
     }
   }, [groupResult]);
 
@@ -210,7 +209,7 @@ export function GroupCriteria({
 
       // runs rest in useEffect when data is returned
       setGroupResult(await res.json());
-      
+
     }
   }
 
