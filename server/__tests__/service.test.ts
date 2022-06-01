@@ -113,19 +113,34 @@ describe("Tests for GroupService", () => {
     const mockAddMember: jest.Mock = On(fakeGroupMemberRepo).get(
       method((method) => method.save)
     );
+    const newUser = new UserEntity(
+      "codbob",
+      "cod@bob.com",
+      "pirate",
+      new SchoolEntity(),
+      "",
+      "",
+      "3"
+    );
+    const group = groupEntitiesWithUsers()[0];
+    const newMember = new GroupMemberEntity();
+    newMember.is_admin = false;
+    newMember.user = newUser;
+    newMember.group = group;
+    newMember.uuid = "3";
+    group.users = Promise.all([
+      groupMemberEntities()[0],
+      groupMemberEntities()[1],
+      newMember,
+    ]);
     mockAddMember.mockImplementation(async () => {
-      const memberEntity = new GroupMemberEntity();
-      memberEntity.group = groupEntitiesWithUsers()[0];
-      memberEntity.user = userEntitiesWithGroups()[1];
-      memberEntity.uuid = "2";
-      memberEntity.is_admin = false;
-      return memberEntity;
+      return newMember;
     });
 
     const mockGetUser: jest.Mock = On(fakeUserRepo).get(
       method((repo) => repo.findOneBy)
     );
-    mockGetUser.mockImplementation(async () => userEntitiesWithGroups()[1]);
+    mockGetUser.mockImplementation(async () => newUser);
 
     const mockGetGroup: jest.Mock = On(fakeGroupRepo).get(
       method((repo) => repo.findOneBy)
@@ -134,7 +149,7 @@ describe("Tests for GroupService", () => {
 
     const res = await groupService.addMember("1", "2");
 
-    expect(res.name).toBe(groupEntitiesWithUsers()[0].name);
+    expect(res.groupMembers[2].user_uuid).toBe(newUser.uuid);
   });
 
   it("Should return group members", async () => {

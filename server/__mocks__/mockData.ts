@@ -11,7 +11,6 @@ import { CriteriaDto } from "../dto/criteriaDto";
 import { MaxSize } from "../entity/enums/MaxSize";
 import { GroupMemberEntity } from "../entity/GroupMemberEntity";
 import { UserOutDto } from "../dto/UserInOutDto";
-import { criteriaEntityToDto } from "../dto/utils/criteriaMappers";
 import { GroupMemberDtoUser } from "../dto/groupMemberDto";
 
 export const userEntitiesWithoutGroups = () => {
