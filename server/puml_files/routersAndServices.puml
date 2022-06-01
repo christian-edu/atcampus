@@ -104,15 +104,20 @@ class ChatRouter {
 
 ServerRouter <|-- ChatRouter
 
-class ChatService {
-- chatRepo
-- userRepo
-- groupRepo
+interface IChatService {
 + addMessage()
 + fetchUserById()
 + getMessages()
 }
 
-ChatRouter o.. ChatService
+ChatRouter o.. IChatService
+
+class ChatService {
+- chatRepo
+- userRepo
+- groupRepo
+}
+
+IChatService <|-- ChatService
 
 @enduml

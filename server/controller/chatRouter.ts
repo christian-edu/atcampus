@@ -1,9 +1,9 @@
 import { ServerRouter } from "./serverRouter";
-import ChatService from "../service/chatService";
 import { IRouter } from "express";
+import { IChatService } from "../service/IChatService";
 
 export default class ChatRouter extends ServerRouter {
-  constructor(private chatService: ChatService, private router: IRouter) {
+  constructor(private chatService: IChatService, private router: IRouter) {
     super();
   }
   fetchRoutes(): IRouter {
