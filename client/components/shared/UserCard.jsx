@@ -14,7 +14,7 @@ import GroupUserSettings from './GroupUserSettings';
 
 SearchRequest;
 
-const UserCard = ({ user, edit, search, match }) => {
+const UserCard = ({ user, edit, search, match, userGroup }) => {
   // classes for icons
   const classes = `h-6 w-6 text-purple-1`;
 
@@ -33,7 +33,11 @@ const UserCard = ({ user, edit, search, match }) => {
         <GroupUserSettings user={user} />
       </Modal>
       <Modal show={modalIsVisible && search} onClick={toggleModal}>
-        <SearchRequest onClick={toggleModal} user={user} />
+        <SearchRequest
+          onClick={toggleModal}
+          user={user}
+          userGroup={userGroup}
+        />
       </Modal>
       <Modal show={modalIsVisible && match} onClick={toggleModal}>
         <MatchRequest onClick={toggleModal} user={user} />

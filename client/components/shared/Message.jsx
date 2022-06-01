@@ -1,7 +1,7 @@
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/outline';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const MessageContainer = ({ children, className, show = false }) => {
+const MessageContainer = ({ children, className, show = true }) => {
   return (
     <AnimatePresence>
       {show && (
@@ -19,17 +19,23 @@ const MessageContainer = ({ children, className, show = false }) => {
   );
 };
 
-const Message = ({ mode = 'success', children, show = false }) => {
+const Message = ({ mode = 'success', children, show = true, className }) => {
   if (mode === 'success')
     return (
-      <MessageContainer show={show} className='bg-green-100 border-green-700'>
+      <MessageContainer
+        show={show}
+        className={`bg-green-100 border-green-700 ${className}`}
+      >
         <CheckCircleIcon className='h-6 w-6 text-green-700' />
         <p>{children}</p>
       </MessageContainer>
     );
   if (mode === 'error')
     return (
-      <MessageContainer show={show} className='bg-red-100 border-red-700'>
+      <MessageContainer
+        show={show}
+        className={`bg-red-100 border-red-700 ${className}`}
+      >
         <XCircleIcon className='h-6 w-6 text-red-700' />
         <p>{children}</p>
       </MessageContainer>
