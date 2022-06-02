@@ -39,11 +39,11 @@ const MatchRequest = ({ group, user, onClick }) => {
       <h2 className='font-bold text-xl w-full border-b-2 pb-4 border-purple-1'>
         {group?.name || user}
       </h2>
-      <ul className='flex flex-col gap-3 mt-6 mb-4'>
+      <ul className='flex flex-col text-left gap-4 mt-6 mb-4'>
         {Object.entries(criterias).map((criteria) => (
           <li
             key={criteria[0]}
-            className='text-sm px-2 outline outline-1 outline-purple-1 outline-offset-1 rounded'
+            className='text-sm px-2 outline outline-1 outline-purple-1 outline-offset-4 rounded'
           >
             <span className='font-bold'>{criteria[0]}: </span>
             {criteria[1]}

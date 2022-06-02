@@ -37,7 +37,7 @@ const App = () => {
       <UserInfoContext.Provider value={userData}>
         <BrowserRouter>
           <TopNavBar />
-          <main className='bg-dark-6 flex'>
+          <main className='bg-dark-6 flex h-screen'>
             <LeftNavBar />
             <div className='w-full h-screen overflow-scroll'>
               <div className='container mx-auto py-16 w-full'>

@@ -18,6 +18,7 @@ const GroupCriteriaPage = ({ createdGroup, lookingForGroup, editGroup }) => {
       className="bg-white p-6 grid gap-4 rounded-standard max-w-2xl mx-auto text-dark-1"
       >
         <h2 className="text-xl font-bold">Søk etter gruppenavn</h2>
+        <h4 className='text-dark-3'>Skriv inn eksisterende gruppenavn</h4>
         <label htmlFor='groupname' className='text-dark-1 mt-2'>Gruppenavn:</label>
         <input
           type="text"
@@ -25,9 +26,10 @@ const GroupCriteriaPage = ({ createdGroup, lookingForGroup, editGroup }) => {
           value={groupname}
           onChange={(e) => setGroupName(e.target.value)}
         />
+        <hr className="border border-purple-1"/>
         <GroupCriteria
           title={"Søk etter gruppekriterier"}
-          buttonText={"Søk etter kriterier"}
+          buttonText={"Søk etter gruppe"}
           fetchLink={"/api/v1/groups/search"}
           searchGroup={true}
           groupName={groupname}
