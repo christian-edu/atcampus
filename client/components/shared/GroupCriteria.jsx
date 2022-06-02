@@ -109,7 +109,7 @@ export function GroupCriteria({
     }
 
     if (patchGroup && groupResult === "No Content") {
-      navigate("/group/specific", { state: { group } });
+      navigate(`/groups/${group.uuid}`, { state: { group } });
     }
   }, [groupResult]);
 
@@ -185,6 +185,9 @@ export function GroupCriteria({
         setGroupResult(await res.json());
       }
     } else if (searchGroup) {
+      // Here we search for the group
+      console.log("searched for group named");
+      console.log(groupName);
       const res = await fetch(fetchLink, {
         method: "POST",
         headers: {
