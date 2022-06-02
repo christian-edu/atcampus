@@ -109,6 +109,7 @@ export function GroupCriteria({
     }
 
     if (patchGroup && groupResult === "No Content") {
+      fetchData()
       navigate(`/groups/${group.uuid}`, { state: { group } });
     }
   }, [groupResult]);
