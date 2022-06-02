@@ -7,8 +7,6 @@ const GroupUserSettings = ({ user, group }) => {
   const navigate = useNavigate();
 
   async function removeMember() {
-    console.log(user.user_uuid + " removed from group: " + group.uuid);
-
     const res = await fetch("/api/v1/groups/member", {
       method: "DELETE",
       headers: {
@@ -26,9 +24,7 @@ const GroupUserSettings = ({ user, group }) => {
 
   function makeAdmin() {
     console.log("Admin roles given to " + user.user_name);
-    //Send a request to make the user admin
   }
-  // Popup som vises når man trykker på et gruppemedlem
 
   return (
     <div className="flex flex-col items-center bg-white text-dark-1 p-8 rounded text-center shadow-xl">

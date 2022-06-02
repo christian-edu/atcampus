@@ -183,7 +183,14 @@ export function GroupCriteria({
           }),
         });
 
-        setGroupResult(await res.json());
+        console.log("here is the create group status: ");
+        console.log(res.status);
+
+        if (res.status === 200) {
+          setGroupResult(await res.json());
+        } else if (res.status === 500) {
+          setError("Gruppenavn eksisterer allerede");
+        }
       }
     } else if (searchGroup) {
       // Here we search for the group
