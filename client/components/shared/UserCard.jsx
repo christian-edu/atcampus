@@ -28,7 +28,7 @@ const UserCard = ({ user, edit, search, match, userGroup }) => {
   return (
     <>
       <Modal show={modalIsVisible && edit} onClick={toggleModal}>
-        <GroupUserSettings user={user} />
+        <GroupUserSettings user={user} group={userGroup} />
       </Modal>
       <Modal show={modalIsVisible && search} onClick={toggleModal}>
         <SearchRequest

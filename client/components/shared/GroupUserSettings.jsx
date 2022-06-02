@@ -1,11 +1,27 @@
 import { KeyIcon, TrashIcon } from "@heroicons/react/solid";
 import Image from "./Image";
 import Button from "./Button";
+import { useNavigate } from "react-router-dom";
 
-const GroupUserSettings = ({ user }) => {
-  function removeMember() {
-    console.log(user.user_name + " removed");
-    // Send a request to delete the user
+const GroupUserSettings = ({ user, group }) => {
+  const navigate = useNavigate();
+
+  async function removeMember() {
+    console.log(user.user_uuid + " removed from group: " + group.uuid);
+
+    const res = await fetch("/api/v1/groups/member", {
+      method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: user.user_uuid,
+        groupId: group.uuid,
+      }),
+    });
+
+    navigate(`/groups/${group.uuid}/members`);
+    location.reload();
   }
 
   function makeAdmin() {
