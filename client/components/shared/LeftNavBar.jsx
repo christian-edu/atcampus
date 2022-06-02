@@ -48,14 +48,15 @@ const LeftNavBar = () => {
             Meny
           </h2>
         </div>
-        <ul className='flex flex-col gap-4 pt-14'>
+        <ul className='flex flex-col gap-4 pt-14 whitespace-nowrap h-[95%]'>
           {leftNavBarMenu.map(({ title, path, Icon }) => {
             if (title === 'Profil')
               return (
+                
                 <li
                   onClick={toggleProfileMenu}
                   key={title}
-                  className='text-purple-5 flex items-center justify-between cursor-pointer p-2 hover:bg-purple-2 rounded'
+                  className='text-purple-5 flex items-center justify-between cursor-pointer p-2 hover:bg-purple-2 rounded mt-auto mb-6'
                 >
                   <button className='flex gap-x-4'>
                     <Icon className='h-6 w-6' />

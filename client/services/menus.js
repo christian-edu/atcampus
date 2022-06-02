@@ -8,6 +8,8 @@ import {
   DocumentTextIcon,
   UserGroupIcon,
   CalendarIcon,
+  CheckCircleIcon,
+  PencilAltIcon
 } from '@heroicons/react/solid';
 import { LogoutIcon } from '@heroicons/react/outline';
 
@@ -15,7 +17,7 @@ export const profileMenu = [
   {
     title: 'Endre profil',
     path: '/',
-    Icon: UserIcon,
+    Icon: PencilAltIcon,
   },
   {
     title: 'Instillinger',
@@ -56,14 +58,14 @@ export const topNavBarMenu = [
     Icon: DocumentTextIcon,
   },
   {
-    title: 'Mine spørsmål',
+    title: 'Mine pørsmål',
     path: '/',
     Icon: QuestionMarkCircleIcon,
   },
   {
     title: 'Mine svar',
     path: '/',
-    Icon: QuestionMarkCircleIcon,
+    Icon: CheckCircleIcon,
   },
 ];
 

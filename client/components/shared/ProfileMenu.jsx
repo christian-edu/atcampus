@@ -43,6 +43,7 @@ const ProfileMenu = ({ onClick }) => {
                   className='flex flex-row justify-between my-1 hover:bg-purple-2 px-4'
                   key={title}
                 >
+                  <hr />
                   <button
                     className='flex flex-row w-full py-3'
                     onClick={logOut}
