@@ -127,7 +127,7 @@ export function GroupCriteria({
         }
 
         if (place === "velg") {
-          setPlace(group.criteria.language);
+          setPlace(group.criteria.location);
         }
 
         if (size === "velg") {

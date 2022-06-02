@@ -58,7 +58,7 @@ export default class GroupService implements IGroupService {
         if (ex instanceof HttpException) throw ex;
         Logger.error("group_service", (ex as QueryFailedError).message);
 
-        throw new HttpException("Database connection lost", 500);
+        throw new HttpException("DBerror, user not found", 500);
       });
     let groupEntity: GroupEntity;
     if (admin != null) {
@@ -70,7 +70,10 @@ export default class GroupService implements IGroupService {
         if (ex instanceof HttpException) throw ex;
         Logger.error("group_service", (ex as QueryFailedError).message);
 
-        throw new HttpException("Database connection lost", 500);
+        throw new HttpException(
+          "Creation or fetching of subject(s) or school failed",
+          500
+        );
       });
       groupEntity.criteria.school = school;
       groupEntity.criteria.subjects = subjects;
