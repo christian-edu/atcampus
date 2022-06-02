@@ -2,7 +2,7 @@ import { useLocation } from 'react-router-dom';
 import GroupCriteriaPage from './GroupCriteriaPage';
 import Button from './shared/Button';
 import { groupCriterias } from '../services/criterias';
-
+import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 export function ShowCriteriaPage() {
@@ -16,7 +16,11 @@ export function ShowCriteriaPage() {
   const criterias = groupCriterias(criteria);
 
   return (
-    <div className='bg-white p-6 text-dark-1 max-w-2xl mx-auto rounded-standard'>
+
+    <motion.div
+    initial={{ opacity: 0}}
+    animate={{ opacity: 1}}
+    className='bg-white p-6 text-dark-1 max-w-2xl mx-auto rounded-standard'>
       <div className='grid grid-cols-1 md:grid-cols-3'>
         <Button
           onClick={() => setEditCriteria((show) => !show)}
@@ -44,6 +48,6 @@ export function ShowCriteriaPage() {
       )}
 
       {editCriteria && <GroupCriteriaPage editGroup={true} />}
-    </div>
+    </motion.div>
   );
 }

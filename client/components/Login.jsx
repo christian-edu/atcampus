@@ -27,7 +27,7 @@ export function Login() {
   }
 
   return (
-    <div className='absolute top-0 left-0 w-screen h-screen bg-dark-6 flex flex-col gap-8 justify-center items-center'>
+    <div className='absolute top-0 left-0 w-screen h-screen bg-dark-6 flex flex-col gap-8 justify-center items-center z-50'>
       <img src={logo} alt='atcampus logo' className='w-[10rem]' />
       <form
         onSubmit={sendLogin}
