@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { fetchJSON } from "../fetchJSON";
 import Breadcrumbs from "./shared/Breadcrumbs";
 import ChatMessage from "./shared/ChatMessage";
@@ -13,8 +13,6 @@ export function GroupChat() {
 
   const bottomOfChat = useRef(null);
 
-  // Gjør fetch-kall til api/v1/chat for å hente gamle meldinger.
-
   const params = useParams();
 
   const url =
@@ -22,12 +20,22 @@ export function GroupChat() {
     `/chat?groupId=${params.id}`;
   const [ws, setWs] = useState(null);
 
+  function checkLocation(ws) {
+    setTimeout(() => {
+      if (ws && window.location.pathname.includes("chat")) {
+        checkLocation(ws);
+      } else {
+        ws.close();
+      }
+    }, 2000);
+  }
   async function connectSocket() {
     const websocket = await new WebSocket(url);
     setWs(websocket);
 
     websocket.onopen = (event) => {
       console.info("Connected to web sockets");
+      checkLocation(websocket);
     };
 
     websocket.onmessage = (event) => {
@@ -42,14 +50,18 @@ export function GroupChat() {
         console.error(e);
       }
     };
+
     websocket.onclose = function (e) {
-      console.log(
-        "Socket is closed. Reconnect will be attempted in 1 second.",
-        e
-      );
-      setTimeout(function () {
-        connectSocket();
-      }, 1000);
+      console.log("on close");
+      if (window.location.pathname.includes("chat")) {
+        console.info(
+          "Socket is closed. Reconnect will be attempted in 1 second.",
+          e
+        );
+        setTimeout(function () {
+          connectSocket();
+        }, 1000);
+      }
     };
 
     websocket.onerror = function (err) {

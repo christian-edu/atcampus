@@ -100,6 +100,7 @@ export default (
             server: `${userFromDb?.userName} entered the chat!`,
           })
         );
+        Logger.debug("WS_Server", `${userFromDb?.userName} connected`);
       }
 
       function sendMessageToGroup(message: string) {
@@ -141,6 +142,7 @@ export default (
         sendMessageToGroup(
           JSON.stringify({ server: `${userFromDb?.userName} left the chat` })
         );
+        Logger.debug("WS_Server", `${userFromDb?.userName} disconnected`);
       });
     }
   );
