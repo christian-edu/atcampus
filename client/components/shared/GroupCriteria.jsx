@@ -109,7 +109,7 @@ export function GroupCriteria({
     }
 
     if (patchGroup && groupResult === "No Content") {
-      fetchData()
+      fetchData();
       navigate(`/groups/${group.uuid}`, { state: { group } });
     }
   }, [groupResult]);
@@ -322,7 +322,7 @@ export function GroupCriteria({
               <option value="velg" disabled>
                 Gruppestørrelse
               </option>
-              <option value="Liten (2-4stk)">Liten (1-4stk)</option>
+              <option value="Liten (2-4stk)">Liten (2-4stk)</option>
               <option value="Medium (5-7stk)">Medium (5-7stk)</option>
               <option value="Stor (8+)">Stor (8+)</option>
               <option value="Ikke viktig">Ikke viktig</option>
