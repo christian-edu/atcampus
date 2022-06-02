@@ -40,7 +40,6 @@ export default class ChatService implements IChatService {
     const groupMembers = await group?.users;
     const memberIds = groupMembers?.map((m) => m.user.uuid);
     const isMember = memberIds?.includes(userId) || false;
-    Logger.debug("get_messages", isMember.toString());
     if (!isMember) throw new HttpException("Unauthorized", 401);
 
     const messages = await this.chatRepo.find({
