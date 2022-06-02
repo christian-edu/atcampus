@@ -215,7 +215,7 @@ export default class GroupService implements IGroupService {
       });
   }
 
-  // Virker IKKE
+  // Testet manuelt, virker som den skal
   async updateGroup(group: GroupInDto): Promise<GroupOutDto> {
     if (!group.uuid) throw new HttpException("No group uuid found", 400);
 
