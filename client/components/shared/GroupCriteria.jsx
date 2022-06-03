@@ -193,9 +193,6 @@ export function GroupCriteria({
         }
       }
     } else if (searchGroup) {
-      // Here we search for the group
-      console.log("searched for group named");
-      console.log(groupName);
       const res = await fetch(fetchLink, {
         method: "POST",
         headers: {
@@ -300,7 +297,7 @@ export function GroupCriteria({
             onClick={addSubjectField}
             className="p-2 mt-2 border border-purple-3 rounded-standard outline-dark-3 hover:bg-dark-6"
           >
-            + Legg til fler
+            + Legg til flere
           </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
