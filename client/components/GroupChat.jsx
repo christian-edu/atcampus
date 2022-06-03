@@ -56,6 +56,7 @@ export function GroupChat() {
     websocket.onclose = function (e) {
       console.log('on close');
       if (window.location.pathname.includes('chat')) {
+        navigate('/login');
         console.info(
           'Socket is closed. Reconnect will be attempted in 1 second.',
           e
@@ -70,7 +71,6 @@ export function GroupChat() {
       // TODO: Må legge inn en sjekk her for om man har blitt logget ut
       console.error('Socket encountered error: ', err, 'Closing socket');
       websocket.close();
-      navigate('/login');
     };
   }
 
