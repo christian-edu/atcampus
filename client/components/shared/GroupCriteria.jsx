@@ -344,7 +344,7 @@ export function GroupCriteria({
               <option value="velg" disabled>
                 Karaktermål
               </option>
-              <option value="PASS">Bestått</option>
+              <option value="Bestått">Bestått</option>
               <option value="D">D</option>
               <option value="C">C</option>
               <option value="B">B</option>
