@@ -58,7 +58,7 @@ export const topNavBarMenu = [
     Icon: DocumentTextIcon,
   },
   {
-    title: 'Mine pørsmål',
+    title: 'Mine spørsmål',
     path: '/',
     Icon: QuestionMarkCircleIcon,
   },

@@ -17,7 +17,7 @@ const GroupLinks = () => {
   const { groups, loading, error } = useContext(UserGroupsContext);
 
   if (!user) {
-    return <Link to={"/login"}>Login</Link>;
+    return <Link to={"/login"}><Button className="lg:w-32 mx-auto">Logg inn</Button></Link>;
   }
   if (loading) return <Loading className="h-screen w-screen bg-dark-6" />;
 
