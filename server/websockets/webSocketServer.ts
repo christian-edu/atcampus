@@ -86,6 +86,7 @@ export default (
       );
       if (!userId || !sessionId) {
         websocketConnection.send({ server: "unauthorized" });
+        websocketConnection.close();
         return;
       }
       if (!groupId) throw Error("No groupId!");
