@@ -183,9 +183,6 @@ export function GroupCriteria({
           }),
         });
 
-        console.log("here is the create group status: ");
-        console.log(res.status);
-
         if (res.status === 200) {
           setGroupResult(await res.json());
         } else if (res.status === 500) {
@@ -193,9 +190,6 @@ export function GroupCriteria({
         }
       }
     } else if (searchGroup) {
-      // Here we search for the group
-      console.log("searched for group named");
-      console.log(groupName);
       const res = await fetch(fetchLink, {
         method: "POST",
         headers: {
@@ -300,7 +294,7 @@ export function GroupCriteria({
             onClick={addSubjectField}
             className="p-2 mt-2 border border-purple-3 rounded-standard outline-dark-3 hover:bg-dark-6"
           >
-            + Legg til fler
+            + Legg til flere
           </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -347,7 +341,7 @@ export function GroupCriteria({
               <option value="velg" disabled>
                 Karaktermål
               </option>
-              <option value="PASS">Bestått</option>
+              <option value="Bestått">Bestått</option>
               <option value="D">D</option>
               <option value="C">C</option>
               <option value="B">B</option>
