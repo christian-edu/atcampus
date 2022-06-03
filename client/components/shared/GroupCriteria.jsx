@@ -183,9 +183,6 @@ export function GroupCriteria({
           }),
         });
 
-        console.log("here is the create group status: ");
-        console.log(res.status);
-
         if (res.status === 200) {
           setGroupResult(await res.json());
         } else if (res.status === 500) {
